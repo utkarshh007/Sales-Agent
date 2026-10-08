@@ -16,7 +16,7 @@ _HYBRID_SERVICE_RX = re.compile(
     re.IGNORECASE,
 )
 _PRODUCT_RX = re.compile(
-    r"\b(supply|procure(ment)?|purchase|licen[cs]es?|subscriptions?|appliances?|hardware|renewal|"
+    r"\b(supply|SITC|procure(ment)?|purchase|licen[cs]es?|subscriptions?|appliances?|hardware|renewal|"
     r"\bATS\b|software|solution|platform)\b",
     re.IGNORECASE,
 )
@@ -29,7 +29,8 @@ def heuristic_type(text: str, hits: list[LexiconHit], oems: list[OemHit], catalo
         # only adjacent evidence: let procurement wording decide
         if not hits:
             return "UNKNOWN"
-        if re.search(r"\b(supply|procure(ment)?|purchase)\b", text, re.IGNORECASE):
+        # SITC = "Supply, Installation, Testing and Commissioning", standard Indian procurement shorthand
+        if re.search(r"\b(supply|procure(ment)?|purchase|SITC)\b", text, re.IGNORECASE):
             return "OEM"
         offering = catalog.capabilities[hits[0].capability_id].offering
         return "OEM" if offering == "PRODUCT" else "SERVICE"

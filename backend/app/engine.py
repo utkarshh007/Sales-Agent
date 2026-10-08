@@ -43,7 +43,8 @@ class Decision:
     def priority(self) -> str | None:
         if self.status == REJECTED or self.score is None:
             return "SUPPRESS" if self.status == REJECTED else None
-        return self.score.priority
+        # a tender kept for review is never labelled "suppressed", however low its score
+        return "LOW" if self.score.priority == "SUPPRESS" else self.score.priority
 
     @property
     def primary_reason(self) -> str:
@@ -129,7 +130,8 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
         flags.append("NON_PORTFOLIO_OEM_SPECIFIED")
     score = compute_score(settings=settings, matches=matches, opportunity_type=opp_type,
                           commercial=commercial or apply_commercial_rules("UNKNOWN", settings, total_value_inr=total),
-                          analysis=analysis, has_documents=ctx.has_documents, closing_at=ctx.closing_at,
+                          analysis=analysis, has_documents=ctx.has_documents,
+                          has_portal_detail=ctx.has_portal_detail, closing_at=ctx.closing_at,
                           organization=ctx.organization, other_oems_named=other_oems, now=now)
 
     if gate_status == "REJECT":
@@ -145,7 +147,10 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
             rejections.append(("COMMERCIAL", commercial.code, commercial.reason))
         elif commercial.status == "REVIEW":
             reviews.append((commercial.code, commercial.reason))
-    if not rejections and score.total < settings.MIN_RELEVANCE_SCORE:
+    # Adjacent-only matches score low by construction; when configured for review, a human decides
+    # rather than the score threshold silently suppressing them.
+    adjacent_review = gate_status == "REVIEW" and settings.ADJACENT_MATCH_ACTION != AdjacentAction.SUPPRESS
+    if not rejections and not adjacent_review and score.total < settings.MIN_RELEVANCE_SCORE:
         rejections.append(("SCORE", "BELOW_MIN_SCORE",
                            f"Relevance score {score.total} is below the minimum {settings.MIN_RELEVANCE_SCORE}."))
     if not ctx.has_documents:

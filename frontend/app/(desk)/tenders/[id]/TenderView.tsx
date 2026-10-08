@@ -64,10 +64,8 @@ export default function TenderView() {
             {t.reference_number && <>, ref. <span className="text-ink">{t.reference_number}</span></>}
             {t.portal_tender_id && <>, tender ID <span className="text-ink">{t.portal_tender_id}</span></>}
           </p>
-          {t.source_url && (
-            <a href={t.source_url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm text-teal hover:underline">
-              Open on {t.portal_code === "cppp" ? "CPPP" : "source portal"}
-            </a>
+          {t.sources.length > 1 && (
+            <p className="mt-2 text-sm">Listed on {t.sources.length} portals: {t.sources.map((s) => s.portal_name).join(", ")}.</p>
           )}
         </div>
         <div className="flex items-start gap-6 lg:flex-col lg:items-end lg:gap-2">
@@ -84,13 +82,14 @@ export default function TenderView() {
         {t.decision === "REJECTED" && t.rejection_reason && <Notice tone="error"><b>Rejected.</b> {t.rejection_reason}</Notice>}
         {t.documents_status === "BLOCKED_HUMAN_REQUIRED" && t.decision !== "REJECTED" && (
           <Notice tone="warn">
-            <b>Documents needed.</b> {t.blocker_note} The assessment below is based on the listing only.
+            <b>Documents needed.</b> {t.blocker_note}{" "}
+            {t.portal_text ? "The assessment below uses the portal’s published tender details." : "The assessment below is based on the listing only."}
           </Notice>
         )}
         {message && <Notice>{message}</Notice>}
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_22rem]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="min-w-0 space-y-6">
           <Panel title="Why this tender">
             <p className="leading-relaxed">{t.relevance_reason ?? "No capability match was recorded."}</p>
@@ -120,6 +119,22 @@ export default function TenderView() {
                   })}
                 </tbody>
               </table>
+            </Panel>
+          )}
+
+          {t.portal_text && (
+            <Panel title="Published on the portal" aside={<span className="text-sm text-muted">from the tender&apos;s detail page</span>}>
+              <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[11rem_1fr]">
+                {t.portal_text.split("\n").map((line, i) => {
+                  const at = line.indexOf(": ");
+                  return at < 0 ? <dd key={i} className="sm:col-span-2">{line}</dd> : (
+                    <div key={i} className="contents">
+                      <dt className="text-muted">{line.slice(0, at)}</dt>
+                      <dd className="whitespace-pre-line">{line.slice(at + 2)}</dd>
+                    </div>
+                  );
+                })}
+              </dl>
             </Panel>
           )}
 
@@ -204,7 +219,7 @@ export default function TenderView() {
           </Panel>
         </div>
 
-        <aside className="space-y-6">
+        <aside className="min-w-0 space-y-6">
           <Panel title="Dates">
             <dl className="space-y-2 text-sm">
               <div><dt className="text-muted">Published</dt><dd>{dateTime(t.published_at)}</dd></div>
@@ -214,6 +229,8 @@ export default function TenderView() {
               {t.corrigendum && <div><dt className="text-muted">Corrigendum</dt><dd>{t.corrigendum}</dd></div>}
             </dl>
           </Panel>
+
+          <SourcesPanel t={t} />
 
           {openReviews.length > 0 && <ReviewPanel reviews={openReviews} editable={editable} onDone={load} />}
 
@@ -346,6 +363,35 @@ function DocumentsPanel({ t, editable, onUploaded }: { t: TenderDetail; editable
         </div>
       )}
       <p className="mt-3 text-xs text-muted">Last updated {date(t.last_analyzed_at)}</p>
+    </Panel>
+  );
+}
+
+const BASIS: Record<string, string> = {
+  PRIMARY: "first found here", "TENDER_ID+REF": "same tender ID and reference", "TENDER_ID+TITLE": "same tender ID and title",
+};
+
+function SourcesPanel({ t }: { t: TenderDetail }) {
+  if (t.sources.length === 0 && !t.source_url) return null;
+  const sources = t.sources.length ? t.sources : [{ portal_code: t.portal_code ?? "", portal_name: t.portal_code ?? "Source", match_basis: "PRIMARY", source_url: t.source_url, lookup_hint: null, first_seen_at: t.first_seen_at, last_seen_at: null }];
+  return (
+    <Panel title="Where it’s listed">
+      <ul className="space-y-4 text-sm">
+        {sources.map((s) => (
+          <li key={s.portal_code}>
+            <p className="font-medium">{s.portal_name}</p>
+            <p className="text-muted">{BASIS[s.match_basis] ?? s.match_basis}{s.last_seen_at ? `, last seen ${dateTime(s.last_seen_at)}` : ""}</p>
+            {s.lookup_hint ? (
+              <p className="mt-1 [overflow-wrap:anywhere]"><span className="text-muted">How to find it: </span>{s.lookup_hint}</p>
+            ) : null}
+            {s.source_url && (
+              <a href={s.source_url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-teal hover:underline">
+                {s.lookup_hint ? "Open the portal" : "Open the tender on the portal"}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
     </Panel>
   );
 }

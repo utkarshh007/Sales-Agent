@@ -68,21 +68,38 @@ class TenderListing:
     corrigendum: str | None = None
     documents: list[DocumentRef] = field(default_factory=list)
     documents_blocker: str | None = None  # set when documents need a human to retrieve
+    # Portal-published tender text (work description, pre-qualification, document names...).
+    # Used as evidence by the rule engine and the LLM; it is not a downloaded document.
+    portal_text: str | None = None
+    # True when detail-level fields (value, EMD, category, portal_text...) were collected this run.
+    # Connectors whose listing already carries the full record should set it at construction.
+    detail_fetched: bool = False
+    # How a human finds this tender on the portal when it has no stable permalink.
+    lookup_hint: str | None = None
     raw: dict[str, Any] = field(default_factory=dict)
 
     def identity_key(self) -> str:
         return self.portal_tender_id or self.reference_number or self.source_url or self.title
 
     def content_signature(self) -> dict[str, Any]:
-        """Fields whose change counts as a material update (triggers re-processing)."""
+        """Listing-level fields whose change counts as a material update (triggers re-processing)."""
         return {
             "title": self.title,
             "reference_number": self.reference_number,
             "closing_at": self.closing_at.isoformat() if self.closing_at else None,
             "opening_at": self.opening_at.isoformat() if self.opening_at else None,
+            "corrigendum": self.corrigendum,
+        }
+
+    def detail_signature(self) -> dict[str, Any] | None:
+        """Detail-level fields; only comparable when they were actually fetched this run."""
+        if not self.detail_fetched:
+            return None
+        return {
             "tender_value_inr": self.tender_value_inr,
             "emd_inr": self.emd_inr,
-            "corrigendum": self.corrigendum,
+            "category": self.category,
+            "portal_text": self.portal_text,
             "documents": sorted(d.url for d in self.documents),
         }
 
@@ -230,9 +247,14 @@ class PortalConnector(ABC):
         return hashlib.sha256(f"{self.portal_code}|{item.identity_key()}".encode()).hexdigest()
 
     # -- discovery loop (shared)
-    def discover(self, is_known: Callable[[str], bool]) -> DiscoveryResult:
+    def discover(self, is_known: Callable[[str], bool],
+                 wants_detail: Callable[[TenderListing], bool] | None = None) -> DiscoveryResult:
         """Walk listing pages newest-first; stop when N consecutive pages contain nothing new
-        (incremental discovery) or the page cap is reached."""
+        (incremental discovery) or the page cap is reached.
+
+        `wants_detail` lets the engine say which listings deserve a (more expensive) detail fetch —
+        typically new or changed tenders whose title shows a possible match. Connectors that have
+        detail pages call it; others ignore it."""
         result = DiscoveryResult()
         max_pages = int(self.config.get("max_pages", self.settings.DISCOVERY_MAX_PAGES))
         stop_after = int(self.config.get("stop_after_known_pages", self.settings.DISCOVERY_STOP_AFTER_KNOWN_PAGES))

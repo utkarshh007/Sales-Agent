@@ -51,7 +51,8 @@ def prefilter(ctx: TenderContext, catalog: Catalog, settings: Settings, now: dat
 
     hits = _body_hits_are_material(catalog.lexicon_matches(ctx.title, ctx.document_text))
     oems = catalog.oem_mentions(ctx.title, ctx.document_text)
-    excl = catalog.exclusion_hits(ctx.title)
+    # the portal's product category ("Civil Works", "Electrical Works"…) is as telling as the title
+    excl = catalog.exclusion_hits(ctx.title + (f" | {ctx.category}" if ctx.category else ""))
     generic = catalog.has_generic_signal(ctx.title) or catalog.has_generic_signal(ctx.document_text[:20000])
     value, emd = deterministic_value(ctx)
     res = PrefilterResult("CONTINUE", lexicon_hits=hits, oem_hits=oems, exclusions=excl,
@@ -75,3 +76,19 @@ def prefilter(ctx: TenderContext, catalog: Catalog, settings: Settings, now: dat
         res.reason = (f"Service-only opportunity valued at {format_inr(value.amount_inr)} exceeds the "
                       f"{format_inr(settings.SERVICE_MAX_VALUE_INR)} service limit (deterministic; evidence: “{value.evidence}”).")
     return res
+
+
+def title_is_candidate(title: str, closing_at: datetime | None, catalog: Catalog, now: datetime | None = None) -> bool:
+    """Cheap listing-level screen used to decide whether a portal detail page is worth a request.
+    Deliberately looser than prefilter(): any capability, OEM or generic security signal qualifies,
+    unless the title is clearly non-cyber (exclusion) with no specific capability match."""
+    closing = as_utc(closing_at)
+    if closing is not None and closing < (now or utcnow()):
+        return False
+    hits = catalog.lexicon_matches(title)
+    oems = catalog.oem_mentions(title)
+    if oems or any(h.match_type in ("DIRECT", "SEMANTIC") for h in hits):
+        return True
+    if catalog.exclusion_hits(title):
+        return False
+    return bool(hits) or catalog.has_generic_signal(title)

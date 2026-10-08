@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -28,7 +29,7 @@ from app.engine import ACCEPTED, MANUAL_REVIEW, Decision, evaluate
 from app.llm.analyzer import Analyzer
 from app.models import (
     CapabilityRow, CapabilitySynonym, ExtractedRequirement, ManualReview, Oem, Portal, ProductRow, RejectionReason,
-    ScoreRow, Tender, TenderDocument, TenderMatch, TenderVersion,
+    ScoreRow, Tender, TenderDocument, TenderMatch, TenderSource, TenderVersion,
 )
 
 log = logging.getLogger(__name__)
@@ -66,45 +67,129 @@ def seed_reference_data(session: Session, catalog: Catalog) -> None:
 
 
 # ------------------------------------------------------------------ discovery
-def _content_hash(item: TenderListing) -> str:
-    return hashlib.sha256(json.dumps(item.content_signature(), sort_keys=True, default=str).encode()).hexdigest()
+def _hash(obj) -> str:
+    return hashlib.sha256(json.dumps(obj, sort_keys=True, default=str).encode()).hexdigest()
 
 
-def _apply_listing(t: Tender, item: TenderListing) -> None:
-    for f in ("title", "source_url", "portal_tender_id", "reference_number", "organization", "department", "location",
-              "category", "tender_type", "published_at", "closing_at", "opening_at", "tender_value_inr", "emd_inr",
-              "contact_info", "corrigendum"):
-        val = getattr(item, f)
-        if val is not None or f in ("corrigendum",):
-            setattr(t, f, val)
-    t.raw = item.raw
+LISTING_FIELDS = ("title", "reference_number", "organization", "department", "location", "published_at",
+                  "closing_at", "opening_at", "corrigendum", "contact_info")
+DETAIL_FIELDS = ("tender_value_inr", "emd_inr", "category", "tender_type", "location", "contact_info")
+
+
+def _snapshot(t: Tender) -> dict:
+    return json.loads(json.dumps({
+        "title": t.title, "reference_number": t.reference_number, "closing_at": t.closing_at,
+        "opening_at": t.opening_at, "corrigendum": t.corrigendum, "tender_value_inr": t.tender_value_inr,
+        "emd_inr": t.emd_inr, "category": t.category, "portal_text": (t.raw or {}).get("portal_text"),
+    }, default=str))
+
+
+def _norm(text: str | None) -> str:
+    return re.sub(r"[^a-z0-9]+", "", (text or "").lower())
+
+
+def find_cross_portal_match(session: Session, portal: Portal, item: TenderListing) -> tuple[Tender, str] | None:
+    """The same tender is often listed on several portals (CPPP aggregates GePNIC instances). Tender
+    IDs are only unique per portal, so an ID match must be confirmed by reference number or title."""
+    if not item.portal_tender_id:
+        return None
+    for t in session.scalars(select(Tender).where(Tender.portal_tender_id == item.portal_tender_id)):
+        if any(src.portal_id == portal.id for src in t.sources):
+            continue  # same portal => genuinely different tender
+        if item.reference_number and _norm(t.reference_number) == _norm(item.reference_number):
+            return t, "TENDER_ID+REF"
+        a, b = _norm(t.title), _norm(item.title)
+        if a and b and (a == b or (min(len(a), len(b)) >= 25 and (a.startswith(b) or b.startswith(a)))):
+            return t, "TENDER_ID+TITLE"
+    return None
+
+
+def _apply(t: Tender, item: TenderListing, *, listing_changed: bool, detail_changed: bool, primary: bool) -> list[str]:
+    """Copy fields from a listing onto the tender; returns the names of fields that changed."""
+    changed: list[str] = []
+
+    def put(field: str, value) -> None:
+        if value is not None and getattr(t, field) != value:
+            changed.append(field)
+            setattr(t, field, value)
+
+    if listing_changed:
+        for f in LISTING_FIELDS:
+            val = getattr(item, f)
+            if f == "title" and not primary and t.title:
+                continue  # keep the primary source's wording
+            if f == "corrigendum" and primary and val is None and t.corrigendum:
+                changed.append(f)
+                t.corrigendum = None
+                continue
+            put(f, val)
+    if detail_changed:
+        for f in DETAIL_FIELDS:
+            put(f, getattr(item, f))
+        raw = dict(t.raw or {})
+        if item.portal_text and raw.get("portal_text") != item.portal_text:
+            raw["portal_text"] = item.portal_text
+            changed.append("portal_text")
+        if item.raw.get("document_names"):
+            raw["document_names"] = item.raw["document_names"]
+        t.raw = raw
+    return changed
 
 
 def upsert_listing(session: Session, portal: Portal, connector: PortalConnector, item: TenderListing) -> tuple[Tender, str]:
-    """Returns (tender, NEW | UPDATED | UNCHANGED). Material changes create a new tender_version."""
+    """Returns (tender, NEW | MERGED | UPDATED | UNCHANGED). Material changes create a tender_version
+    and queue re-analysis; unchanged sightings only refresh last_seen_at."""
     fp = connector.fingerprint(item)
-    chash = _content_hash(item)
-    t = session.scalar(select(Tender).where(Tender.fingerprint == fp))
-    if t is not None and t.content_hash == chash:
-        return t, "UNCHANGED"
+    lhash = _hash(item.content_signature())
+    dsig = item.detail_signature()
+    dhash = _hash(dsig) if dsig is not None else None
+    src = session.scalar(select(TenderSource).where(TenderSource.fingerprint == fp))
+    now = utcnow()
 
-    if t is None:
-        t = Tender(portal_id=portal.id, fingerprint=fp, content_hash=chash, version=1, title=item.title)
-        _apply_listing(t, item)
-        status, change = "NEW", "first seen"
-        session.add(t)
-        session.flush()
+    if src is not None:
+        t = src.tender
+        listing_changed = src.listing_hash != lhash
+        detail_changed = dhash is not None and src.detail_hash != dhash
+        src.last_seen_at = now
+        if not listing_changed and not detail_changed:
+            return t, "UNCHANGED"
+        src.listing_hash = lhash
+        src.detail_hash = dhash or src.detail_hash
+        src.lookup_hint = item.lookup_hint or src.lookup_hint
+        changed = _apply(t, item, listing_changed=listing_changed, detail_changed=detail_changed,
+                         primary=t.portal_id == portal.id)
+        if not changed:
+            return t, "UNCHANGED"
+        status, change = "UPDATED", f"{portal.code} changed: " + ", ".join(dict.fromkeys(changed))
     else:
-        old = session.scalar(select(TenderVersion).where(TenderVersion.tender_id == t.id, TenderVersion.version == t.version))
-        before = (old.snapshot if old else {}) or {}
-        after = item.content_signature()
-        changed = [k for k in after if before.get(k) != after[k]]
-        t.version += 1
-        t.content_hash = chash
-        _apply_listing(t, item)
-        status, change = "UPDATED", "changed: " + ", ".join(changed)
-    session.add(TenderVersion(tender_id=t.id, version=t.version, content_hash=chash,
-                              snapshot=json.loads(json.dumps(item.content_signature(), default=str)), change_summary=change))
+        match = find_cross_portal_match(session, portal, item)
+        if match is not None:
+            t, basis = match
+            changed = _apply(t, item, listing_changed=True, detail_changed=dhash is not None, primary=False)
+            t.sources.append(TenderSource(portal_id=portal.id, fingerprint=fp, portal_tender_id=item.portal_tender_id,
+                                          source_url=item.source_url, lookup_hint=item.lookup_hint, listing_hash=lhash,
+                                          detail_hash=dhash, match_basis=basis))
+            if not changed:
+                audit.record(session, "TENDER_MERGED", tender_id=t.id, details={"portal": portal.code, "basis": basis})
+                session.flush()
+                return t, "MERGED"
+            status, change = "MERGED", f"also listed on {portal.code} ({basis}); added: " + ", ".join(dict.fromkeys(changed))
+        else:
+            t = Tender(portal_id=portal.id, fingerprint=fp, content_hash=lhash, version=0, title=item.title,
+                       source_url=item.source_url, portal_tender_id=item.portal_tender_id, raw=dict(item.raw))
+            session.add(t)
+            _apply(t, item, listing_changed=True, detail_changed=dhash is not None, primary=True)
+            t.sources.append(TenderSource(portal_id=portal.id, fingerprint=fp, portal_tender_id=item.portal_tender_id,
+                                          source_url=item.source_url, lookup_hint=item.lookup_hint, listing_hash=lhash,
+                                          detail_hash=dhash, match_basis="PRIMARY"))
+            session.flush()
+            status, change = "NEW", f"first seen on {portal.code}"
+
+    t.version += 1
+    snap = _snapshot(t)
+    t.content_hash = _hash(snap)
+    session.add(TenderVersion(tender_id=t.id, version=t.version, content_hash=t.content_hash, snapshot=snap,
+                              change_summary=change))
 
     known_urls = {d.source_url for d in t.documents}
     for ref in item.documents:
@@ -116,8 +201,8 @@ def upsert_listing(session: Session, portal: Portal, connector: PortalConnector,
     elif item.documents_blocker and t.documents_status in ("NONE", "BLOCKED_HUMAN_REQUIRED"):
         t.documents_status, t.blocker_note = "BLOCKED_HUMAN_REQUIRED", item.documents_blocker
     t.pipeline_status = "QUEUED"
-    audit.record(session, "TENDER_" + status, tender_id=t.id, details={"version": t.version, "change": change,
-                                                                        "source_url": t.source_url})
+    audit.record(session, "TENDER_" + status, tender_id=t.id,
+                 details={"version": t.version, "change": change, "portal": portal.code, "source_url": item.source_url})
     session.flush()
     if item.documents:
         jobs.enqueue(session, jobs.PROCESS_DOCUMENTS, {"tender_id": t.id}, dedupe_key=f"docs:{t.id}")
@@ -126,24 +211,39 @@ def upsert_listing(session: Session, portal: Portal, connector: PortalConnector,
     return t, status
 
 
-def discover_portal(session: Session, portal: Portal, settings: Settings, connector: PortalConnector | None = None) -> dict:
+def discover_portal(session: Session, portal: Portal, settings: Settings, connector: PortalConnector | None = None,
+                    catalog: Catalog | None = None) -> dict:
+    from app.catalog import get_catalog
+    from app.rules.prefilter import title_is_candidate
+
+    catalog = catalog or get_catalog()
     connector = connector or build_connector(portal.connector, portal.code, portal.config, settings)
-    known = set(session.scalars(select(Tender.fingerprint).where(Tender.portal_id == portal.id)))
-    result = connector.discover(lambda fp: fp in known)
-    counts = {"NEW": 0, "UPDATED": 0, "UNCHANGED": 0}
+    known = {fp: (lh, dh) for fp, lh, dh in session.execute(
+        select(TenderSource.fingerprint, TenderSource.listing_hash, TenderSource.detail_hash)
+        .where(TenderSource.portal_id == portal.id))}
+
+    def wants_detail(item: TenderListing) -> bool:
+        """Read a detail page only for plausible matches that are new, changed or never detailed."""
+        prev = known.get(connector.fingerprint(item))
+        if prev is not None and prev[0] == _hash(item.content_signature()) and prev[1] is not None:
+            return False
+        return title_is_candidate(item.title, item.closing_at, catalog)
+
+    result = connector.discover(lambda fp: fp in known, wants_detail)
+    counts = {"NEW": 0, "MERGED": 0, "UPDATED": 0, "UNCHANGED": 0}
     for item in result.items:
         try:
-            _, status = upsert_listing(session, portal, connector, item)
+            with session.begin_nested():  # a bad row rolls back alone, not the whole run
+                _, status = upsert_listing(session, portal, connector, item)
             counts[status] += 1
-        except Exception as e:  # one malformed row must not lose the whole run
-            session.rollback()
+        except Exception as e:
             log.exception("upsert failed")
-            result.errors.append(f"upsert {item.identity_key()}: {e}")
+            result.errors.append(f"upsert {item.identity_key()}: {type(e).__name__}: {e}")
     portal.last_run_at = utcnow()
     portal.last_status = "ERROR" if result.errors and not result.items else (
         "BLOCKED" if result.blockers and not result.items else ("PARTIAL" if result.errors or result.blockers else "OK"))
-    portal.last_error = "\n".join(result.errors + result.blockers)[:4000] or None
-    summary = {"pages": result.pages_fetched, **counts, "blockers": result.blockers, "errors": result.errors,
+    portal.last_error = "\n".join(result.errors[:20] + result.blockers[:20])[:4000] or None
+    summary = {"pages": result.pages_fetched, **counts, "blockers": result.blockers[:50], "errors": result.errors[:50],
                "stopped": result.stopped_reason}
     audit.record(session, "DISCOVERY_RUN", details={"portal": portal.code, **summary})
     session.commit()
@@ -233,14 +333,18 @@ def process_documents(session: Session, tender: Tender, settings: Settings, conn
 def build_context(tender: Tender, settings: Settings) -> TenderContext:
     docs = [DocText(d.filename, d.extracted_text or "", d.sections or {})
             for d in tender.documents if d.status == "EXTRACTED" and d.extracted_text]
-    full = "\n\n".join(f"=== {d.filename} ===\n{d.text}" for d in docs)
+    portal_text = (tender.raw or {}).get("portal_text") or ""
+    full = "\n\n".join(([f"=== PORTAL TENDER DETAILS ===\n{portal_text}"] if portal_text else [])
+                       + [f"=== {d.filename} ===\n{d.text}" for d in docs])
     llm_ctx, truncated = build_llm_context(docs, settings.LLM_MAX_CONTEXT_CHARS) if docs else ("", False)
+    if portal_text:  # small and always relevant: sent ahead of document excerpts
+        llm_ctx = f"=== PORTAL TENDER DETAILS (published on the portal page) ===\n{portal_text}" + (f"\n\n{llm_ctx}" if llm_ctx else "")
     return TenderContext(
         title=tender.title, organization=tender.organization, reference_number=tender.reference_number,
         closing_at=as_utc(tender.closing_at), published_at=as_utc(tender.published_at),
         portal_value_inr=tender.tender_value_inr, portal_emd_inr=tender.emd_inr, location=tender.location,
         category=tender.category, document_text=full, llm_context=llm_ctx, llm_context_truncated=truncated,
-        has_documents=bool(docs),
+        has_documents=bool(docs), has_portal_detail=bool(portal_text),
     )
 
 

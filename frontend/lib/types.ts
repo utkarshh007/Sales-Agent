@@ -24,6 +24,7 @@ export interface TenderRow {
   reference_number: string | null;
   portal_tender_id: string | null;
   score_parts?: Record<string, [number | null, number]> | null;
+  source_count?: number;
 }
 
 export interface ScoreComponent {
@@ -86,6 +87,9 @@ export interface TenderDetail extends TenderRow {
     emd_inr?: number | null;
     components?: { description: string; kind: string; value_inr: number | null; evidence: string }[];
   };
+  portal_text: string | null;
+  document_names: string | null;
+  sources: { portal_code: string; portal_name: string; match_basis: string; source_url: string | null; lookup_hint: string | null; first_seen_at: string | null; last_seen_at: string | null }[];
   matches: MatchOut[];
   score_breakdown: Record<string, ScoreComponent> | null;
   documents: {

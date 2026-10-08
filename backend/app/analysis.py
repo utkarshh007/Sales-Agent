@@ -84,6 +84,7 @@ class TenderContext:
     llm_context: str = ""  # targeted excerpts sent to the LLM
     llm_context_truncated: bool = False
     has_documents: bool = False
+    has_portal_detail: bool = False  # structured detail page read from the portal (value, category, description)
     metadata: dict[str, Any] = field(default_factory=dict)
 
 

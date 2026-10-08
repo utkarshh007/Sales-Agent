@@ -15,7 +15,8 @@ from app.config import get_settings
 from app.db import as_utc, get_db, utcnow
 from app.documents.values import format_inr
 from app.models import (
-    Alert, AuditLog, ManualReview, Portal, RejectionReason, ScoreRow, Tender, TenderDocument, TenderMatch, TenderVersion, User,
+    Alert, AuditLog, ManualReview, Portal, RejectionReason, ScoreRow, Tender, TenderDocument, TenderMatch, TenderSource,
+    TenderVersion, User,
 )
 from app.pipeline import store_upload
 from app.security import create_access_token, hash_password, limiter, validate_password, verify_password
@@ -80,10 +81,10 @@ def overview(db: Session = Depends(get_db), _: User = Depends(current_user)):
         return db.scalar(select(func.count(Tender.id)).where(*conds)) or 0
 
     by_portal = []
-    for p in db.scalars(select(Portal).order_by(Portal.id)):
+    for p in db.scalars(select(Portal).where(Portal.enabled.is_(True)).order_by(Portal.id)):
         by_portal.append({"code": p.code, "name": p.name, "enabled": p.enabled, "last_run_at": _iso(p.last_run_at),
                           "last_status": p.last_status, "last_error": p.last_error, "blocker": p.blocker,
-                          "tenders": count(Tender.portal_id == p.id)})
+                          "tenders": db.scalar(select(func.count(TenderSource.id)).where(TenderSource.portal_id == p.id)) or 0})
     return {
         "new_24h": count(Tender.first_seen_at >= now - timedelta(hours=24)),
         "hot": count(live, open_, Tender.priority == "HOT"),
@@ -119,6 +120,7 @@ def _row(t: Tender) -> dict:
         "match_confidence": t.match_confidence, "decision": t.decision, "pipeline_status": t.pipeline_status,
         "documents_status": t.documents_status, "flags": t.flags, "portal_code": t.portal.code if t.portal else None,
         "reference_number": t.reference_number, "portal_tender_id": t.portal_tender_id,
+        "source_count": len(t.sources) or 1,
     }
 
 
@@ -164,8 +166,9 @@ def list_tenders(
         conds.append(Tender.priority == priority)
     if opportunity_type:
         conds.append(Tender.opportunity_type == opportunity_type)
-    if portal:
-        conds.append(Tender.portal.has(Portal.code == portal))
+    if portal:  # a tender matches if any portal it is listed on matches
+        conds.append(or_(Tender.portal.has(Portal.code == portal),
+                         Tender.sources.any(TenderSource.portal.has(Portal.code == portal))))
     if q:
         like = f"%{q}%"
         conds.append(or_(Tender.title.ilike(like), Tender.organization.ilike(like), Tender.reference_number.ilike(like),
@@ -204,6 +207,11 @@ def tender_detail(tender_id: int, db: Session = Depends(get_db), _: User = Depen
         "analysis_mode": t.analysis_mode, "model_version": t.model_version,
         "relevance_reason": t.relevance_reason, "rejection_reason": t.rejection_reason, "summary": t.summary,
         "recommendation": t.recommendation, "extracted": t.extracted, "value_analysis": t.value_analysis,
+        "portal_text": (t.raw or {}).get("portal_text"), "document_names": (t.raw or {}).get("document_names"),
+        "sources": [{"portal_code": src.portal.code, "portal_name": src.portal.name, "match_basis": src.match_basis,
+                     "source_url": src.source_url, "lookup_hint": src.lookup_hint,
+                     "first_seen_at": _iso(src.first_seen_at), "last_seen_at": _iso(src.last_seen_at)}
+                    for src in t.sources],
         "value_display": {k: format_inr(t.value_analysis.get(k)) for k in ("total_value_inr", "service_value_inr", "product_value_inr", "emd_inr")}
         if t.value_analysis else {},
         "matches": [{
@@ -290,6 +298,8 @@ def create_manual_tender(body: ManualTenderIn, db: Session = Depends(get_db), us
                closing_at=as_utc(body.closing_at), tender_value_inr=body.tender_value_inr,
                source_url=str(body.source_url) if body.source_url else None, location=body.location,
                pipeline_status="QUEUED", raw={"entered_by": user.email})
+    t.sources.append(TenderSource(portal_id=portal.id, fingerprint=fp, portal_tender_id=None, source_url=t.source_url,
+                                  listing_hash=fp, match_basis="PRIMARY"))
     db.add(t)
     db.flush()
     db.add(TenderVersion(tender_id=t.id, version=1, content_hash=fp, snapshot=body.model_dump(mode="json"), change_summary="manual entry"))

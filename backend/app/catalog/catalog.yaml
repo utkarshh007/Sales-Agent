@@ -259,11 +259,12 @@ capabilities:
     offering: SERVICE
     synonyms:
       - {p: 'managed detection (and|&) response', t: D, sub: Managed Detection & Response}
-      - {p: 'MDR( services)?', t: D, cs: true, sub: Managed Detection & Response}
+      # bare "MDR" is usually Major District Road; require service context
+      - {p: 'MDR (services?|solution|platform|provider|subscription)', t: D, sub: Managed Detection & Response}
       - {p: '(security operations? cent(re|er)|SOC)( as a service| services| operations| monitoring)', t: S, sub: SOC as a Service}
       - {p: '(24 ?x ?7|round the clock) (security )?monitoring', t: S, sub: 24x7 Security Monitoring}
       - {p: 'managed SOC', t: S, sub: Managed SOC}
-      - {p: 'SOC', t: A, cs: true, sub: Security Operations Centre}
+      - {p: '(setting up|set-up|setup|establishment|implementation) of (a |the )?(SOC|security operations? cent(re|er))', t: S, sub: SOC Setup}
   - id: mss_infra_mgmt
     name: Security Infrastructure Management
     category: F
@@ -272,6 +273,7 @@ capabilities:
       - {p: 'security (infrastructure|devices?) management', t: D, sub: Security Infrastructure Management}
       - {p: 'managed security services?', t: S, sub: Managed Security Services}
       - {p: 'facility management of (security|SOC)', t: S, sub: Security Facility Management}
+      - {p: 'cyber ?security (infrastructure|solutions?|systems?|equipment|products|appliances)', t: A, sub: Cyber Security Infrastructure}
   - id: mss_cloud
     name: Managed Cloud Security
     category: F
@@ -317,7 +319,8 @@ capabilities:
     offering: PRODUCT
     synonyms:
       - {p: 'data (loss|leak(age)?) prevention', t: D, sub: Data Loss Prevention}
-      - {p: 'DLP', t: D, cs: true, sub: Data Loss Prevention}
+      # bare "DLP" usually means Defect Liability Period in Indian tenders; require cyber context
+      - {p: '(endpoint|network|email|data|cloud|enterprise) DLP|DLP (solution|software|tool|suite|platform|licen[cs]es?|agents?|policies|policy engine)', t: D, sub: Data Loss Prevention}
       - {p: '(endpoint|network) data protection', t: A, sub: Data Protection}
   - id: prd_xdr
     name: XDR / EDR
@@ -338,7 +341,7 @@ capabilities:
     offering: PRODUCT
     synonyms:
       - {p: 'privileged (access|account|identity|user) management', t: D, sub: Privileged Access Management}
-      - {p: 'PAM', t: D, cs: true, sub: Privileged Access Management}
+      - {p: 'PAM (solution|tool|software|licen[cs]es?|system|platform|suite)', t: D, sub: Privileged Access Management}
       - {p: 'privileged (session|password) (management|recording|vault(ing)?)', t: S, sub: Privileged Session Management}
       - {p: 'session recording', t: A, sub: Session Recording}
   - id: prd_iam
@@ -562,6 +565,8 @@ exclusions:
   - {p: 'hiring of (vehicles?|taxis?|cars?|buses)', reason: Vehicle hiring}
   - {p: 'security deposit', reason: Financial term (security deposit), not cyber}
   - {p: 'food security|social security|national security guard', reason: Non-cyber use of "security"}
+  - {p: 'cyber ?knife', reason: Medical device (CyberKnife radiosurgery)}
+  - {p: 'defect liability period', reason: Contract term (DLP = defect liability period)}
 
 # Generic security wording — insufficient on its own (section 15). Routes to LLM / review, never auto-accepts.
 generic_signals:

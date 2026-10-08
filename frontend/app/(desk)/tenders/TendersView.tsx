@@ -21,6 +21,12 @@ export default function TendersView() {
   const pathname = usePathname();
   const [result, setResult] = useState<{ key: string; data: { total: number; items: TenderRow[]; page: number; page_size: number } } | null>(null);
   const [error, setError] = useState("");
+  const [sources, setSources] = useState<{ code: string; name: string }[]>([]);
+
+  useEffect(() => {
+    api<{ code: string; name: string; enabled: boolean }[]>("/portals")
+      .then((ps) => setSources(ps.filter((p) => p.enabled))).catch(() => {});
+  }, []);
 
   const query = new URLSearchParams(params.toString());
   if (!query.has("decision")) query.set("decision", "LIVE");
@@ -78,6 +84,16 @@ export default function TendersView() {
             </select>
           </label>
         ))}
+        {sources.length > 1 && (
+          <label className="text-sm">
+            <span className="mr-2 text-muted">Source</span>
+            <select value={query.get("portal") ?? ""} onChange={(e) => set("portal", e.target.value)}
+              className="max-w-[16rem] rounded-md border border-line bg-surface px-2 py-1">
+              <option value="">All sources</option>
+              {sources.map((s) => <option key={s.code} value={s.code}>{s.name}</option>)}
+            </select>
+          </label>
+        )}
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={!!query.get("include_closed")} onChange={(e) => set("include_closed", e.target.checked ? "true" : "")} />
           Include closed

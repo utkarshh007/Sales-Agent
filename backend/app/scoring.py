@@ -43,6 +43,7 @@ def compute_score(
     commercial: CommercialDecision,
     analysis: Analysis | None,
     has_documents: bool,
+    has_portal_detail: bool = False,
     closing_at: datetime | None,
     organization: str | None,
     other_oems_named: list[str] | None = None,
@@ -83,8 +84,12 @@ def compute_score(
         put("technical", cov, f"{len(mapped)} of {len(reqs)} extracted technical requirements map directly/semantically "
                               f"to company capabilities ({len(partial)} adjacent).")
     else:
-        cap_pct = 0.75 if has_documents else 0.6
-        basis = "documents (keyword evidence, requirements not itemised)" if has_documents else "title and listing metadata only (no documents yet)"
+        if has_documents:
+            cap_pct, basis = 0.75, "documents (keyword evidence, requirements not itemised)"
+        elif has_portal_detail:
+            cap_pct, basis = 0.68, "the portal's tender detail page (no documents yet)"
+        else:
+            cap_pct, basis = 0.6, "title and listing metadata only (no documents yet)"
         put("technical", cap_pct * cap_factor,
             f"Technical coverage estimated from {basis}; capped at {int(cap_pct * 100)}% until requirements are itemised by the LLM.")
 

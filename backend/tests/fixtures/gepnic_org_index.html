@@ -1,0 +1,1954 @@
+<head>
+	<base target="_self">
+	<title>Government eProcurement System</title>
+</head>
+<!-- BEGIN: HEADER -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>eProcurement System</title>
+<script type="text/javascript">djConfig = {"baseRelativePath":"/eprocure/app?service=asset&path=%2Fgep%2F","preventBackButtonFix":false,"parseWidgets":false} </script>
+
+<script type="text/javascript" src="/eprocure/app?service=asset&path=%2Fgep%2Fgep.js"></script><script type="text/javascript" src="/eprocure/app?service=asset&path=%2Fgep%2Fgep2.js"></script>
+<script type="text/javascript">
+dojo.registerModulePath("tapestry", "/eprocure/app?service=asset&path=%2Ftapestry%2F");
+</script>
+<script type="text/javascript" src="/eprocure/app?service=asset&path=%2Ftapestry%2Fcore.js"></script>
+<script type="text/javascript">
+dojo.require("tapestry.namespace");
+tapestry.requestEncoding='UTF-8';
+</script>
+<link rel="stylesheet" type="text/css" href="/eprocure/css/nicgep_web_style.css" />
+</head>
+<head>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<noscript>
+	<meta http-equiv="Refresh" content="2;url=https://etenders.gov.in/eprocure/app?page=ErrorNotice&amp;service=page" id="Any"></meta> 
+</noscript>
+<link href="includes/dialog/dialog_box.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="images/nation.ico" ></link>
+<link href="includes/dialog/nicgep_color_theme.css" rel="stylesheet" type="text/css">
+
+
+
+<!-- Javascript -->
+<script language="JavaScript" type="text/JavaScript" src="includes/evaluator.js"></script>
+<script language="javascript" src="includes/MessageDigest.js" ></script>
+<script language="JavaScript" type="text/JavaScript" src="includes/dialog/dialog_box.js"></script>
+<!-- End -->
+<script language="JavaScript" type="text/JavaScript">
+<!--
+	function MM_swapImgRestore() { //v3.0
+	  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+	}
+	
+	function MM_preloadImages() { //v3.0
+	  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+	    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+	    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+	}
+	
+	function MM_findObj(n, d) { //v4.01
+	  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+	    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+	  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+	  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+	  if(!x && d.getElementById) x=d.getElementById(n); return x;
+	}
+	
+	function MM_swapImage() { //v3.0
+	  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+	   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+	}
+//-->
+</script>
+
+</head>
+
+
+<body onLoad="MM_preloadImages('images/homeb.png','images/contactb.png','images/sitemapb.png')" onunload="" onpageshow="if (event.persisted) noBack();" ondragstart="return false;" id="Body">
+<script type="text/javascript"><!--
+dojo.require("tapestry.event");
+// --></script>
+	
+	<script type="text/javascript">
+
+	if(navigator.appName == 'Microsoft Internet Explorer')
+	{
+	document.onkeydown = fnCheckKeysMIE;
+	}
+	else if(navigator.appName == 'Netscape')
+	{
+	document.onkeydown = fnCheckKeysNMF;
+	}
+	
+	function fnCheckKeysNMF(event)
+	{
+	
+	var e=event? event : window.event;
+	var event_element=e.target? e.target : e.srcElement;
+	
+	if (event.ctrlKey && (event.keyCode==78 || event.keyCode==84 || event.which==78 || event.which==84))
+	{
+	return false;
+	}
+	
+	if (event.altKey && (event.keyCode==37 || event.which==37))
+	{
+	return false;
+	}
+	
+	if (event.keyCode==8 && (event_element.tagName != 'INPUT' && event_element.tagName != 'TEXTAREA'))
+	{
+	return false;
+	}
+	
+	}
+	
+	function fnCheckKeysMIE()
+	{
+	
+	var e=event? event : window.event;
+	var event_element=e.target? e.target : e.srcElement;
+	
+	if (event.ctrlKey && (event.keyCode==78 || event.keyCode==84 || event.which==78 || event.which==84))
+	{
+	return false;
+	}
+	
+	if (event.altKey && (event.keyCode==37 || event.which==37))
+	{
+	return false;
+	}
+	
+	if (event.keyCode==8 && (event_element.tagName != 'INPUT' && event_element.tagName != 'TEXTAREA'))
+	{
+	return false;
+	}
+	
+	}
+
+	window.history.forward();
+	function noBack(){ window.history.forward(); }
+	
+	</script>
+		
+	<div id="content">
+		<table width="1004" height="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+			<tr>
+				<td valign="top" height="40">
+					<table width="1000" border="0" align="center" cellspacing="0" cellpadding="0">
+    <tr> 
+    <td>
+		<table width="100%" height="22" border="0" cellpadding="0" cellspacing="0" id="Menu">
+		 <td width="210" height="22" align="right" class="date topBannerGradient"><a id="link1" name="link1" class="Menu" href="/eprocure/app?page=WebScreenReaderAccess&amp;service=page">Screen Reader Access</a>
+				
+		  </td>
+		</table>
+		</td>
+		</tr>
+   <tr> 
+    <td width="1005"><img border="0" width="1005" alt="Logo" src="images/topban.png" usemap="#Map" height="83" id="Any_0"></img></td>
+  </tr>		
+  <tr>
+    <td height="1" class="topBannerLine"></td>
+  </tr>
+
+  <tr> 
+    <td>
+		<table width="100%" height="22" border="0" cellpadding="0" cellspacing="0" id="Menu">
+        <tr> 
+          <td width="210" height="22" align="center" class="date primaryBg">
+				08-Oct-2026 
+		  </td>
+          <td align="center" class="secondaryBg">
+	           <span id="If">
+					<span id="For">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Search" class="Menu" href="/eprocure/app?page=FrontEndAdvancedSearch&amp;service=page" target="_self">Search</a>
+						</span>
+						<span class="divider1" id="Insert_2">|</span>
+					</span><span id="For_0">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Active Tenders" class="Menu" href="/eprocure/app?page=FrontEndLatestActiveTenders&amp;service=page" target="_self">Active Tenders</a>
+						</span>
+						<span class="divider1" id="Insert_2_0">|</span>
+					</span><span id="For_1">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Tenders by Closing Date" class="Menu" href="/eprocure/app?page=FrontEndListTendersbyDate&amp;service=page" target="_self">Tenders by Closing Date</a>
+						</span>
+						<span class="divider1" id="Insert_2_1">|</span>
+					</span><span id="For_2">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Corrigendum" class="Menu" href="/eprocure/app?page=FrontEndLatestActiveCorrigendums&amp;service=page" target="_self">Corrigendum</a>
+						</span>
+						<span class="divider1" id="Insert_2_2">|</span>
+					</span><span id="For_3">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Results of Tenders" class="Menu" href="/eprocure/app?page=ResultOfTenders&amp;service=page" target="_self">Results of Tenders</a>
+						</span>
+						
+					</span>
+	          </span>
+	          
+          </td>
+          <td width="215" valign="middle" class="primaryBg">
+			<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr> 
+                <td width="28%"><div align="center"><a id="homeLink" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image4','','images/homeb.png',1)" page="Home" href="/eprocure/app?service=restart"><img src="images/homea.png" alt="Home" name="Image4" width="47" height="18" border="0"></a></div></td>
+                <td width="40%"><div align="center"><a id="PageLink_6" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image5','','images/contactb.png',1)" href="/eprocure/app?page=FrontEndContactUs&amp;service=page"><img src="images/contacta.png" alt="Contact Us" name="Image5" width="78" height="18" border="0"></a></div></td>
+                <td width="32%"><div align="center"><a id="PageLink_7" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image6','','images/sitemapb.png',1)" href="/eprocure/app?page=SiteMap&amp;service=page"><img src="images/sitemapa.png" alt="Sitemap" name="Image6" width="63" height="18" border="0"></a></div></td>                 
+              </tr>
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+	<td>
+		<table width="100%" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="notice" width="20" align="right"><img src="images/notice.png" width="15" height="16" alt="Notices" /> </td>
+		<td class="notice_strip">
+			<marquee align="left" id="gepNotice" onMouseover="this.stop();" onMouseout="this.start();" scrolldelay="200">
+				
+				<span>
+					Government eProcurement System
+				</span>
+			</marquee>
+		</td>
+	</tr>
+</table>
+	</td>
+  </tr>
+</table>
+<map name="Map">
+  <a id="PageLink_8" shape="circle" coords="43,43,37" href="/eprocure/app?page=Home&amp;service=page"></a>
+</map>
+
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0">
+						<tr>
+
+							<td width="214" class="navigation"><script language="javascript">
+
+	// Script to view document in popup
+	function popup(mylink, windowname)
+	{
+		if (! window.focus)return true;
+		var href;
+		if (typeof(mylink) == 'string')
+	 		href=mylink;
+		else
+			href=mylink.href;
+			window.open(href, "Popup", 'location=no, scrollbars=yes, toolbar=no, width=700, height=550, directories=no, menubar=no, resizable=yes, status=no, titlebar=yes');
+			return false;   
+	}
+
+</script>
+
+<table width="100%" height="100%" cellspacing="0" cellpadding="0" class="left_nav">	
+	
+	<tr> 
+         <td height="10"></td>
+     </tr>
+     	
+	<tr>
+		<td valign="top">
+			<table width="214" border="0" cellspacing="0" cellpadding="0">
+				<span id="If_2">
+					<tr id="For_5">
+						<span id="If_0_4">
+							<span id="If_3">
+			             		<tr> 
+					             	<td height="37" background="images/textbg.png" align="center"><a id="GenericLink" rel="noopener noreferrer" title="MIS Reports" class="link1" href="https://gepnicreports.gov.in/eprocreports/etenders/" target="_blank">MIS Reports</a></td>
+					             </tr>
+			             	 </span>
+			             	 
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_6">
+						<span id="If_0_5">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink" title="Tenders by Location" class="link1" href="/eprocure/app?page=FrontEndTendersByLocation&amp;service=page" target="_self">Tenders by Location</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_7">
+						<span id="If_0_6">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_0" title="Tenders by Organisation" class="link1" href="/eprocure/app?page=FrontEndTendersByOrganisation&amp;service=page" target="_self">Tenders by Organisation</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_8">
+						<span id="If_0_7">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_1" title="Tenders by Classification" class="link1" href="/eprocure/app?page=FrontEndTendersByClassification&amp;service=page" target="_self">Tenders by Classification</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_9">
+						<span id="If_0_8">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_2" title="Tenders in Archive" class="link1" href="/eprocure/app?page=FrontEndTendersInArchive&amp;service=page" target="_self">Tenders in Archive</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_10">
+						<span id="If_0_9">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_3" title="Tenders Status" class="link1" href="/eprocure/app?page=WebTenderStatusLists&amp;service=page" target="_self">Tenders Status</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_11">
+						<span id="If_0_10">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_4" title="Cancelled/Retendered" class="link1" href="/eprocure/app?page=WebCancelledTenderLists&amp;service=page" target="_self">Cancelled/Retendered</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_12">
+						<span id="If_0_11">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_5" title="Downloads" class="link1" href="/eprocure/app?page=StandardBiddingDocuments&amp;service=page" target="_self">Downloads</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_13">
+						<span id="If_0_12">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_9" title="D" class="link1" href="/eprocure/app?page=FrontEndDebarmentList&amp;service=page" target="_self">Debarment List</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_14">
+						<span id="If_0_13">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_10" title="Announcements" class="link1" href="/eprocure/app?page=WebAnnouncements&amp;service=page" target="_self">Announcements</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_15">
+						<span id="If_0_14">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_11" title="Awards" class="link1" href="/eprocure/app?page=WebAwards&amp;service=page" target="_self">Awards</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_16">
+						<span id="If_0_15">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_12" title="Site compatibility" class="link1" href="/eprocure/app?page=SiteComp&amp;service=page" target="_self">Site compatibility</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_17">
+						
+					</tr><tr id="For_18">
+						
+					</tr><tr id="For_19">
+						
+					</tr><tr id="For_20">
+						
+					</tr>
+					
+					<tr> 
+		                <td height="10"></td>
+		             </tr>
+				</span>
+				
+				<span id="If_15">
+					<tr> 
+	               		<td height="30" align="center">
+							<table width="160" height="114" border="0" align="center" cellpadding="0" cellspacing="0">
+								<tr id="For_22"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0" rel="noopener noreferrer" title="link" href="https://gepnic.gov.in" target="_blank"><img border="0" width="160" src="images/Gepnic Logo.png" height="34" id="Any_1"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr><tr id="For_23"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0_0" rel="noopener noreferrer" title="National Portal of India - External Link that open in a new window" href="http://india.gov.in" target="_blank"><img border="0" width="160" src="images/indiagovin.png" height="34" id="Any_2"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr><tr id="For_24"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0_1" rel="noopener noreferrer" title="Government e-Marketing of India - External link that opens in a new window" href="https://gem.gov.in" target="_blank"><img border="0" width="160" src="images/gem.png" height="34" id="Any_3"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr><tr id="For_25"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0_2" rel="noopener noreferrer" title="Central Public Procurement Portal - External Link that opens in a new Window" href="http://eprocure.gov.in/cppp" target="_blank"><img border="0" width="160" src="images/cppp-img.png" height="34" id="Any_4"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr>
+							</table>
+				 		</td>
+	             	</tr>					
+				</span>	
+				
+				<tr> 
+					<td height="30" align="center">&nbsp;</td>
+			  	</tr>							
+			  	
+			</table>
+		</td>
+	</tr>
+	
+</table></td>
+							<td class="page_content" valign="top">
+							<!-- Page content starts here -->
+								
+	<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+		<tr>
+			<td valign="top" height="100%">
+				<!-- Page Content -->
+					<!-- Content Area -->
+					<table width="100%" cellspacing="0" cellpadding="0" border="0" height="100%">
+						<tr>
+							<td class="page_content" height="100%" valign="top">
+								<table width="100%" cellspacing="0" cellpadding="0" border="0">
+									<form method="post" action="/eprocure/app" id="TendersByOrganisationForm">
+<div style="display:none;" id="TendersByOrganisationFormhidden"><input type="hidden" name="formids" value="tokenSecret,If_17,tenderCategory,productCategory,tenderExpire,captchaText,captcha,Search,If_0_21,iterRows_0" />
+<input type="hidden" name="seedids" value="ZH4sIAAAAAAAAAF1QQW7CMBAMh/5kjz7EoQWujdRWSCmtChLHyIQFrCa7ke1WSt/Ur/EHNjEgxMWe8XjHM/4/Jg9/STJajArl0f3aCiFVrdn3W8VNy4QUBkzBWEIn2KP3lqlHrSxr3OTstoM0J3EJoCdqecC6lpNn6uBJ5bzt4tUVt7mhaFRb+taiznf9xCs7yKZCyhSyVL3UHkHPzpalhscLzAQeuMFCxsXlU9L2sJzckml8bsEhdroKsygUuAvvSD/C3lDi2OrODvT4VpFQY/WFJD3PZVYD8Xn34faGrDdBPkVKNJCeAHig7ktXAQAA" />
+<input type="hidden" name="component" value="TendersByOrganisationForm" />
+<input type="hidden" name="page" value="FrontEndTendersByOrganisation" />
+<input type="hidden" name="service" value="direct" />
+<input type="hidden" name="session" value="T" />
+<input type="hidden" name="submitmode" value="" />
+<input type="hidden" name="submitname" value="" />
+<input type="hidden" name="tokenSecret" id="tokenSecret" value="SXe1FQgyOh++BWnQFlsTCb6K/cfm8P71W0MQEm+Dum0fkiYHvzDrgUfmgLCN/CPrO" />
+<input type="hidden" name="If_17" value="F" />
+<input type="hidden" name="If_0_21" value="T" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWQsU7DMBCGL6EdaCVUITGCLLE7SIxMUSeQBUMRu0murlFyDrYbpQsjSwcY4BWY+ii8AwxZGXgD4hapcNsvff+nu1t9Qd9ZSJSpOemMK6w4ktd+wcemLA1dzyyiMKSuCCfealJCO3/03dLB27SNoScg1rmHkbiTtUwKSSoJ+JmAgcPMUB7SPTxAJGDo1oYbWczRw/6fykbdlXb9TNttp6m67fYCxwPH1+pl+/z+dPwRQ3QB/TrIGgujLXQ5L2/RPq5eD4cvn8sYoKlgMycuWHu/acfDaZqes7G0yjBhVHeZzhyTlLO0KDTmbIK21hk61n2jkrRgwuf/HNEPvOIEgEIBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTMLAaZygLl8Zcw6Dm6hDn6Obu6KIS7Ogb4+wUrOPq5KLgGhnoG+Lr6hSh4+rl4Oir4hLjoOoa7evqgaGcCAB7rt1M9AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQcKQaZygLlMZUwqDt6KrjmpWfmpaaCHKAQnFpUlpmcWqzgk5mbWZKaoqDh6Oka7KOJoo8ZAMJFlPU2AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQwFYNMZYHyJpQwSDtmFhXkF5UUKziWlmTkFwE9rpCfpuCZl5KZiKKWBQDPivxpKgEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwScLAaZygLlMZcwaDrmlRZnJGaXZCqEZaZkVJaWKPhlpifmKvhk5maWpKYoaDgGe4R5+nlqouhkBQAZpo96OAEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRwFINMZYHyGEsY1B2LgNpyMhUC8stTixSAfi5IzKtUCCgr0VPwKUlR0FXwdA8OCQhA0ccGAGT+QeM2AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0eCmIAEQazUg/R7D2AldrLEQkm/3k32Jtzunrt7x9lY2qRQQV/BKo/iO8TiWgvfwGwixEz3w/d9zOIbes5CIk3NNKVMYslQe/IP7NIoZfRtbhG50fJa4423pCUn509/Wn30MW0j6HKIKPMw5DNRi6QQWiYBP+fQd5ganYV1D4/Q4TBw68JEFBV6OPynbNIrad/nZLdOU66+OwgcCxxbp+fty+fzaBlB5wp6dYg1FoZbaFypO7RPi/eTwdvXPAJoStjcqwvV7t869nB2YZWpLGbxBHNKC3TxmKRQMSdFHrMdfu8X0aepoi4BAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0ciakCCYKkc2FjtPYCd6WRV0GC/5sbLyN3uOTs5zsbSJoUW+gpW6XwN30GLay18A28TITrdD9/3MfMv6HmGJHOVsjRWGZYKrZDcqaErCmdHE0bUzmZnFi+EyWaavOx9N3bn9bqJoKsholRgoG9MZZLc2CwJ+KGGTY9jZ9OwbuEeOhr6flG4NPkUBbb/KMt0K23IhHjl1GX73VbgVODUIj1rnt4f9z8i6BxDrwqxmmGwgk6nxRXyw/xlt//8OYsA6hKW9+ZDtfu71gQOjlrB5I4xPkFhF58byuOh49KxEXI21lSQYPpPXP8B2pg9PTcBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTMKQaZygLlaZQwyDhlJGYXJSo4pSYWK/gm5iWmp+YC/a/glJ9YlIKimBMASBS6JSsBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRRFX5akMAEJgqUyYBObWbCxsFNElCEWkfTj7mR2JPtmnXlZ1sbSJoUW+gWCVT7Ff9BiWwv/wJ1EiL7qXjj38BZf0PEOYm1LjibhWhVcIRm64yc2zy1eZU4pYVFfohqRM6iF8bT7XeP226SOoC0gMilBX9zIUsZTiToO+JGArleJxTS0W7iHloCeXxrGcjpTBFt/Jit1M9qgzLj1piqa7zYDxwPHl+p5/fT+uPcRQesCOmWQVQ76a2g4y6+Ve1i87PSeP+cRQFXA6g58sLZ/2yvB4XEmnSQ2kpg0iQ2NljkTJjekUjY4syUxO2HnmBrJTpGUK5zxav+fp/sDbxvbRUYBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWPsU7DMBBAr1E7QBCqkBhBlhiAxfkANtiQBZWK2E1zpIbkbGwnJAsjSwcY4BeY+in8AwxZGfgD4hapcNtJ7z3dzb9g4Cwkma44qQnP0HAkr3zDT3RRaLqYWkShKTsnHHurKBPK+d3vlrbfrtsI+gIilXoYihtZySSXlCUBPxKw7nCiKQ3bHTxAT0DsFoVLmZfoYeuPskx30pqfKrtyatNdtxk4Hji+SM/a5/envY8IeqcwqEKstjBcQWdlcYX2cf66E798ziKA2sBySheq/d9tw8P+sb6VVrORvkfLxqUxecO6z42khh2MDplQhfKY/vPiH1BIkP42AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsU7DMBBAr6EdaBGqkBhBkRjYnA9goxuyAAnEikxyOIbYDmcnShdGlg4w0F9g6qfwDzBkZeAPiFukwk130ntPt/iCgSNIpK2ZUSmTWDI0Xvkpm1itrbnMCZFbI88MXnhSRnLl/P53a3bfbtsI+hwilXkY8ztRi6QQRiYBP+IwdJhak4XrAR6hx2HkloUrUVToYeePskp30qbPFa2dpuy+2w4cCxxbpmfty/vzwUcEvRMY1CHWEIzX0Gmlb5CeFvO90evnLAJoSljNtQvV/u+14eHwmESuRVl5EvGERHqPFAuTxee2mOpu50orj9k/b+sH1iG2AjYBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUrDUBSGT0M7aFGKILgoAfcbnN0sOMhFB8X92hyTI8m98eQkpIKOLh100Fdw6qP4DjpkdfANzG2F6r/98P0f//wLBiVDlLhaWZqoBAuFVkimauzy3NmLlBG1s8mZxXNhsommUva+W7v9dt0G0NcQUCww0jemNlFmbBJ5/FDDeokTZ2PfbuEBehqG5cJwabIKBbb+TJbqbrQmKfFq0xTdu03PKc+phXrWPr8/7X8E0DuBQe1lDcNoBZ1W+RXy4/x1d/jyOQsAmgKWuS+9tf/bdgQOjtikuSkqYRN2vzKchsfIQhndIYdjx4VjI+RsqCknwfifYeMHVBmngUABAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOMU7DQBBFx1ZSQKQoQqIEWaJfH4COiAK0ggJEv7Enm0X2rNkdW6ahpEkBBVyBKkfgCNwBCrcU3CDZBCkw3Zfee5rFN/S9g1TbRpDJhMZKILHhezG2ZWnpeuYQpSV9SXjFzpCWxvPhT0f7b9Muhp6E2OQMI3mrGpUWinQa8GMJux4zS3lYd/AAkYSBXxduVFEjw94fZZNeSTs8M27rtNXqu2HgRODEOj3vnj+ejj5jiM6h34RY62C0hS7qcoLucfF6MHj5mscAbQWbe/eh2vtdEUN64qzKM+U5OSVtCDH8kYwt+bpgReyTM8qNSqQpDWP+zx8uAaEaqYE+AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWPsUoDQRBAJ0cCmoAGwVI5Yr/3AZZXKYsWiv2am2xWsrPn7uQ4GyuxSaGF/oJVPsV/0OJaC//A20SITjfw3mNm+QW94CHTrhJkxkJjKZDY8J3InbWOLqceUTrS54QX7A1paQIffje0/zZpEuhKSEzBMJQ3qlLZTJHOIn4soR9w7KiI2y3cQ0fCIKwKV2o2R4a9P8o63UrbPDV+49Rle91O5ETkxCq9aJ7fn44+EuicQq+KsdrDcAOdze01+sfl68Hg5XORANQlrOchxGr3d9tiGOVo23/T3PnSecXGUeom6QkVRqXSWMbin7L7A2CjfoUxAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRoFoNMZYHyBEoYpJ2Bvi1KzFFwzUlNLinKB4ZBsYJPZm5mSWoKqloAhyxQ1SoBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwSsKAaZygLlMZcwSDoDfVuUmKMQqqcQoKfgnlis4JOZm1mSmoKiUhAA1WyEjigBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwScLgaZygLliZUwyDsDfVuUmKMQnliUmpFfWgx0hYJzflFBflFiSWZ+Hop6IQDiiasyLgEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOMU7DQBBFJ1ZSQCQUgRAVyBL9+gCU6dAKiiD6xR7Wg+JZszuxnIaSJgUUcAWqHIU7QOGWghuQTZAC033pvadZfsEgeMisaxRTrizWCllI5mrsqsrxVekRtWN7yTgRT2w1BTn57vjw7bZLoK8hoUJgpO9MY7KpYZtF/EzDbsDccRHXPTxAT8MwrAvXZjpDgf0/yia9knakJL912nr13V7kVOTUOr3ont+fTj8S6J3DoImx1sNoC13Mqhv0j8vX4+HL5yIBaGvYHIZY7f+uVOBo7PKSOJ2UVM+NL1JNFQkW/7iDH1Kj6hMmAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWPsU7DMBRFX6NmgEqoQjCCLDHjfABjJ5AFEkXsxnlJjJLnYDtRWBhh6AAD/AJTP6X/AENWBv6AukUqvO1K9xzdN/+C2FlIctNy0ornWHMkr/09n5iqMnRVWERhKL8gnHqrKRfa+cPvnvbfsz6CoYBIpx7G4la2Mikl5UmonwjYdqgMpSHdwQMMBIzcynAtywY97P5B1uoltOULbTdMVy/X7YQeDz2+Us/6l8Xz0UcEgzOI2yDrLIw3pfOmukH7OH87GL1+ziKArob1xS5Yh7/pycPxxDSkdMlMxqZKh9czrZiklJ1S2oS9smSX6FBaVfyj934Ak4oGqjwBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwSoF4NMZYHyFEsYpFwSc/NTEosUgG7KSa1UcM4vKsgvSizJzM9DUSoKAAGgeEUpAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOMU7DQBBFJ1ZSQCSIkKADWYJ6fQDKUKEFJIjol3iwB9mzZndimYaSJgUUcAWqnARxByjcUnADsglSYLovvfc0sy/oeQdJZmvFNFYZVgpZSO7U0Jal5VHuELXl7IzxQhxxpsnL3nfL26/XbQRdDRGlAgN9Y2qTFIazJOCHGtY9ji2nYd3CPXQ09P2icGmKCQps/VGW6bm0Jjm5ldNU8+82AqcCpxbpafv0/rj/EUHnGHp1iDUOBivodFJeoXuYvez2nz+nEUBTwfLefKh2f9emwMERFjnFJyjOxueGinhoXWWdEbIcaypJMP0n7fwAaWYOXjMBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUrDUBSGT0Mr2IIUQZyUgM43D+BYB5GLChb32+SYXEnuifeehLh0dOmgg76CUx/Fd9Ahq4NvYG4rVM/2w/d9nOUXDJyFKKVaGB2LFEuBhjU/iAkVBZlpZhElmfTS4DVbbVKpHR9+t2bv7bYNoC8h0AnDWN6pWkW5Mmnk8RMJQ4cxmcSve5hDT8LIrQo3Kq+QYfePsk530jZn2m6cpuy+2/Gc8JxYpRft8/vT0UcAvXMY1D7WWBhvoIuqmKF9XL4ejF4+FwFAU8L65s5X+79ri+H4FPNMh1eU6xjDM6pc90Y4IVuSVazJhJKTf9L+DxqrWGczAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTUFINMZYHyuEoYFF3z0jPzUlNBtisEFOVnpSaXFCtoeOalZCZqKviUpOih6JAAAPm+0W4wAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQ0FINMZYHyWIDOdnf09FFwTyxW8MnMzSxJTUFRIAkAMkZRqx8BAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwSUFYNMZYHy+EoYRNwdPX0UNDzzUjITNRV8MnMzS1JTUBRJAQDtutcJIwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQcKAaZygLlMZYwqLo7evoo+AJ1JebkF6UqBKSWFOUnZ6TmZiYn5hQr+GTmZpakpqDokgYASl4RIzQBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwSsLwaZygLlMZUwCLoDvZen4J5YrOCTmZtZkpqCokIGAIObUuwgAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0eCaECCINhEAvZ7D2CZRmTRQrFfc+NmJDe77s4dZ2Npk0ILfQWrPIrvoMW1Fr6B2USITvfD933M4gt6MUBuXa2YJsqiV8hCcq/GriwdX04DonZszxkvJBBbTVEOv1vef7tpM+hqyKgQGOhbU5t8ZtjmCT/WsBNx4rhI6w4eoKOhH1eFKzOrUGDvj7JOL6VtmVLYOI1ffrebOJU4tUrP2+f3p6OPDDqn0KtTrAkw2EBnVXmN4XHxOuy/fM4zgMbD+lRM1e7v2hI4OCEuqiiGR2PnPYaRppIEi3/g8AcDGPy4JwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTMKgaZygLliZUwsHp4hrgGo4jKAQBayBxUFAEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwScKQaZygLlMZYwCHv4+Cg4ZeaXpCZnKPhk5maWpKagqJEHAK4z7Q4iAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQoF4NMZYHyxEoYRDx8fBR8MtNSkxOLUoGM3MyS1BQURQoAqwiFoyMBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQ0FYNMZYHy+EoYRD0CnH0UnDLz00pTc4oVfDJzM0tSU1BUKQIAEG5g1iQBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQcKgaZygLlMZYwqHl6hvgqBBQB9RaVJGYrhKQmZ+Tl5+SnZ6YWK7jll+alJJZk5uehaFMCAHX4xgE1AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWPsU7DMBBAr6EdoFJVIXUERapYnQ9gZCoyZaBid5OrY5Scg+1E6cLI0gEG+AWmfgr/0A5ZGfgD4hapcNtJ7z3drb+gZw1EUleMVMwkFgzJKbdkVzrPNc1Sg8g1yVvCO2cUSa6sO/9uaPSxaALocghU4mDIH0QlokyQjDx+yeHEYqwp8dsjPEGHQ9/uCvciK9HB6R9ln26lY5cqc3Dqor1u4DnmObZLr5rXz5fxJoDONfQqH6sNDA/QtMznaJ7X72f9t+0qAKgL2M+R9dXu7zZwcDGhRAkKJ2Tbp0uHoV6EM4xT0pmWy/BGJEbYf9b4B8wRAyY0AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0ciaECCYKkcmNa9B7ASC1EWI0Tt1+y4GbmbPXc3x9lY2qTQQl/BKo/iO2hxrYVvYDYRotP98H0fM/uCjneQGVsJppEwWArkQOFeHNmisHwxdojSshkwDoMjNpJ82P1uePvtpkmgLSEhHaAnb1WlslyxySJ+IGHD48iyjusOHqAloesXhSuVTzDA1h9lmZ5L62FMbuXU5fy7zciJyIlFeto8vz/tfSTQOoVOFWO1g94KOpsU1+geZ6873ZfPaQJQl7C8Sx+r7d+1FqB/wpoUpwPK9w+1YkqPlU/PHVUqYCqpoID6n9T/ARA/cXczAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0eu0IAEwVI5EME0ew9gaRVZzIFiv+bWzcjd7Lk7Oc7G0iaFFvoKVvcovoMW11r4BmYTITrdD9/3Me0XxN5BamwtCKfC6EpoYuR7cWrL0tLlzGktLZkJ6Qt2SEai54PvjvbebroI+hIizBmG8lbVKi0UmTTgJxK2vZ5aysO6gwfoSRj4VeFKFXPNsPtHWaeX0hbP0G2cplp+txM4ETixSi+65/enw48IemcQ1yHWOBhuoPN5ea3dY/u6P3j5XEQATQXra32o9n9XzDAaU46KJlgkmWZnSfkkc1gr1onEElnnyfE4y+Ton3n0A6FDNuY4AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsU4CQRCGhwsUSGKIiXSaIyaWew9gSaXZoFFCv3DrsuZu9pwdLmdjaUOhhb6CFY/iO2BxrYVvIAsm6HR/8n1fZvkFLU+QGFcKtFNhdCE0suUHMXB57nA0I62lQ3OJ+obJopHW8/F3jYfvt3UETQmRTRm68k6VKskUmiTgZxL2vJ46TMO6h0doSOj4TWGssrlmOPijbNNrqc0zSzunKtbf7QdOBE5s0ov65eP5ZBVB4wJaZYhVBN0dNJznE01Py7ejzuvnIgKoCthez4dq83e1GfrnmFqF8ZUjjq+VzeKBo8KRYuswlpyKf8bpD5JdidwwAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRMKgaZygLlsZcwCHvmpWQmKvgXlKTmKPhk5maWpKagqFEHAEvjsnciAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWQsU7DMBBAr1E7QKWqQuoIisRSMTgfwFgWkAUDFbtprq5RfDa2E4WFkaUDDPALTP0U/qEMWRn4A+IWqXDbSe89nW71BT3vIJOmYqRmTKJlSEGFBzYxWhuaLhwiNySvCK+DUyS58uHou6HR+7xJoMshUXmAIb8TlcgKQTKL+CmHfY8zQ3nc7uEROhz6flO4EUWJAQ7+KNt0K+2FhXI7p7btdYPIscixTXrZvHw8H68T6FxAr4qx2sFwB12W+hbd0+rtsP/6uUwAagvbGflY7f5ugwAn55QrkU5N6ZTX6RlWWBir2xekE+OscSIoQykPOfunjn8AL5ZnkTkBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRoFYNMZYHyGEsYZD3zUooSUzIS80qLMxTcE4sV3IsyUxR8MnMzS1JTUFRrAgDmvW8gLAEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWPsUoDQRCGJ0dSaECCYKms2KjF3gNYikhk0SIiadfc5LKSmz13546zsbRJoUV8Bas8iu+gxbUWvoG3iRCd7of/+/hn8QUd7yBObSnJjGSKuURiww/y1GaZpeuJQ1SW0ivCATtDqTKe975r2nkb1xG0FUQmYeipO13qeKopjUP9RMGmx5GlJKR7eISWgq5fGm70tECG7T/ISt1AGzwxbs1UebNuK/Rk6Mmlela/vD8ffETQuoBOGWSVg966dFlkt+ieFq+73fnnLAKocljd0Adr+zftM8R9ajYVWfOzZmNJKE7EoTi3JQs7Fn1KjBZnxOhyZzwe/eOPfwAUuqldPgEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwSoFYNMZYHy2EoYpD2DnP39FDzzSlKL8hJLMvPzEnMUfDJzM0tSU1DUagMA4cl83SoBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTkFoNMZYHy+EoYRDyDXH0UNDz9XDwdNRV8MnMzS1JTUBTpAAA9uy/nIwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRMKQaZygLl8QKd7ZWRmFSaqBCQX55apOBTkoKiQBcA9ElitB8BAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwS0F4NMZYHymIBu8M7Py07MU/Dxc1fwyczNLElNQVGiBwAu0FrHIQEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsU7DMBCGr1E6QCVUITGCLDHjPABjN+QCAsRumsM5lNjBvkbpwsjSAQZ4BaY+Cu8AQ1YG3oC6RSrc9kvf9+kWX9APHjLjGmlpIg3WEi0Tz+TIVZWzV4VHVM6aM4uX7MkaRYEPvju793bbJZAqSChnGKo73eis1NZkET9WsB1w4mwe1z08QE/BIKwK17qcIsPuH2WdXkpbXJDfOG29/G4ncjJycpWed8/vT4cfCfROoN/EWOthuIFOp9UN+sfF6/7g5XOeALQ1rM+FWE1/V8pwNNZ5MdPi3OscQyHGyN6JC02lGDlfO6+ZnBWKKmLM/9nZD1QhNU88AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsU7DMBCGr1E7lEqoQmIDFIndYWdkQEKmDCD2ozG2UXIO9iUKCyNLBxjgFZj6KLxDGbIy8AbULVLhtl/6vk83/4JB8JBp1wiyU6FVJRSx5Qdx4srS0ZXxSklH+oLUJXtLWtrAB98d7b7fdgn0JSQ2ZxjLO2wwK5B0FvFjCVtBTR3lcd3DI/QkjMKqcI1FrRh2/ijr9FIasrF+47TV8rvtyInIiVV61r18PB8uEuidwaCJsdbDeANN6vJG+af52/7o9XOWALQVrM+EWO3/riHD3jka9BgMe0wnyLXHIj3FkErOxT/46AdO1CeQKwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQkFYNMZYHyGEsYxH1TsxIVQouAhF9memKuQkBZiYJPSQqKOkMAuM7zGCYBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0tSaECCYKkcSNo9sLVMJxsFFfs1N9mM3O2eu5PjbCxtUmihj6BVHsV30OJaC9/A20SITvfD933M8gt6wUNqXCUtTaTBUqJl4js5ckXh7OXMIypnzZnFC/ZkjaLAB9+N3XubNgK6CgRlDAN1oyud5tqaNOLHCrYDTpzN4rqFe+go6IdV4Urnc2TY/aOs0620xTPyG6cu2+92IicjJ1fpRfP0/nj4IaBzAr0qxmoPgw10Oi+u0T8sX/b7z58LAVCXsL7XEKvd3yUYhuOW1ZSMkb1LzjXlycj50nnN5GyiqCDG7J919ANykBihNAEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAE2PsU7DMBRFX6J2gEqoQmKkitTdGRgZy1QZGEDsbvvqGCXPru1EYWFESB1ggF9g6qfwD3TIysAfEDdD+7YrnXt03+YX+s5CKnXFSM2ZRMOQvPJPbKKLQtN9ZhG5JnlLeOetIsmV86O/hs6+lk0MPQ6xWngY8kdRiTQXJNOAX3I4djjXtAhpBc8QcRi4neFB5CV6OD2odOq2dOQzZfed2rTrTgLHAsd26nXz/v02/okhmkK/CrLawnAP3ZTFDO3L5vN88LFdxwC1ge5eXbD2uhAlHkbXZfu2MiJPJtoabYVXmhK9TK4wz9QhDhf/T6P9Ti0BAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQ0F4NMZYHyZEoYxH1L8zJLMvPzihU881IyExV8MnMzS1JTUNSZAAAL/xNNJgEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsU7DMBCGr1EzQCVUITEwgCIx15mYGLMhq0hQsZvWdY2Ss7GvUVgYWTrAAK/A1EfhHWDIysAbYKdIhVt+3en7P936C1LvIFemZqinTEnLJJKme1aYqjI4WTgpuUF1gfKKnEbFtafj7xYP3uZtAn0OiZ4RDPmtqEVeClR5xM847Ho5NTiL2x08QI/DwHeGa1EuJcH+n8pGHUo7tNBu22ls+G4vcixyrFOv2uf3p5OPBHrnkNZR1jgYbqHxsrqR7nH9ejR4+VwlAI2FzRz6aO3/binBaCxIGxRlVgirKeSlVOGQTZxAb42jrDAuZIf9a5/+AHKxq6I8AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsU7DMBCGL1E7QCVUITGCLCFGnI2lE4QJWUWCiN00h2uUnIPtVmFhZOkAA7wCUx+Fd4AhKwNvQJwiFW75dafv/3TLL+g7C4kyc056whVWHMlrf89TU5aGsqlFFIbUOeGlt5qU0M7vfTe083bTxNATEOvcw1DcyrlMCkkqCfhIwKbDiaE8bHfwAJGAgesMV7KYoYftP5WVui1t+Km2605dtd9tBY4HjnfqRfP8/rT/EUN0Bv15kNUWhmtoPCuv0T4uX3cHL5+LGKCuYDUHLlh7v1vkYTSWXhuSBUtlpX2bF6jaA8usJFcZ61lqbJsdxg7Z8ekJy5BytO6f6+gHUpFU70oBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0dSmIAEwU4lkH6vtLAULGSJhaL1mptsRu5mz93JcVpY2qTQQl/BKo/iO2hxrYVvYDYRotP98H0fs/iCTvCQWlcpprGyWCpkIblTx64oHF9MPaJ2bM8Yz8UTW01BDr4b3n2bNAm0NSSUCfT1jalMmhu2acSPNHQDjh1ncd3CA7Q09MKqcGnyGQrs/FHW6aW0JVPyG6cul99tR05FTq3S8+b5/Wn4kUDrFDpVjNUe+htoNCuu0T8uXvd7L5/zBKAuYX1XIVbbv6srsDcyQo5NPjhBL5TTPfow0FSQYPYPPvwB3KTVfSsBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRBAJ2dSmIAEwVJZsJW9VrBMI7JEMGIprLlxb+Rud93dHGdjaZNCC/2FVPkU/0GLay38A7MXITrdMO89ZvkFPe8gVabimqZcoeWoA4UHPjJlafRl7hCF0epc4yQ40kqQDwffjd5b3DYJdAUklAUYijtZybSQWqURPxHQ9zg1OovbPTxCR8DAt4UrWcwwwO4fZZ1eSdshJ7dxarv6bidyPHK8Tc+bl/fnw48EOmfQq2KsdjDcQONZeYPuafm2P3j9nCcAtYX1XPtY7f5uWwGOxjKQ0bJgp6RyNrGIGbuQVLCRcda49soElRQw+ycf/wAp/ZWNOwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAE2QsU7DMBBAL1E6QCVUITGCIsHszIgJsQCyygBiN43rGCXnYF9CujCydIABfqFT/4KVf4AhK0P/gLgZ2ttOeu/pdMs/GDgLiTI1Qz1hSpZMImmasQtTFAbvMislN6huUN6S1ai4dnS0avFgMW1DiDiEOiUY8UdRiyQXqBKPn3HYdXJiMPXbE7xAwGHo1oV7kVeSYH9L6dOdtEOZthunKbvr9jzHPMfW6Xn7/v12/BNCcA2D2scaC6MNNK6KB2lfl5+Hw4/feQjQlNBP5Hw16pfgi+BkLEgbFHl8qVX2LGYuPq8oM7b7QGym8RWmWmxLcPoPQ4oCFzMBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWQsUoDQRCGJ0simIAEwVI5SL+HrZaplCUWEfv1bnJZuZs9ZzfH2VjapNBCX8Eqj+I7xOJaC9/A20SITvcz3/8xzOoLeo4hzmwlySQyw1IieeMf5NgWhaXrOSMqS9kV4dSzoUwZ50++Gzp6nzUCugqEST0M1Z2udJxryuKAnyvoO0wspSHdwyN0FAzcxnCj8wV6OPxT2arb0r6fG9516rK97iBwMnByo142Lx/Po7WAziX0qiCrGYY7aLIobpGfVm/Hg9fPpQCoS9jOngvW7m8SHk4n2htLOo8uaGa5aFPionH7AsZoilyZBF27SyyXlrXH9J/h7Achqk0MQAEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOMU7DQBBFJ1ZSQCQUIaUEWaJfS7Qp06FVQALRL/aw2cieNbtjyzSUNCmggCtQ5SjcAQq3FNwAr4MUmO6P3n/6my8YeQeJtrUgkwqNpUBiw/dibovC0tXSIUpL+pzwkp0hLY3n4++Wpm+3bQRDCZHJGCZypWqV5Ip0EvCZhH2PqaUspDt4gIGEse8N1yqvkOHwT2Wr7kp7vDRu12nKbt1B4ETgRK9et8/vTycfEQzOYFQHWeNgsoMWVXGD7nHzejR++VxHAE0J2zM+WIe/acpwulBsLKk8vnB2hSn7eG6pm1ml4d8FV1rXM7E0hWHM/ilmPzwGD9pBAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQsKAaZygLlMZYwqPollmTm5yXmKATnJubkKHjmpZSCHJlarOCcX1SQXwSWRtFlAwA+OfM3NAEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRsKgaZygLlcZQwiPmllgcXJCanKnjmpWQmKvhk5maWpKagKLMFAO4W9CQlAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUrDUBSGT0M7aECK4GgJuN+4Cy6li1yqoLhfk9PkSnJuvPc0xsXRpYMO+gpOfRTfQYesDr6BuW2h+m8/fP/Hv/yGgbMQZ6YWpBORYSWQWPODGJuyNHSVW0RpKDsnvGSrKZPa8einpYP3WRtAX0KgU4ahvFW1igtFWezxEwm7DhNDqW938Ag9CaFbGa5VMUeG/T+Ttbob7XCu7XbTVN27Pc8Jz4mVetG+fDwffQbQO4NB7WWNheEWms7LG7RPy7fD8PVrEQA0Fawzct7a37SQ4XhqLOfRRDlGS9GkwKR7kkQX5h5tNDa2MlaxNhRJXWrG9J/g9Bf2Dwp5PwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWQsUoDQRCGJ0eCaECCYKks2O89gIVFFEWWWBjs17vN3crtzrk7Oc7G0iaFFlraWuVRfActrrXwDby9CNGp5ofv/xhm+QUD7yDOsOJWJzxTJVeWNN3xMRqDdpo7pQTa7MKqS3LaZkJ72v9u7O7brImgLyDSKcFI3MhKxoW0WRzwQwFbXiVo05Bu4R56Aoa+M1zJYq4Idv5UVuq2tEm5dutOXbbXbQeOB4536kXz9P548BFB7xwGVZDVDkZraDI318o9LF/2hs+fiwigLmE1rz5Y+79pg+B0go5ydiI9KWfZmbSpTpyckWft2uUC0Xh2rCpVYGna57AxuhKdJI2WCW00qfSf9+gHRZz7c1YBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRoF4NMZYHymEoYWP1CXJ19UEQdACx3DcsUAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwScLQaZygLlMZYwyPuFBDgrBDt6+igE+Ie7Bik4+/sGOPpFKvh4+nqGuLqgqHcEAAAbMLQuAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0dSaECCYKeyYGex9wB2plKWRFDs17vJZeRu9tzdO08ES5sUWugrWOVRfActrrXwDcwmQnS6H77vY+Zf0HMW4szUkimRGZYS2ZO/k0NTFIYvphZRGc7GjOfeEmeKnN//bnnnbdJG0FUQUephoK51reNccxYH/EjBpsPEcBrWDTxAR0HfLQuXOq/Qw/YfZZVeSBt+SnbtNOXiu63AycDJZXrWPr8/HXxE0DmFXh1ijYXBGhpVxRXax/nrXv/lcxYBNCWs7t6Favd37Xo4HFVJjtqKM3OLVgyNLY3VngyL8USccEpaKCrIY/pPPf4BKo8LGzkBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0dSaECCYKksWNjtPYDlFYIsSaHYr7l1M3I3e+7OHWdjKUgKLfQVrOKb+A5aXGvhG5hNhOh0P3zfxyy+YBA8pNY1knAqramkIUa+lZkrS0fnM2+McmQnZM7YI1mFgQ++O9p7veoS6CtIMGcYqWvd6LTQZNOIHyvYDmbqKI/rBu6gp2AYVoULXdSGYfePsk4vpS2eod84bbX8bidyMnJylZ53T++Phx8J9E5h0MRY62G0gcZ1eWn8/eJlf/j8OU8A2grW9xZitf+7HhiOJlgITbkYa669LsSJDiJzvnJeMzoSCktkk//zsh/evD2mNgEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTMLgaZygLlMZYwSPn7uTsrhBRlFpQWJSoE5JenFikAPV6QmFeJotQFAOGD+ccpAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsUoDQRCGJ0tSaECCYKmc2O89gJ0igiwaUNJvcuPeSG733J07zsbSJoUW+goWkkfxHbS41sI3MJsI0el++L6PmX9BL3hIjaulpYk0WEq0THwnj11ROHuVe0TlrLmweMmerFEUeO+7tTuv162ArgJBGcNA3ehap1NtTRrxQwWbASfOZnHdwj10FPTDsjDS0woZtv8oq/RC2uCc/NppysV3W5GTkZPL9Kx9en88+BDQOYNeHWONh8EaOq+KMfqH+ctu//lzJgCaElb3FmK1+7sEw/6w8mOdHOXaa6bkVIdk6KnWjImighizf8bJD8DgfZ4wAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWQMU7DQBBFJ1ZSQCQUIVGCVqKBIusDUGKQQlYgBUS/2BNnwZ4167XlNJQ0KUIBV6BKyy24AxRuKbgB3gQpMN2X3n/6msUXdHIDfqxLTirkMWYcySo75cc6TTVdTQyi0BRfEF5aoygWKrd73zXtvI5rD9oCPBVZ6IlbWUo/kRT7Dj8SsJljqCly6R4eoCWgmy8N1zIp0ML2n8pK3ZQ27ESZdafKmnVbjuOO40v1rH56n+9/eNA6g07pZJWB3ho6L9IbNI+Ll93u8+fMA6gyWN1b7qzt3+RZCEZSJWxAYyObbUVoC4MswBITnaXNI1jzhUzSlB0MpSFp5Z08ZEKlymLE+mzYHw2Ck3/S0x85ZVuBUwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwScLwaZygLl2ZcwiAalFqcWlaUqOCXmZSv4pyl45qVkJqKocgcAQJUsNCQBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRIFYNMZYHyOEsYuII8Q1yDFXxKUvRQpDwAy0qwlBkBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQsLgaZygLl8ZUwWAa7OocGeYZEKgQEefqFePq5Kzj6uSj4QtnO/kEB/kGOIZ7+fgr+bgqefi6ejrrBAb7Onj4oJnkCAKWJomJIAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWPsUoDQRCGJ0dSaECCYKkc2MreA1imMixaGOzX3HoZuZ09d+eOs7G0SaGFvoJVHsV30OJaC9/A3SSQOMXAD9//MbP8gYF3kBW2EYQzUehKaGLkRzG2xliazp3W0lJxRfqaHVIh0fPJb0dHH3ddAn0JCeYMI3mvGpWVioos4ucS9r2eWcpjeoAn6EkY+pXhRpW1ZjjcqazVobTHc3TbTluF6w4iJyInVupF9/r5cvqVQG8CgybKWgejLXRZm1vtnpfvx8O370UC0FawnsxHa3+TBMPZVJfhSmPq8L1itOTTcVh1yYrYpxeUo0olGmSd/ytP/gDHn2FCOwEAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwQcKwaZygLlMZYwCIekFhUlKjjnpCbmKfhk5maWpKagqPEGAHBGYeIiAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwRMKwaZygLliZQwiIUE+fsHKDj7+7r5B4UEK/h4+nqGuLqgKPMBAP/RiGglAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOPU7DQBBGJ1ZSQCRkIVGCLEG9PgBlKtACBT/9Em82g7yzZndsmYaSJgUUcAWqHIU7hMItBTcgmyAFpvuk955m/gWD4CE3rhGEY2F0JTQx8oMYOWsdXU291tKRuSB9yR7JSAx88N3R3vukS6AvIcGCIZV3qlF5qcjkET+WsB302FER1z08Qk/CMKwKN6qsNcPuH2WdXkpbPEW/cdpq+d1O5ETkxCo9614+ng8XCfROYdDEWOsh3UDntb3V/mn+tj98/ZwlAG0F6ytDrPZ/V8pwdO0VYW2zkfOV84rRUeYm2QkVqDKJFlkX/6SzH9tiBbYzAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOPU4DMRBGJ6ukIJFQhEQJskSLvAegTIdMQPz1Jjt4Dbv2Mp6sloaSJgUUcAWqHIU7QLEtBTcgTpAC033Se08z/4JeIEiNr6WzE2mwkujY8r0c+bL07jwnROWdOXZ4xmSdUTbw7nfrtt+u2wS6ChKbMQzVja51Wmhn0ogfKOgHnHiXxXUHD9BRMAjLwqUupsiw9UdZpRfSBueW1k5TLb7bjJyMnFymZ+3z+9PeRwKdQ+jVMdYQDNfQeFpeIT3OX3cGL5+zBKCpYHW3IVa7v6vPsH/BrEmckM4w5OIImbw41bYQI0+VJ83WO6FsaRmzf/L4B/6PS2g7AQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTsLAaZygLlMZYwyIQlpmSUJeYpBOQXlSgEFOVnpSaXKPhk5maWpKagKPYHAHo+otYrAQAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwSoFINMZYHyWEsYJMIyixOzMxILEkvyEnMVAvKLShRCikqLS1AUBgAAgVgO8ycBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFWOsU4CQRCGhwsUiiHExE4Nif1eQ2dJZzaikdAv3Lq3hps9Z+cuZ2NpQ6GFvoIVj8I7YHGthW8gCybIdH/yfV9m8Q0tTxAbVwq0U2F0LjSy5ScxcFnmcJSS1tKhGaK+Y7JopPV8/lPjyed9HUFTQmQThq58UKWKZwpNHPBLCYdeTx0mYT3CMzQktP2mMFazQjMc/1O26bV0wKmlnVPl6+86gROBE5v0vH5bvl6sImhcQasMsYqgu4Oui2yi6WXxcdZ+/5pHAFUO2+v7UG3+rSOG07EYikFqE5VNFClU1LtxxL0RFZ734NtfgbC6eSsBAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwSkFINMZYHy2EoY+MIdA5z9gxV8MnMzS1JRpYMAQHG2gh0BAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAFvzloG1uIhBPz2/TC8vM1kvPbVALzWvJLOkUs85Pzc3Py8koyg11Sc/L90/LzW4pCgzL90ns7hE7uOTPNFlaU+YGFh8GJgyU0oYBHyyEssS9XMS89L1QcqtfRi4ilOT8/NSQLxChjoGRh8G7mKwCWGJOaWpJQxCSFogRgM1cZZkZBYh9FQUAF3HB1KnB1KnBza6+8mEM/3K95kYGL0YWMtAhlUUMQggFPmV5ialFrWtmSrLPeVBNxMDQ0UBAwTMKwaZygLlsZUwiEQm5pUUJSp45qVkJir4ZOZmlqSmoCgKBgBFgR8+IwEAAA==" />
+</div>
+										
+									<tr>
+										<td>
+											<!-- interface_elements -->
+												<table width="92%" border="0" align="center" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>&nbsp</td>
+													</tr>
+													<tr>
+														<td valign="left">
+															<table width="100%" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td valign="bottom" class="pageheader" align="left">Tender Search By Organisation</td>
+																	<td align="right" width="80"><a id="PageLink_13" title="Back" class="customButton_link" value="Back" href="/eprocure/app?page=Home&amp;service=page">Back</a></td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<tr>																									
+														<td>&nbsp</td>
+													</tr>
+													<tr>
+														<td>&nbsp</td>
+													</tr>
+													
+													<tr>
+														<td>
+															<table width="100%" cellspacing="0" cellpadding="0" class="list_table">
+																<tr class="list_header">
+																	<td colspan="4" class="list_header">Search</td>
+																</tr>		
+																			<TR>
+																					<td class="td_caption" width="15%" align="left">Tender Category</td>
+																					<td class="td_element" width="35%">
+																					<select name="tenderCategory" id="tenderCategory" style="width:200px;">
+<option value="0">-Select-</option>
+<option value="1">Goods</option>
+<option value="2">Services</option>
+<option value="3">Works</option>
+</select>																						
+																					</td>
+																					
+																					<td class="td_caption" width="15%" align="left">Product Category </td>
+																					<td class="td_element" width="35%">
+																						<select name="productCategory" id="productCategory" style="width:200px;">
+<option value="0">-Select-</option>
+<option value="1">Access Control System</option>
+<option value="2">Advertisement Services</option>
+<option value="3">Air Compressor</option>
+<option value="4">Allotment of Space</option>
+<option value="5">AMC/ Maintenance Contracts</option>
+<option value="6">Audio-Visual Equipment</option>
+<option value="7">Batteries and cells and accessories</option>
+<option value="8">Cables and Wires</option>
+<option value="9">Charter Hiring of Onshore Work-Over Rigs</option>
+<option value="10">Chemicals/Minerals</option>
+<option value="11">Civil Works</option>
+<option value="12">Civil Works - Bridges</option>
+<option value="13">Civil Works - Buildings</option>
+<option value="14">Civil Works - Canal</option>
+<option value="15">Civil Works - Highways</option>
+<option value="16">Civil Works - Others</option>
+<option value="17">Civil Works - Roads</option>
+<option value="18">Civil Works - Water Works</option>
+<option value="19">Computer- H/W</option>
+<option value="20">Computer- S/W</option>
+<option value="21">Construction Works</option>
+<option value="22">Consultancy</option>
+<option value="23">Consumables (Hospital / Lab)</option>
+<option value="24">Consumables - Paper/Printing/Photocopy Paper</option>
+<option value="25">Consumables- Raw materials</option>
+<option value="26">Crane Services</option>
+<option value="27">Drugs and Pharmaceutical Products</option>
+<option value="28">Electrical Goods/Equipment</option>
+<option value="29">Electrical Works</option>
+<option value="30">Electronic Components And Devices</option>
+<option value="31">Electronics Equipment</option>
+<option value="32">Equipments (Hospital / Lab)</option>
+<option value="33">Explosive</option>
+<option value="34">Facility Management Services</option>
+<option value="35">Fire &amp; Safety</option>
+<option value="36">Food Products</option>
+<option value="37">Handicrafts</option>
+<option value="38">Hiring of Vehicles</option>
+<option value="39">Hosekeeping/ Cleaning Works</option>
+<option value="40">Hotel/ Catering</option>
+<option value="41">Information Technology</option>
+<option value="42">Info. Tech. Services</option>
+<option value="43">Info. Tech. Services</option>
+<option value="44">Job Works</option>
+<option value="45">Laboratory and scientific equipment</option>
+<option value="46">Land/Building</option>
+<option value="47">Machineries/ Mechanical Engg Items</option>
+<option value="48">Machinery and Machining Tools</option>
+<option value="49">Manpower Supply</option>
+<option value="50">Marine Services</option>
+<option value="51">Marine Works</option>
+<option value="52">Mechanical Tools and Equipment</option>
+<option value="53">Medical Equipments/Waste</option>
+<option value="54">Metal Fabrication</option>
+<option value="55">Metal Plates</option>
+<option value="56">Metals - Ferrous</option>
+<option value="57">Mining</option>
+<option value="58">Miscellaneous Goods</option>
+<option value="59">Miscellaneous Services</option>
+<option value="60">Miscellaneous Works</option>
+<option value="61">Network /Communication Equipments</option>
+<option value="62">Non Consumables (Hospital / Lab)</option>
+<option value="63">OFC Laying Works</option>
+<option value="64">Oil/Gas</option>
+<option value="65">Pipes and Pipe related activities</option>
+<option value="66">Plant Protection Input/Equipment Works</option>
+<option value="67">Power/Energy Projects/Products</option>
+<option value="68">Publishing/Printing</option>
+<option value="69">Repair and Maintenance Services</option>
+<option value="70">Security System</option>
+<option value="71">Solar Water Heater Services</option>
+<option value="72">Solid Waste Management</option>
+<option value="73">Street Lighting</option>
+<option value="74">Supply, Erection and Commissioning</option>
+<option value="75">Support/Maintenance Service</option>
+<option value="76">Surveillance Equipments</option>
+<option value="77">Survey and Investigation services</option>
+<option value="78">TPI Agency</option>
+<option value="79">Transportation Services</option>
+<option value="80">Vehicles/Vehicle Spares</option>
+<option value="81">Weighing System</option>
+</select>
+																					</td>																																																							
+																				</TR>
+																				
+																				<TR>
+																					<td class="td_caption" width="15%" align="left">Tender Expire </td>
+																					<td class="td_element" width="35%">
+																						<select name="tenderExpire" id="tenderExpire" style="width:200px;">
+<option value="0">-Select-</option>
+<option value="1">Closing Today</option>
+<option value="2">Closing Tomorrow</option>
+<option value="3">Closing within 7 Days</option>
+<option value="4">Closing within 15 Days</option>
+<option value="5">Closing within 30 Days</option>
+<option value="6">Closing within 45 Days</option>
+<option value="7">Closing greater than 45 Days</option>
+</select>																						
+																					</td>																																																																																					
+																				</TR>	
+																				 <tr>
+																					<td colspan="6">
+																						 <table width="100%" cellspacing="0" cellpadding="0" class="list_table">
+																						 <tr>
+																							<td   align="middle">Enter Captcha</td>
+																						    <td ><input type="text" name="captchaText" value="" id="captchaText" size="5" autocomplete="off" maxlength="6" style="width:200px;" /></td>
+
+																						   <td>
+																								<img name="captchaImage" id="captchaImage" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL0AAAAuCAYAAAB9JRjdAAACqklEQVR42u2dQXbDMAhEdf9L00V3
+aZpI1sAM0vCel5ERfCPAuB3Doibx5sq+ZfxeFhvU0FvqDXqlMwjQWyrhjM+Xob8D+pZ+zoLe6Y2h
+v8PBL5H+FkdlOd75uqE39BZt6A1AM59ZDL2h73gaZ0PpQnbPPhV2e3rfLzqlNT8ed/+qjHwQ9Cmn
+yCnQDw708zZRMLRSijK5X0M/DzzFJjG7qGBUhkYI9ZNo4X5pwWAVqiiGHuLv2Nj8acVXI+jl6opI
+Cma7/oNv3NCfD32SrinQb+vVFfow9OXQK9mkBfS7a34rrJDQZzu5C/TKgQBuwwroVzolb34TUQA9
+u2hjQhY3QV/ZJtuEPlZabLEB/m3QM/TrAP2jVtoTRXf66LMPw7ffs4s2JvTjEOjfOmdxEQj0q5sb
+SdCj/HYC9Cy9dtLT9M4H84nOcGwIAMfwB+MFFLqbdCT0qp2kE6FXs8msvnCjVxk7Gfo/aUeIRTVH
++ppZpCkQgvRUg/WZqmHQ+0V1lQYR+jgsEEy1BzNGSAnQPzH09pBXR+iZ4E/O0WM7CovgQ6EPEvSZ
+uW1X6FngI+8HG9llGp0daSqhVy0cO0Evq4TayxF0lOsOfbWeV0IfItBXHO//rF369djTukqet52F
+FNpmTDH0teDToY9G0CcUvEGK9LIPdashPBT0QwB6ZB83cqA/ZuBMKOXDdSQKoyZMRzT0CQXc0dCP
+0fD0U/0TIGzoPU+/l0qiAkJaCxXtbMg8BAH6MfTmXsSg331j/7oOD3p0KpPV066Mzh3Gq5WgX/Q7
+LOWT7ONXF72sD0Auk092kWyxUsBv5DRLI+h1LGLoH6VhfuAtxwcCYgqoBr0fREOPBcInr8XQ2x2W
+C9ObrkWy5VDoI+uzRDL0s/taegHmk6s59FX/6qhrBH+0px+RoZXNxLBrjAAAAABJRU5ErkJggg==" class="image_style"></img>
+																						   &nbsp; &nbsp;
+																							<button type="button" name="captcha" id="captcha" style="border:0px; background-color:transparent;"><img src="images/refresh_new.png" border="0"/> Refresh</button>
+																						   
+																						   </td>
+																						   </tr>																			
+																						</table>
+																					</td>
+																				 </tr>
+																				 
+																				 <tr>
+																					<td colspan="2" class="notes">Provide Captcha and click on Search button to list By Organisation.</td>
+																				</tr>
+																																																									
+															</table>
+														</td>
+													</tr>	
+													<tr><td>&nbsp</td></tr>
+													<tr>
+														<td  class="td_element" colspan="2" align="right"> 
+															<a id="clear" title="Clear" class="customButton_link" value="Clear" href="/eprocure/app?component=clear&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T">Clear</a>
+															<input type="submit" name="Search" id="Search" border="0" onClick="return checkIf();" title="Search" value="Search" class="customButton" />
+														</td>
+													</tr>	
+													<tr>
+														<td>&nbsp;</td>
+													</tr>
+																								
+													<tr>
+														<td>&nbsp</td>
+													</tr>
+													<span id="If_0_21">	
+														<tr>
+															<td bgColor="#757575">
+															
+																
+
+<table border="0" bgColor="#f7f7f7" cellpadding="0" width="100%" cellspacing="1" id="table" class="list_table">
+	
+																	<tr class="list_header">																		
+																		<td width="5%" >S.No</td>
+																		<td width="70%" align="center">Organisation Name</td>
+																		<td width="25%" align="center" style="white-space: nowrap;">Tender Count</td>																																														
+																	</tr>																												
+																	
+
+
+	<tr class="even" id="informal">
+			
+																		<td align="left">1</td>																	        																												
+       																	<td align="left">AAI Cargo Logistics and Allied Services Company Ltd</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Sp8kbpWL9AOYjOXdZLA%2BMYw%3D%3D">     																	 
+       																	  3
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_0">
+			
+																		<td align="left">2</td>																	        																												
+       																	<td align="left">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_0" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Ss%2B%2FzAp6iQJnXsZXpNCfbKNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  15
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_1">
+			
+																		<td align="left">3</td>																	        																												
+       																	<td align="left">AI Engineering Services Limited (AIESL)</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_1" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SzfgzsWhxP%2Ba8K6Q3%2BWNwMtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_2">
+			
+																		<td align="left">4</td>																	        																												
+       																	<td align="left">Airports Authority of India</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_2" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SpUU0rj42FI3UoCfR2Ztdaw%3D%3D">     																	 
+       																	  144
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_3">
+			
+																		<td align="left">5</td>																	        																												
+       																	<td align="left">Anushakti Vidhyut Nigam Limited (ASHVINI)</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_3" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SOkCSwllMr6hdCNHMB0UMm9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  3
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_4">
+			
+																		<td align="left">6</td>																	        																												
+       																	<td align="left">Aravali Power Company Pvt. Ltd - IGSTPP</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_4" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SlSWDFjp48I0HvjstGkSyOA%3D%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_5">
+			
+																		<td align="left">7</td>																	        																												
+       																	<td align="left">Armoured Vehicles Nigam Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_5" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SbFtG1dOxj5VJbx0uDFM1JtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  23
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_6">
+			
+																		<td align="left">8</td>																	        																												
+       																	<td align="left">Bangalore Metro Rail Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_6" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SJQ2KYGoH5PYys2amFj77pdS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  6
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_7">
+			
+																		<td align="left">9</td>																	        																												
+       																	<td align="left">Bhakra Beas Management Board</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_7" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SRCa6VLBKLeg42bcHBop0otS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  40
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_8">
+			
+																		<td align="left">10</td>																	        																												
+       																	<td align="left">Bharat Sanchar Nigam Limited (Govt of India Enterprise)</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_8" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SJa4Ru2G8JZoRRYfmzk90CA%3D%3D">     																	 
+       																	  163
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_9">
+			
+																		<td align="left">11</td>																	        																												
+       																	<td align="left">Bokaro Power Supply Company (P) Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_9" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S6k75z33oc0pcHRfLnq58J9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  12
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_10">
+			
+																		<td align="left">12</td>																	        																												
+       																	<td align="left">Brahmaputra Cracker and Polymer Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_10" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SdSULsYN6UIcJpRc2ANugEA%3D%3D">     																	 
+       																	  3
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_11">
+			
+																		<td align="left">13</td>																	        																												
+       																	<td align="left">Brahmaputra Valley Fertilizer Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_11" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SC7VEasBb%2F7MRrJ6xK9sFyNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  24
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_12">
+			
+																		<td align="left">14</td>																	        																												
+       																	<td align="left">Broadcast Engineering Consultants India Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_12" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Sg1BsdrfnPtx3iFjov2PBV9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_13">
+			
+																		<td align="left">15</td>																	        																												
+       																	<td align="left">Cement Corporation of India Limted</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_13" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S5v%2BQk4U71hywqUxlAzvuMNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  8
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_14">
+			
+																		<td align="left">16</td>																	        																												
+       																	<td align="left">Central Electronics Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_14" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SkzhmvtV0s6%2BK1fjGtzn0vQ%3D%3D">     																	 
+       																	  16
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_15">
+			
+																		<td align="left">17</td>																	        																												
+       																	<td align="left">Central U. P. Gas Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_15" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=St9RKnYWlIM5LhNoBVAon2dS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  3
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_16">
+			
+																		<td align="left">18</td>																	        																												
+       																	<td align="left">Central Warehousing Corporation</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_16" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SFP6ZQzyKoS%2F99M3gj7bSqdS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  22
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_17">
+			
+																		<td align="left">19</td>																	        																												
+       																	<td align="left">Cochin Shipyard Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_17" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SXM%2FYCEphTGb9h5IHaViEmNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  32
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_18">
+			
+																		<td align="left">20</td>																	        																												
+       																	<td align="left">Council of Scientific and Industrial Research</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_18" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SGTcD%2BRUO7BhBfui0B%2FOiww%3D%3D">     																	 
+       																	  135
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_19">
+			
+																		<td align="left">21</td>																	        																												
+       																	<td align="left">Damodar Valley Corporation</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_19" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SkJrz7Zxd2odf1T7%2BlmIdCQ%3D%3D">     																	 
+       																	  33
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_20">
+			
+																		<td align="left">22</td>																	        																												
+       																	<td align="left">Delhi Metro Rail Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_20" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SoVS5sfO4uqKd00y3intK8NS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  15
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_21">
+			
+																		<td align="left">23</td>																	        																												
+       																	<td align="left">Delhi Police Housing Corporation Ltd</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_21" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SxEoGjdEAecb34LxmLKVOpNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  6
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_22">
+			
+																		<td align="left">24</td>																	        																												
+       																	<td align="left">Engineering Projects (India) Ltd.</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_22" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SfUQ%2BU3TXJ9hX%2FS4Z%2BBK%2F%2FdS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  10
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_23">
+			
+																		<td align="left">25</td>																	        																												
+       																	<td align="left">GAIL Gas Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_23" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SwwNwnkHC63IAe8zJ%2BO%2BKNtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  4
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_24">
+			
+																		<td align="left">26</td>																	        																												
+       																	<td align="left">GAIL (India) Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_24" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SuDy0AvOvz0K8nJXpCQmSudS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  14
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_25">
+			
+																		<td align="left">27</td>																	        																												
+       																	<td align="left">GAIL Mangalore Petrochemicals Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_25" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SSa%2F6yMO%2B1LV%2Beulo7nz2jtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_26">
+			
+																		<td align="left">28</td>																	        																												
+       																	<td align="left">Green Gas Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_26" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SO7iXJ7A2vi8u3Dyr5rXMxdS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_27">
+			
+																		<td align="left">29</td>																	        																												
+       																	<td align="left">Hindustan Copper Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_27" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SkGgnVv8TVOxLEj6HmQRJAQ%3D%3D">     																	 
+       																	  7
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_28">
+			
+																		<td align="left">30</td>																	        																												
+       																	<td align="left">HITES</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_28" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SWCYgOQ6%2BoWJgcrqIT%2B3UJ9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  22
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_29">
+			
+																		<td align="left">31</td>																	        																												
+       																	<td align="left">HLL Biotech Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_29" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SaFLtaxRjp1XZTpZAzubYLtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_30">
+			
+																		<td align="left">32</td>																	        																												
+       																	<td align="left">HLL Lifecare Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_30" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SZl5tMtOqbiAyrV7iCYHT0g%3D%3D">     																	 
+       																	  22
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_31">
+			
+																		<td align="left">33</td>																	        																												
+       																	<td align="left">HPCL Biofuels Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_31" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SvMYfZMoWPyCHYG0HjoSG49S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  14
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_32">
+			
+																		<td align="left">34</td>																	        																												
+       																	<td align="left">IITM Pravartak Technologies Foundation</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_32" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Sp2LOVRS0iAS4DA3hSjn5V9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_33">
+			
+																		<td align="left">35</td>																	        																												
+       																	<td align="left">Indian Institute of Technology Madras</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_33" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=So2%2B9tAgdUu57%2FfjN7BQj4A%3D%3D">     																	 
+       																	  14
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_34">
+			
+																		<td align="left">36</td>																	        																												
+       																	<td align="left">Indian Oil-Adani Gas Private Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_34" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SlcFAaPXVxEAHbviR5LWD3Q%3D%3D">     																	 
+       																	  6
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_35">
+			
+																		<td align="left">37</td>																	        																												
+       																	<td align="left">IndianOil Petronas Private Limited (IPPL)</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_35" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Su%2Bzb384sa%2FwA6xudXbBwXNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  5
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_36">
+			
+																		<td align="left">38</td>																	        																												
+       																	<td align="left">Indian Port Rail Corporation Ltd.</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_36" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Sl20tHcROYLu%2BkL1B2ZoORA%3D%3D">     																	 
+       																	  9
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_37">
+			
+																		<td align="left">39</td>																	        																												
+       																	<td align="left">India Optel Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_37" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SZTqV1D%2FvPYKogvrwHrNGn9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  7
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_38">
+			
+																		<td align="left">40</td>																	        																												
+       																	<td align="left">India Tourism Development Corporation Ltd.</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_38" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S7P6k2QWUihQNKXNS3x0y3g%3D%3D">     																	 
+       																	  14
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_39">
+			
+																		<td align="left">41</td>																	        																												
+       																	<td align="left">Indradhanush Gas Grid Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_39" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S0g8N%2FzBGK2IUXzIfka6LnQ%3D%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_40">
+			
+																		<td align="left">42</td>																	        																												
+       																	<td align="left">Instrumentation Ltd ( Govt of India Enterprise)</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_40" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SJPPt56C0f%2FcYy5o1yJAWvQ%3D%3D">     																	 
+       																	  33
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_41">
+			
+																		<td align="left">43</td>																	        																												
+       																	<td align="left">IRCON International Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_41" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SDRJrn9Uk4%2BNbVN5Z%2B22JUA%3D%3D">     																	 
+       																	  6
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_42">
+			
+																		<td align="left">44</td>																	        																												
+       																	<td align="left">IREL (INDIA) Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_42" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SRebWmmzKEyWMEGexNc4mntS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  14
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_43">
+			
+																		<td align="left">45</td>																	        																												
+       																	<td align="left">Jhabua Power Ltd</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_43" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SNuPBswJUuK2rlIFIGuyQU9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  13
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_44">
+			
+																		<td align="left">46</td>																	        																												
+       																	<td align="left">Konkan LNG Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_44" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SZLkFwXvSpyddu2rv7tgHctS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_45">
+			
+																		<td align="left">47</td>																	        																												
+       																	<td align="left">Madhya Pradesh Metro Rail Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_45" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Sd6LB7EruLLs4Lcyx4OV3I9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  4
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_46">
+			
+																		<td align="left">48</td>																	        																												
+       																	<td align="left">Maharashtra Natural Gas Ltd.</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_46" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SnPFmQ65MU3r48VZRW8be59S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  9
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_47">
+			
+																		<td align="left">49</td>																	        																												
+       																	<td align="left">Meja Urja Nigam Pvt Ltd</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_47" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SkP9YKJiX0yaSrAFRfcQi6A%3D%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_48">
+			
+																		<td align="left">50</td>																	        																												
+       																	<td align="left">Mumbai Metro Rail Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_48" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SDi1gJjwch%2FJ81C5pLcEgVtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_49">
+			
+																		<td align="left">51</td>																	        																												
+       																	<td align="left">Municipal Corporation of Delhi</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_49" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Ssp1GPf2AXEQ7F%2FjpIgN7%2BdS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  288
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_50">
+			
+																		<td align="left">52</td>																	        																												
+       																	<td align="left">Munitions India Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_50" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Sa48BA3Ekn4AQ5Vx857v5gtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  28
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_51">
+			
+																		<td align="left">53</td>																	        																												
+       																	<td align="left">National Capital Region Transport Corporation</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_51" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S4s7HwpeLeRl65QW%2BfBSi8g%3D%3D">     																	 
+       																	  5
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_52">
+			
+																		<td align="left">54</td>																	        																												
+       																	<td align="left">National Capital Region Transport Corporation - ADB Tenders</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_52" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SrpA2GXqCvlOH1dstDS3Idw%3D%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_53">
+			
+																		<td align="left">55</td>																	        																												
+       																	<td align="left">National Fertilizers Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_53" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SUth%2FOTOMKisxcRkXR6SyAQ%3D%3D">     																	 
+       																	  10
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_54">
+			
+																		<td align="left">56</td>																	        																												
+       																	<td align="left">National High Speed Rail Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_54" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S4aARRK3mq9yUTP0gEwS4CA%3D%3D">     																	 
+       																	  3
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_55">
+			
+																		<td align="left">57</td>																	        																												
+       																	<td align="left">National Highways Authority of India</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_55" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SBHgI013YJrPRYhqXDt5TRg%3D%3D">     																	 
+       																	  451
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_56">
+			
+																		<td align="left">58</td>																	        																												
+       																	<td align="left">National Informatics Centre Services Incorporated</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_56" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SHXzAeTkot7P4JDf%2FRD8GIA%3D%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_57">
+			
+																		<td align="left">59</td>																	        																												
+       																	<td align="left">National Projects Construction Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_57" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SQL6POtuBmMKtQnaL5D7dj9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  21
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_58">
+			
+																		<td align="left">60</td>																	        																												
+       																	<td align="left">National Small Industries Corporation</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_58" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SGwtQJVOzd7vZEiW7IkP50dS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_59">
+			
+																		<td align="left">61</td>																	        																												
+       																	<td align="left">NewSpace India Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_59" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SsXU%2FZwIp%2Fd55FptvScFxRdS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  8
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_60">
+			
+																		<td align="left">62</td>																	        																												
+       																	<td align="left">North Eastern Electric Power Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_60" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=STlvStUgmaCvUv2AUt6ri4w%3D%3D">     																	 
+       																	  11
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_61">
+			
+																		<td align="left">63</td>																	        																												
+       																	<td align="left">North Eastern Handicrafts and Handlooms Development Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_61" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SXCKz8u3pn97sUopD0NnghNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  7
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_62">
+			
+																		<td align="left">64</td>																	        																												
+       																	<td align="left">NTECL</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_62" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SR4p3TYrFMbIBoHsxJBkRZQ%3D%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_63">
+			
+																		<td align="left">65</td>																	        																												
+       																	<td align="left">NTPC SAIL POWER COMPANY LIMITED</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_63" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SOAa8jprPysOxBNSOL3ZC5NS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_64">
+			
+																		<td align="left">66</td>																	        																												
+       																	<td align="left">Nuclear Power Corporation Of India Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_64" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SgHZhXDEy2MQUIUFNl4oIaNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  28
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_65">
+			
+																		<td align="left">67</td>																	        																												
+       																	<td align="left">Oil and Natural Gas Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_65" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SNagVMX%2FNVa2tJf%2B7THDLZ9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  137
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_66">
+			
+																		<td align="left">68</td>																	        																												
+       																	<td align="left">ONGC Tripura Power Company</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_66" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=Sq279NhrzHsiP0MSCs634ctS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_67">
+			
+																		<td align="left">69</td>																	        																												
+       																	<td align="left">Purba Bharati Gas Private Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_67" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SwjiyUIkiTniTfPDydgYaRtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_68">
+			
+																		<td align="left">70</td>																	        																												
+       																	<td align="left">Rail Infrastructure Development Company (Karnataka) Limited - K-RIDE</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_68" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SmDf2bNUReHRkpgpMXWzVadS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  2
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_69">
+			
+																		<td align="left">71</td>																	        																												
+       																	<td align="left">Reserve Bank Of India</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_69" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S4%2FfOHX6O1ZVjdXmupL7Q2NS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  63
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_70">
+			
+																		<td align="left">72</td>																	        																												
+       																	<td align="left">RITES Ltd.</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_70" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SFr5xBaZyDrpp1geSRbv8Dg%3D%3D">     																	 
+       																	  9
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_71">
+			
+																		<td align="left">73</td>																	        																												
+       																	<td align="left">SECURITY PRINTING AND MINTING CORPORATION OF INDIA-SPMCIL</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_71" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SSxP9uaWqx7bzT7SeGuxOCtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  14
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_72">
+			
+																		<td align="left">74</td>																	        																												
+       																	<td align="left">Telecommunications Consultants India Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_72" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SUAznQ9mBhx5GCYHtFRRm8g%3D%3D">     																	 
+       																	  46
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_73">
+			
+																		<td align="left">75</td>																	        																												
+       																	<td align="left">Terra Clean Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_73" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S2BlhwkmmkWBmXPve5DIMzNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_74">
+			
+																		<td align="left">76</td>																	        																												
+       																	<td align="left">TROOP COMFORTS LIMITED</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_74" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S7cn2So%2FKRHPoKpgfzsFxOtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  20
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_75">
+			
+																		<td align="left">77</td>																	        																												
+       																	<td align="left">Uranium Corporation of India Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_75" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SBtccLrpQa%2FTS5ZWVXHvHFNS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  16
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_76">
+			
+																		<td align="left">78</td>																	        																												
+       																	<td align="left">Uttar Pradesh Metro Rail Corporation Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_76" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S5FIu7XOOxbx9wOqkqqWHx9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  10
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_77">
+			
+																		<td align="left">79</td>																	        																												
+       																	<td align="left">Vadhvan Port Project Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_77" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SBcovjd6ibD6jB4s1XR5R7dS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  1
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_78">
+			
+																		<td align="left">80</td>																	        																												
+       																	<td align="left">Visakhapatnam Port Trust</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_78" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SM%2Fbr9ae%2FkkS4nUTpzjfVAQ%3D%3D">     																	 
+       																	  5
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_79">
+			
+																		<td align="left">81</td>																	        																												
+       																	<td align="left">V.O.Chidambaranar Port Trust</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_79" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S2AELrffvWnSB6unk0d3Gxg%3D%3D">     																	 
+       																	  12
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="odd" id="informal_80">
+			
+																		<td align="left">82</td>																	        																												
+       																	<td align="left">WAPCOS Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_80" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=S0q7BSURV1TyGhrvvCFNKv9S0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  6
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+	<tr class="even" id="informal_81">
+			
+																		<td align="left">83</td>																	        																												
+       																	<td align="left">Yantra India Limited</td>       																	         																	
+       																	<td align="right">   
+       																	<a id="DirectLink_81" class="link2" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndTendersByOrganisation&amp;service=direct&amp;session=T&amp;sp=SD4UVYOfBg8L2fLNOnn96VtS0Fec7wUuNy1YFXyqSerE%3D">     																	 
+       																	  6
+       																	  </a>
+       																	 </td>      																																													       																								
+       																
+	</tr>
+
+
+
+																	<tr>																		
+																	</tr>
+																
+</table>
+
+
+															</td>
+														</tr>
+													</span>
+													
+													<tr>
+														<td>&nbsp;</td>
+													</tr>
+											  </table>
+											  <!-- END: interface_elements -->
+										</td>
+									</tr>
+									</form>
+								</table>
+							</td>
+						</tr>								
+					</table>
+					<!-- End : Content Area -->
+			</td>
+		</tr>
+	</table>
+
+							<!-- Page content ends here -->	
+							</td>				
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td valign="bottom" height="40">
+					<table width="100%" cellspacing="0" cellpadding="0">
+	 <tr style="background-color:#E8E8E8;"> 
+	 <td height="25" class="text2" align="center"><b>Visitor No:10621811</b></td>
+		
+	  </tr>
+	 <tr style="background-color:#E8E8E8;"> 
+	
+		<td height="25" class="text2" align="center">Contents owned and maintained by concerned Departments in coordination with Finance Department and Information Technology Department, Government of India		  
+		 </td>
+	  </tr>
+	  <tr valign="top" class="secondaryBg"> 
+		<td>
+			<table width="100%" height="22" border="0" cellpadding="1" cellspacing="1">
+
+				
+				<tr class="footer">
+					<td width="40%" valign="top" align="left">Designed, Developed and Hosted by<br/>  <a href="http://www.nic.in" target="_blank" rel="noopener noreferrer" class="footerlink">National Informatics Centre</a></td>
+					<td width="40%" align="left">
+						 Version : 1.09.24 17-Jul-2026<br />
+						(c) 2017 Tenders NIC, All rights reserved.<br/>Site best viewed with a screen resolution 1920 x 1080.</td>					
+					<td width="20%" valign="top" align="right"><a id="PageLink_14" class="footerlink" href="/eprocure/app?page=Disclaimer&amp;service=page">Portal policies</a></td>
+				</tr>
+			</table>
+		</td>
+	  </tr>
+</table>
+				</td>
+			</tr>
+			<tr>
+			    <td>
+			        <form method="post" action="/eprocure/app" id="WebBorder_0">
+<div style="display:none;" id="WebBorder_0hidden"><input type="hidden" name="formids" value="domainUrl" />
+<input type="hidden" name="seedids" value="ZH4sIAAAAAAAAAF1RTU8CMRAlJP4K463HHthVZD26CoYEPwIkHEnpDmzDbqdpBwF/k3/N/+B0F5V4ad/r67zOvH5+dS4+Op3uVfdSBvDvRoPoSac2cdNYO7RgqcGWlLHgGQcIwaCNyPGygFWOvmApkWPLLiSSrC9nJVQVy/f2KPoyx+LY3p2jy5VtnSpjtwmr4zWXyBF6kQ6YLHsiTeWwCiCSu5PnMhFZ9oNTrimxhgnXs80b9xvh8vacDNr3XpDaqX6FrBUmsKZnsDtmT8D9GP3PTiT9c4W7upZTsDxpM00i5w0J+fHVb5Q1QRHHwlPUbEK4BTsD7SHGR83NB0WwQR+DcB6Lnaazk/bK8OCMb8JXjnSp5nCgPzauTz/T0ogqUDHJGW+6jDZqVXFsJ7uJCTTFPZ8bAs8oiOxGGrvmJlUlslTuvXIOiggf+WVNzeTMOKERIsV/+gaKXdGPJgIAAA==" />
+<input type="hidden" name="component" value="$WebBorder.WebBorder" />
+<input type="hidden" name="page" value="FrontEndTendersByOrganisation" />
+<input type="hidden" name="service" value="direct" />
+<input type="hidden" name="session" value="T" />
+<input type="hidden" name="submitmode" value="" />
+<input type="hidden" name="submitname" value="" />
+<input type="hidden" name="domainUrl" id="domainUrl" value="Shttps://etenders.gov.in/eprocure/app" />
+</div>
+				       
+				   </form>
+			    </td>
+			</tr>
+		</table>
+	</div>
+<script type="text/javascript"><!--
+tapestry.addOnLoad(function(e) {
+dojo.require("tapestry.form");tapestry.form.registerForm("TendersByOrganisationForm");
+
+tapestry.cleanConnect("captcha", "onclick", "formEvent1083182113");
+                tapestry.formEvent1083182113=function(e){
+                    var content={beventname:"onclick", bcomponentidpath:"FrontEndTendersByOrganisation/captcha", bcomponentid:"captcha"};
+                    tapestry.event.buildEventProperties(e, content, arguments);
+                    if (!content["beventtarget.id"]){
+                    	content["beventtarget.id"]="captcha";
+                    }
+                    
+                   var validateState=tapestry.form.forms["TendersByOrganisationForm"].validateForm;
+                   var validateForm=false;
+                   tapestry.form.setFormValidating("TendersByOrganisationForm", validateForm);
+                   
+                    
+                    tapestry.form.submitAsync("TendersByOrganisationForm", content);
+                    
+                    
+                    
+                    tapestry.form.setFormValidating("TendersByOrganisationForm", validateState);
+                    
+                };
+                tapestry.connect("captcha", "onclick", "formEvent1083182113");
+tapestry.form.registerForm("WebBorder_0");
+
+tapestry.form.focusField('tenderCategory');});
+// --></script></body>
+</html>
+
+
+<script type="text/javascript" src="includes/CsrfdeleteBlock.js"></script>
+<script language="javascript">
+	function checkIf()
+		{	
+		     var F = document.getElementById("TendersByOrganisationForm");	
+		     
+		     if(F.captchaText.value==0){
+				   	alert("Please enter Captcha.");
+				   	F.captchaText.focus();
+					return false;
+			 }
+			 
+			 if(F.captchaText.value.length != 6) {
+				alert("Invalid Captcha! Please Enter Correct Captcha");
+				F.captchaText.value = "";
+				F.captchaText.focus();
+				return false; 
+			 }
+		}
+</script>

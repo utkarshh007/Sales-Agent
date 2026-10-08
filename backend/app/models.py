@@ -120,7 +120,29 @@ class Tender(Base):
 
     portal: Mapped[Portal] = relationship()
     documents: Mapped[list[TenderDocument]] = relationship(back_populates="tender", cascade="all, delete-orphan")
+    sources: Mapped[list[TenderSource]] = relationship(back_populates="tender", cascade="all, delete-orphan",
+                                                       order_by="TenderSource.id")
     matches: Mapped[list[TenderMatch]] = relationship(back_populates="tender", cascade="all, delete-orphan")
+
+
+class TenderSource(Base):
+    """Where a tender was seen. A tender published on several portals (e.g. CPPP's aggregate listing
+    and the GePNIC portal that hosts it) has one row per portal, all pointing at one tender."""
+    __tablename__ = "tender_sources"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tender_id: Mapped[int] = mapped_column(ForeignKey("tenders.id", ondelete="CASCADE"), index=True)
+    portal_id: Mapped[int] = mapped_column(ForeignKey("portals.id"), index=True)
+    fingerprint: Mapped[str] = mapped_column(String(64), unique=True)
+    portal_tender_id: Mapped[str | None] = mapped_column(String(200))
+    source_url: Mapped[str | None] = mapped_column(Text)
+    lookup_hint: Mapped[str | None] = mapped_column(Text)
+    listing_hash: Mapped[str] = mapped_column(String(64))
+    detail_hash: Mapped[str | None] = mapped_column(String(64))  # None until a detail page was read
+    match_basis: Mapped[str] = mapped_column(String(40), default="PRIMARY")  # PRIMARY | TENDER_ID+REF | TENDER_ID+TITLE
+    first_seen_at: Mapped[datetime] = _ts()
+    last_seen_at: Mapped[datetime] = _ts()
+    portal: Mapped[Portal] = relationship()
+    tender: Mapped[Tender] = relationship(back_populates="sources")
 
 
 class TenderVersion(Base):

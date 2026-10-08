@@ -76,9 +76,9 @@ export default function SourcesPage() {
       {msg && <Notice>{msg}</Notice>}
       {err && <Notice tone="error">{err}</Notice>}
 
-      <Panel title="Tender sources">
+      <Panel title="Active tender sources" aside={<span className="text-sm text-muted">{portals.filter((p) => p.enabled).length} of {portals.length} on</span>}>
         <ul className="divide-y divide-line">
-          {portals.map((p) => (
+          {portals.filter((p) => p.enabled).map((p) => (
             <li key={p.id} className="py-3 first:pt-0 last:pb-0">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <div>
@@ -92,17 +92,36 @@ export default function SourcesPage() {
                 </div>
                 {isAdmin && p.connector !== "manual" && (
                   <div className="flex gap-2">
-                    <Button variant="quiet" onClick={() => toggle(p)}>{p.enabled ? "Pause" : "Resume"}</Button>
+                    <Button variant="quiet" onClick={() => toggle(p)}>Turn off</Button>
                     <Button onClick={() => run(p)} disabled={!p.enabled}>Check now</Button>
                   </div>
                 )}
               </div>
               {p.blocker && <p className="mt-1.5 text-sm">{p.blocker}</p>}
-              {p.last_error && <p className="mt-1 whitespace-pre-line text-sm text-high">{p.last_error}</p>}
+              {p.last_error && <p className="mt-1 line-clamp-3 whitespace-pre-line text-sm text-high">{p.last_error}</p>}
             </li>
           ))}
         </ul>
       </Panel>
+
+      {portals.some((p) => !p.enabled) && (
+        <Panel title="Available portals, switched off">
+          <p className="mb-3 text-sm text-muted">
+            State and sector eProcurement portals on the same NIC platform. Turn on the ones where your team bids;
+            each adds roughly one request per organisation on the portal every two hours.
+          </p>
+          <ul className="grid gap-x-6 gap-y-1.5 text-sm sm:grid-cols-2">
+            {portals.filter((p) => !p.enabled).map((p) => (
+              <li key={p.id} className="flex items-baseline justify-between gap-3">
+                <span>{p.name}</span>
+                {isAdmin && (
+                  <button onClick={() => toggle(p)} className="shrink-0 text-teal hover:underline">Turn on</button>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      )}
 
       <Panel title="Commercial and relevance rules">
         <dl className="grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2">

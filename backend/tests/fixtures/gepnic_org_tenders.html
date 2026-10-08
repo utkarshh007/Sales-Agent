@@ -1,0 +1,883 @@
+<head>
+	<base target="_self">
+	<title>Government eProcurement System</title>
+</head>
+<!-- BEGIN: HEADER -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>eProcurement System</title>
+<script type="text/javascript">djConfig = {"baseRelativePath":"/eprocure/app?service=asset&path=%2Fgep%2F","preventBackButtonFix":false,"parseWidgets":false} </script>
+
+<script type="text/javascript" src="/eprocure/app?service=asset&path=%2Fgep%2Fgep.js"></script><script type="text/javascript" src="/eprocure/app?service=asset&path=%2Fgep%2Fgep2.js"></script>
+<script type="text/javascript">
+dojo.registerModulePath("tapestry", "/eprocure/app?service=asset&path=%2Ftapestry%2F");
+</script>
+<script type="text/javascript" src="/eprocure/app?service=asset&path=%2Ftapestry%2Fcore.js"></script>
+<script type="text/javascript">
+dojo.require("tapestry.namespace");
+tapestry.requestEncoding='UTF-8';
+</script>
+<link rel="stylesheet" type="text/css" href="/eprocure/css/nicgep_web_style.css" />
+</head>
+<head>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<noscript>
+	<meta http-equiv="Refresh" content="2;url=https://etenders.gov.in/eprocure/app?page=ErrorNotice&amp;service=page" id="Any"></meta> 
+</noscript>
+<link href="includes/dialog/dialog_box.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="images/nation.ico" ></link>
+<link href="includes/dialog/nicgep_color_theme.css" rel="stylesheet" type="text/css">
+
+
+
+<!-- Javascript -->
+<script language="JavaScript" type="text/JavaScript" src="includes/evaluator.js"></script>
+<script language="javascript" src="includes/MessageDigest.js" ></script>
+<script language="JavaScript" type="text/JavaScript" src="includes/dialog/dialog_box.js"></script>
+<!-- End -->
+<script language="JavaScript" type="text/JavaScript">
+<!--
+	function MM_swapImgRestore() { //v3.0
+	  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+	}
+	
+	function MM_preloadImages() { //v3.0
+	  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+	    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+	    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+	}
+	
+	function MM_findObj(n, d) { //v4.01
+	  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+	    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+	  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+	  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+	  if(!x && d.getElementById) x=d.getElementById(n); return x;
+	}
+	
+	function MM_swapImage() { //v3.0
+	  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+	   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+	}
+//-->
+</script>
+
+</head>
+
+
+<body onLoad="MM_preloadImages('images/homeb.png','images/contactb.png','images/sitemapb.png')" onunload="" onpageshow="if (event.persisted) noBack();" ondragstart="return false;" id="Body">
+
+	
+	<script type="text/javascript">
+
+	if(navigator.appName == 'Microsoft Internet Explorer')
+	{
+	document.onkeydown = fnCheckKeysMIE;
+	}
+	else if(navigator.appName == 'Netscape')
+	{
+	document.onkeydown = fnCheckKeysNMF;
+	}
+	
+	function fnCheckKeysNMF(event)
+	{
+	
+	var e=event? event : window.event;
+	var event_element=e.target? e.target : e.srcElement;
+	
+	if (event.ctrlKey && (event.keyCode==78 || event.keyCode==84 || event.which==78 || event.which==84))
+	{
+	return false;
+	}
+	
+	if (event.altKey && (event.keyCode==37 || event.which==37))
+	{
+	return false;
+	}
+	
+	if (event.keyCode==8 && (event_element.tagName != 'INPUT' && event_element.tagName != 'TEXTAREA'))
+	{
+	return false;
+	}
+	
+	}
+	
+	function fnCheckKeysMIE()
+	{
+	
+	var e=event? event : window.event;
+	var event_element=e.target? e.target : e.srcElement;
+	
+	if (event.ctrlKey && (event.keyCode==78 || event.keyCode==84 || event.which==78 || event.which==84))
+	{
+	return false;
+	}
+	
+	if (event.altKey && (event.keyCode==37 || event.which==37))
+	{
+	return false;
+	}
+	
+	if (event.keyCode==8 && (event_element.tagName != 'INPUT' && event_element.tagName != 'TEXTAREA'))
+	{
+	return false;
+	}
+	
+	}
+
+	window.history.forward();
+	function noBack(){ window.history.forward(); }
+	
+	</script>
+		
+	<div id="content">
+		<table width="1004" height="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+			<tr>
+				<td valign="top" height="40">
+					<table width="1000" border="0" align="center" cellspacing="0" cellpadding="0">
+    <tr> 
+    <td>
+		<table width="100%" height="22" border="0" cellpadding="0" cellspacing="0" id="Menu">
+		 <td width="210" height="22" align="right" class="date topBannerGradient"><a id="link1" name="link1" class="Menu" href="/eprocure/app?page=WebScreenReaderAccess&amp;service=page">Screen Reader Access</a>
+				
+		  </td>
+		</table>
+		</td>
+		</tr>
+   <tr> 
+    <td width="1005"><img border="0" width="1005" alt="Logo" src="images/topban.png" usemap="#Map" height="83" id="Any_0"></img></td>
+  </tr>		
+  <tr>
+    <td height="1" class="topBannerLine"></td>
+  </tr>
+
+  <tr> 
+    <td>
+		<table width="100%" height="22" border="0" cellpadding="0" cellspacing="0" id="Menu">
+        <tr> 
+          <td width="210" height="22" align="center" class="date primaryBg">
+				08-Oct-2026 
+		  </td>
+          <td align="center" class="secondaryBg">
+	           <span id="If">
+					<span id="For">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Search" class="Menu" href="/eprocure/app?page=FrontEndAdvancedSearch&amp;service=page" target="_self">Search</a>
+						</span>
+						<span class="divider1" id="Insert_2">|</span>
+					</span><span id="For_0">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Active Tenders" class="Menu" href="/eprocure/app?page=FrontEndLatestActiveTenders&amp;service=page" target="_self">Active Tenders</a>
+						</span>
+						<span class="divider1" id="Insert_2_0">|</span>
+					</span><span id="For_1">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Tenders by Closing Date" class="Menu" href="/eprocure/app?page=FrontEndListTendersbyDate&amp;service=page" target="_self">Tenders by Closing Date</a>
+						</span>
+						<span class="divider1" id="Insert_2_1">|</span>
+					</span><span id="For_2">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Corrigendum" class="Menu" href="/eprocure/app?page=FrontEndLatestActiveCorrigendums&amp;service=page" target="_self">Corrigendum</a>
+						</span>
+						<span class="divider1" id="Insert_2_2">|</span>
+					</span><span id="For_3">
+						
+		             	 <span>
+							<a id="link1" name="link1" title="Results of Tenders" class="Menu" href="/eprocure/app?page=ResultOfTenders&amp;service=page" target="_self">Results of Tenders</a>
+						</span>
+						
+					</span>
+	          </span>
+	          
+          </td>
+          <td width="215" valign="middle" class="primaryBg">
+			<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr> 
+                <td width="28%"><div align="center"><a id="homeLink" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image4','','images/homeb.png',1)" page="Home" href="/eprocure/app?service=restart"><img src="images/homea.png" alt="Home" name="Image4" width="47" height="18" border="0"></a></div></td>
+                <td width="40%"><div align="center"><a id="PageLink_6" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image5','','images/contactb.png',1)" href="/eprocure/app?page=FrontEndContactUs&amp;service=page"><img src="images/contacta.png" alt="Contact Us" name="Image5" width="78" height="18" border="0"></a></div></td>
+                <td width="32%"><div align="center"><a id="PageLink_7" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image6','','images/sitemapb.png',1)" href="/eprocure/app?page=SiteMap&amp;service=page"><img src="images/sitemapa.png" alt="Sitemap" name="Image6" width="63" height="18" border="0"></a></div></td>                 
+              </tr>
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+	<td>
+		<table width="100%" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="notice" width="20" align="right"><img src="images/notice.png" width="15" height="16" alt="Notices" /> </td>
+		<td class="notice_strip">
+			<marquee align="left" id="gepNotice" onMouseover="this.stop();" onMouseout="this.start();" scrolldelay="200">
+				
+				<span>
+					Government eProcurement System
+				</span>
+			</marquee>
+		</td>
+	</tr>
+</table>
+	</td>
+  </tr>
+</table>
+<map name="Map">
+  <a id="PageLink_8" shape="circle" coords="43,43,37" href="/eprocure/app?page=Home&amp;service=page"></a>
+</map>
+
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0">
+						<tr>
+
+							<td width="214" class="navigation"><script language="javascript">
+
+	// Script to view document in popup
+	function popup(mylink, windowname)
+	{
+		if (! window.focus)return true;
+		var href;
+		if (typeof(mylink) == 'string')
+	 		href=mylink;
+		else
+			href=mylink.href;
+			window.open(href, "Popup", 'location=no, scrollbars=yes, toolbar=no, width=700, height=550, directories=no, menubar=no, resizable=yes, status=no, titlebar=yes');
+			return false;   
+	}
+
+</script>
+
+<table width="100%" height="100%" cellspacing="0" cellpadding="0" class="left_nav">	
+	
+	<tr> 
+         <td height="10"></td>
+     </tr>
+     	
+	<tr>
+		<td valign="top">
+			<table width="214" border="0" cellspacing="0" cellpadding="0">
+				<span id="If_2">
+					<tr id="For_5">
+						<span id="If_0_4">
+							<span id="If_3">
+			             		<tr> 
+					             	<td height="37" background="images/textbg.png" align="center"><a id="GenericLink" rel="noopener noreferrer" title="MIS Reports" class="link1" href="https://gepnicreports.gov.in/eprocreports/etenders/" target="_blank">MIS Reports</a></td>
+					             </tr>
+			             	 </span>
+			             	 
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_6">
+						<span id="If_0_5">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink" title="Tenders by Location" class="link1" href="/eprocure/app?page=FrontEndTendersByLocation&amp;service=page" target="_self">Tenders by Location</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_7">
+						<span id="If_0_6">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_0" title="Tenders by Organisation" class="link1" href="/eprocure/app?page=FrontEndTendersByOrganisation&amp;service=page" target="_self">Tenders by Organisation</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_8">
+						<span id="If_0_7">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_1" title="Tenders by Classification" class="link1" href="/eprocure/app?page=FrontEndTendersByClassification&amp;service=page" target="_self">Tenders by Classification</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_9">
+						<span id="If_0_8">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_2" title="Tenders in Archive" class="link1" href="/eprocure/app?page=FrontEndTendersInArchive&amp;service=page" target="_self">Tenders in Archive</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_10">
+						<span id="If_0_9">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_3" title="Tenders Status" class="link1" href="/eprocure/app?page=WebTenderStatusLists&amp;service=page" target="_self">Tenders Status</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_11">
+						<span id="If_0_10">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_4" title="Cancelled/Retendered" class="link1" href="/eprocure/app?page=WebCancelledTenderLists&amp;service=page" target="_self">Cancelled/Retendered</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_12">
+						<span id="If_0_11">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_5" title="Downloads" class="link1" href="/eprocure/app?page=StandardBiddingDocuments&amp;service=page" target="_self">Downloads</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_13">
+						<span id="If_0_12">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_9" title="D" class="link1" href="/eprocure/app?page=FrontEndDebarmentList&amp;service=page" target="_self">Debarment List</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_14">
+						<span id="If_0_13">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_10" title="Announcements" class="link1" href="/eprocure/app?page=WebAnnouncements&amp;service=page" target="_self">Announcements</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_15">
+						<span id="If_0_14">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_11" title="Awards" class="link1" href="/eprocure/app?page=WebAwards&amp;service=page" target="_self">Awards</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_16">
+						<span id="If_0_15">
+							
+			             	 <span>
+				             	 <tr> 
+				                	<td height="37" background="images/textbg.png" align="center"><a id="PageLink_12" title="Site compatibility" class="link1" href="/eprocure/app?page=SiteComp&amp;service=page" target="_self">Site compatibility</a></td>
+				             	 </tr>
+			             	 </span>
+			             	 
+			             	 <tr> 
+				                <td height="10"></td>
+				             </tr>
+			             	 
+						</span>
+					</tr><tr id="For_17">
+						
+					</tr><tr id="For_18">
+						
+					</tr><tr id="For_19">
+						
+					</tr><tr id="For_20">
+						
+					</tr>
+					
+					<tr> 
+		                <td height="10"></td>
+		             </tr>
+				</span>
+				
+				<span id="If_15">
+					<tr> 
+	               		<td height="30" align="center">
+							<table width="160" height="114" border="0" align="center" cellpadding="0" cellspacing="0">
+								<tr id="For_22"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0" rel="noopener noreferrer" title="link" href="https://gepnic.gov.in" target="_blank"><img border="0" width="160" src="images/Gepnic Logo.png" height="34" id="Any_1"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr><tr id="For_23"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0_0" rel="noopener noreferrer" title="National Portal of India - External Link that open in a new window" href="http://india.gov.in" target="_blank"><img border="0" width="160" src="images/indiagovin.png" height="34" id="Any_2"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr><tr id="For_24"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0_1" rel="noopener noreferrer" title="Government e-Marketing of India - External link that opens in a new window" href="https://gem.gov.in" target="_blank"><img border="0" width="160" src="images/gem.png" height="34" id="Any_3"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr><tr id="For_25"> 
+				             		<tr>
+				             			<td height="15" valign="top"><a id="GenericLink_0_2" rel="noopener noreferrer" title="Central Public Procurement Portal - External Link that opens in a new Window" href="http://eprocure.gov.in/cppp" target="_blank"><img border="0" width="160" src="images/cppp-img.png" height="34" id="Any_4"></img></a></td>
+				             		</tr>
+				             		 <tr> 
+						                <td height="10"></td>
+						             </tr>
+				             	 </tr>
+							</table>
+				 		</td>
+	             	</tr>					
+				</span>	
+				
+				<tr> 
+					<td height="30" align="center">&nbsp;</td>
+			  	</tr>							
+			  	
+			</table>
+		</td>
+	</tr>
+	
+</table></td>
+							<td class="page_content" valign="top">
+							<!-- Page content starts here -->
+								
+	<table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+		<tr>
+			<td valign="top" height="100%">
+				<!-- Page Content -->
+					<!-- Content Area -->
+					<table width="100%" cellspacing="0" cellpadding="0" border="0" height="100%">
+						<tr>
+							<td class="page_content" height="100%" valign="top">
+								<table width="100%" cellspacing="0" cellpadding="0" border="0">
+									<form method="post" action="/eprocure/app" id="FrontEndViewTender">
+<div style="display:none;" id="FrontEndViewTenderhidden"><input type="hidden" name="formids" value="tokenSecret,If_17,iterRows_0" />
+<input type="hidden" name="seedids" value="ZH4sIAAAAAAAAAF1Qy27CMBAMB/5kjz7EoTyuRAoIiSJEUXuM0mQpVsNuZBsQfFN/jX9gE9MK9WLPeLzjGf/cov41inrzXqYc2pMpEWLVFF/tVvKhYULyHSZfGEIr2KFzhqlFjSwf+JmyrTppQeLiQY/U2x7rWk6mdIGhSrm6hKtbbtKCglFt6FuLuti1EzO2kIyF5DEkscpqh6AnD8tcw8svTATu+YBLGReXtaRtYT56JuPw3Ip96PQnTIKwxJ1/RToKm6PEMeU/O9CDZ0VCDdQGSXo+ysys/ElG1bvB87YTIL4DauCkglABAAA=" />
+<input type="hidden" name="component" value="FrontEndViewTender" />
+<input type="hidden" name="page" value="FrontEndViewTender" />
+<input type="hidden" name="service" value="direct" />
+<input type="hidden" name="session" value="T" />
+<input type="hidden" name="submitmode" value="" />
+<input type="hidden" name="submitname" value="" />
+<input type="hidden" name="tokenSecret" id="tokenSecret" value="SNZetk2JvB7F52SrtqV7sPPdzmf0LabUaOsSZoROCk8HkiYHvzDrgUfmgLCN/CPrO" />
+<input type="hidden" name="If_17" value="T" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAGVSPW/TQBi+pIqEGqhK2xGkk1hgiJMYSEOZ3NgBU8cJiWnFFDnOG/fA8Zm7S5pKFRILDB3KAIiRgbE/g5GfgARCrMwsDNwlRknA2z1+vt737vwnynGGtJCOtZgEWgiJdgQ9TgRoEAsijjXHF8CFEQgyBg/iPjD+7vfO2Zf31cMsWnNQPogoJ3FoSp5AG84Tf+wXIz8Oix3BJH7XQRcDGgvmB0JxnqHnKDPFGCOhNBwNuUCbC7pdSiPwYylc7UPiMzGUVVJZlvQFWl8gO3QakacJxGmLlJpPRr2I8MMFaIXHdDnLjgWEwKTDJTEdbtfnJLD7SrDioAszcHZWnrNzGwYuXYY8IiJYhvb9aPTPSkwqO4Ga7Iiyp7aAYRo1SQTa0m8VmoEo6CW9gkuVnVIJtxqJ/NEyzH3DrVkmPrCMVtPtYMM1sfXwkd1qWK6Hbde0Dex4ZsE4sGzn5KRt1x0L142a12w/xnbnvlS1LVzAe01nz/AMeeVrqpSmSmnTFZ7+eP357NrXLMo8QLmxaj5haH1OckfDHrCX52+v5t98O80iNEmQ+nLVT6p5dd68XFLNjYaES9v/DySzL89t0/1vfP/w8deLV1UZb/+NV3tZlQkZuYFNZdGdTtfV79y8rVe7ZYGutOt20bOKbVOvlPWi4hT07aLVxNdrNwS65wEb4lr69vCAMjwkPIBIJgMdcQwRBPKNBn6E1XVgEnPSBzyQbMqOcYuB5ANPkj9oa+1oJwMAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAGVSMW/TQBi9pqqECFSlhRHpk1gbx0nbtCmTG7uSqesEJ23FVF2dq3vg3Jm7S1qkCokFhg5lAMTIwNhfwcxPQIAQKzMLA3dJIC54+u75ve+977u7+IFmpEBWwgcWo7GVkMw6JgeSKmIRpqh6YgVYEamcWNEB6RDWJUK++bV+/unt2lEBzQaoGKdcUpa4mqfQfPAQD3A5xSwpt5XQ+N0AXYs5UwLHynAeo6doaogJQRPdsN+TCi3kdBucpwQzLbzaJRkWqqejjGUF2lVoLkcO+NCiyDPCxinG1GLWP0ipPMpB05Lxy14+UyQhQne4robDbWBJY79rBNMBujICR2fTc3SOyGHIL0MdqlJyGdrFaf+flbhcZyJmsmMuHvmK9MZWJ5lCNyvLpWasSlW7WgN7Zd22obWd6R++4+46YcNzYc9zWs2wDU7ognd/x29te2EH/ND1HQg6bsnZ8/zg9LQZuaERwKbT6DSjB1CCLSds7UT6rmdNGsuksYa7O/v+8uP5nS8FNHUPzQxM5BOB5iaksN87IOL5xevbxVdfzwoInWTIfDO1DyZybRK5YpvIzraG7cr/k2jvG5O248XPf3v3/uezF2va3v9jbxZyVTsU9OgLpsX+cKz9an3Jri/tVxS61dxslL1mo2zXy5FXNpxSdVWhzy0iYv1YcEIg0tcOjfHDg0MugKQk1k8yximY7QNn0NYI5axUqQNmXcBS8phqYRdiOqAjngTK4C+zWlmcqNZy9Wqutie1XcvVK7l6OVcvAT+EdjsyC7MBK3BED2d9AZ5UOs0ibGGmj1n2GzVNMYWwAwAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1Sv2/TQBi9JoqEGqhKW0akk1jxj5g2bcPkxq5k6jhpkrZiii7ONXVx7sz5SxqkCokFhg5lAMTIwNg/hT8BCYRYmVkYuEuMkuDte37ve+999s0vVEgF0vt8pLMo1Ps00S9oN42A6pRBBC90nwBNwQ4hGtE2ZT0q0g9/KtdfP+6c5dCKj4phzNOI9R3JA7Tmn5MRMWLC+kYLhMQf++h2yBkIEoLiPEcv0dIEEyLqy4XDQQpofU63x3lMCZPC5R5NiICBjJLJclEP0Ooc2ecTiyJPKMtSZNRiMuzGUXo2B+VTxhe9PAa0T4XccAcm5fZIGoVeTwnyPro1Baez2jmdm/Q04ItQO4KYLkLHJB7+dxKHy0xUNbvg4pkHdJBZjRNAGyVLq4egWaZVxuZWxTRxo5bIF57tHNtB1XXwiWs36kEL24GD3cMjr1Fzgzb2Asezsd92NPvE9fzLy3rTCZQA79vVdr35FGv4wA4aR035rVdUGl2l0Se3u/r59sv1g285tPQEFUYq8lig1RkpGA66VLy+eX+/+O77VQ6hcYLUU9g6V5E3Z5FLpops1yRs7WotmmRNypVHqon0vjtbmx1+7cenz79fvdmR9t4/e3WQZemQl9XX1YrOpFbH2rW2y1anBOhefb9quPWqUTKNpmsojmZtA7KblPERgYgzY0AiacEICynmp/gQBA64jqttw9zEBLAtBiQZCuymIH+Qh/iAMDkmyV8ZYjj1EwMAAA==" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1Sv2/TQBi9pkRCDVSlhRHpJFZsJxb9yYIbu9JRxw6J24gpujgX94rtM+dLGqQKiQWGDmUAxMjA2D+FPwEJhFiZWRi4S4yScNv37n3fe9+7u/oFyjkHesRGekpDPSKZfkZ6ORVEJ6mg4oXuYkFyYYWCjkhA0j7h+Yc/e5dfP+6clMCqCyphzHKaRrbkCbDunuIRNmKcRkZbcIk/dMGNkKWC41AoznPwEixNMM5pJAcOk1yAjbm+fcZiglPZuNInGeYikVaKthLtC7A2R3bZRKLCMpIWLgpqJRv2YpqfzEHLecoWtVAqSES4nHBTTJbbxzkNUV81LLvg+hSc1mrmtG6RgccWoYCKmCxCxzge/heJzaQnojY7Y/wZEiQppMaZALdrpuaHQjOr5hasbu5Vq7DZyOQFsuxjy6s7Nuw4VtP32tDybOg8OULNhuMFEHk2sqAb2JrVcZB7fu63bE81wAOrHvitp1CDh5bXPGrJt15VbnTlRp9kd/Hz7ZfLe99KYOkxKI+U5TEHazOSN0x6hL++en+38u77RQmAcQbUKW8+UpYfzCzXqsqy1ZCwuau1Sba4idS+NRtbBL/+49Pn36/e7Eh59E9eBbIiFa7J1TfUiO5kra65a26btW5NgDv+Qd1w/LpR3TJajqE4mrktgwoIT2C9+G1wwDi0uKADGhIOOzLxHNIUtkkoGNcQQhALSUhwNuTQyYX8KPfhIU5lmWV/AYmeP/MbAwAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SP2/TQBy9poqEGqhKW0akk1jxn1iUpmVyY0dy69ghcRvBEjnOxT1w7sz5kqZShcQCQ4cyAGJkYOxH4SMggRArMwsDd45RErzdu/d77/2e7/oXKGcMqDGdqARHaoxS9Qz1M8yRigjH/Fx1Q44ybkYcT1CAyACx7MOf/auvH2unJbDugkqU0AyT2BI8DjbdZ+Ek1JKQxFqHM4E/csHNiBLOwohLzgvwEqzkGGM4FoLjUcbB1sLcAaUJCokYXBugNGR8JKIUYyU84GBjgezS3KJCU0SKFAW1ko77Cc5OF6DVjNBlL4dwFCMmFG7xfLmDMMORM5ADqy64MQNnZ6k5O7fR0KPLUIB5gpahkzAZ/1eJRUUmJDc7o+y5w9GosJqmHGxXDcWPuGLoxkOo7+zrOmw1U3HhmNaJ6dVtC3Zts+V7HWh6FrQfHzutpu0F0PEsx4RuYClm13bciwu/bXlyADbMeuC3n0AFHple67gt/vW6TKPKNGre3eXPt1+u7n0rgZVDUJ7IyFMGNuYkbzzqI/b6+v3dyrvvlyUApimQX3mnJiM/mEeu6jKy2RSwsad0ULq8ifC+PZctit/88enz71dvasLe+WcvC1mTDmL1LSnRy9fqGXvGbrXaq3Jwx2/UNduva/qu1m5okqMYuxwcBoiNYL14bXBIGTQZx0MciVcLu6LyHHtKCVIsiEmGBwg2BJWycxhyKGTvw6OQpGOWpn8Bz7chlxwDAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1Sv2/TQBi9pgpCDVSlZQTpJBZA8s+qpS2TGzvC1HFCYloxVY7z1T1wfObukgapQmKBoUMZADEyMPZP4U9AAiFWZhYG7pKgJHi7d+99733vfPELlTlDekoHek4SPYVCP4EOJwJ0yAURL/QgFsCFkwgygAjyLjD+4c/O+dePW8cltBygSpJRTvLUlTyBVoOn8SA2sjhPjbZgEr8foCsJzQWLE6E4z9FLtDDCGCOpHNjvcYHWZnS7lGYQ51K41IUiZqIno0xkJdIVaGWGHNCRRYUWkE9STKiVot/JCD+egRZ5Tue9/FxACkxOuCpGy+3GnCR+VwkWA3R5DI7Paub43IKjkM5DEREZzEP7cdb/rxKXykygNjuh7JkvoDexGhYCXTe3tUYiNNu0N7G5uWOauFkv5EXTcfedsOq5+MBzmo2wjZ3Qxd6jx36z7oUR9kPXd3AQuZpz4PnB6WnLrwUerjnVqNF6gv32A6lqeVjDe41gz4kc+eTLKpSuQumjCs9+vv1yfutbCS08ROWBSj5kaGVKCvu9DrDXF+9vVt59PyshNCyQ+spmWSa31qfJLVMld+oSti2tDcX8QtL72nTspP/VH58+/371Zkva+//sVS9L0uGSbGBNjTgcbXdob1sb1vqhJdCNVs03Is9oufaGZRqKo9n3DK+Bb1fvCHS3TnLKMGSQyD8xiTOsSse0LzjpApZi3GTQIxx4UfwF9JL2yQoDAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SMW/TQBS+popADVSlZUNIJ7HAYMe2RNqUybWdyq3jpInTlilynItjcO7M+ZwGqUJigaFDGQAxMjD2p/ATkECIlZmFgTsnkIRbTu+7773ve+/e1U9QTCmQQzKWcRTIIUrkM9RLI4ZkhFnEnsuOz1DK9IBFY+Qh3Ec0ff979/LLh51hAaw7oBTEJI1waHIeA5vOE3/sl2Mfh+U2oxx/5IAbAcGM+gETnGfgBVjJMUqjkBfMRikDWwt5e4TEyMc8ca2PEp+yEbcySytEfQY2FsgOySVKJEF45mJGLSVZL47S4QK0mmKyrGVjhkJEeYWbLG9uz0+jwO6LhFUHXJ+C01jUnMYtNHDJMuRFLEbL0LEfZ/+NxCTcExKdnRH61GZoNJOaJAzcVjWpETBJU7QKVCq7igKb9YQ/HOjmse4alglPLL3ZcNtQd01oHXXsZt1yPWi7pq1DxzMl/cSynfPzmm05JtzvuLCmG16j9RhK8FB3m50W/+x1YUcWduR8eBc/3ny+vPe1AFYOQHEsPE8o2JiT3GzUQ/TV1bu7pbffLgoATBIgTlE6Ep4fzj2rqvCs16dwGyXLrXDtW/Oys8lvfv/46dfL1ztc3v4rLyayxhWu8d63RIlu3ldXqypVReuqDNyp7R+WrcZ940HZMMqVagWSARRMSdtm4NQgOGU04ztLsHipkQz3/TwaEAoN14D1KI6hl1EM634wjMTuQIPvGaJQrXC7p/8ulV8+g1xRTpI/hBeoAjEDAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAGVTv2/TQBi9pqpUGqhKywjSSSwg1XYSlPQHk2u7kVvXCfnRiqly7Gt61Lkz589pK1VILDB0KAMgRoaO/VP4E5BAiJWZhYG7JFUT8GL53fvee993n69+oZlUIL3L+zqjod4liX5MOikFohMGFE51LwCSghkC7ZMWYRER6cc/6xdfP60e5tC8h/JhzFPKurbkAVr0XgT9wIgD1jWaICT+1EO3Q85ABCEozkv0Ck0NMCFoVwpmvRTQ0ljdBucxCZgsnItIEgjoySijshyNAC2MkT0+sMjzhLBRihE1n2SdmKaHY9B0yvikl8uAdImQCndg0NxGkNLQjVTBtIdmh+DwW2kOvxvkwOeTUItCTCah3SDO/hmJzWUmojo75uLIBdIbWZ0kgO4VS1otBK1UKFVwobJeKOD6TiIPtkx71/Qtx8Z7jlmv+U1s+jZ2nrXd+o7jt7Dr266JvZatmXuO652dbbqOZ+Nq28ebptWqNZ5jDW+bfr3dkJc9r+LoKo4+GN75z3dfLh5+y6GpLTTTV5lPBFq4IflZr0PEm6sPD/Lvv5/nEDpJkHpmlm+pzOWxzE+GmRVc1JokmWxFet+9kR1NfvHH58vfr9+uSnv32l5NZE46zMrel5TE/qCv/dJaoby2sl8EdB9vVrcNp/bIemxYllFZK2N+gBVVK60AurTUAsl1wAGLcEMuERWGesdBSNQ2KXbDsnCD84N0GVddw7Rw85AQuIbk5cXkFFczALnxAx2bHzPcCo4IrtOEpEqjLniUyV+DM1nNkyHP50z778TYyGgcyUiSAyq9niR/AeNlv8F+AwAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SPW/TQBi+pooEDVSlZa10EhMS/qRN0zJdY1cycZwQu62YIse5uFeSszlf0iBVSCwwdCgDIEYGxv4UxC9AAiFWZhYG7hJXSfB2zz3v8/Ger36DYsaAGicjlZJIjXGqnuFORjhWMeWEv1DdkOOMo4iTEQ4w7WKWffi7d/ntY+WkAFZdUIr6SUZobAkeB+vuaTgKtX5IY83nTOCPXHArSihnYcQl5zl4CZYmGGMkFoLDQcbBxtzcfpL0cUjF4EoXpyHjAxElHyuQLgdrc2Q3mViUkhTTPEVOLaXDTp9kJ3PQckaTRS+HchxjJhRu80m5/TAjkdOVA8suuDEFp2epOT23cM9LFqGA8D5ehI7C/vC/lViJyIRls7OEPXM4HuRW45SDu4apNCKumLpZhvr2nq7DZj0VFzVkHSGvalvw2EbNhudD5FnQfnLoNOu2F0DHsxwE3cBS0LHtuOfnfh25LkStug8PUDVotJ5CBdaQ1zxsiddelXlUmUedbO/i19svl/e+F8DSY1AcydBjBtZmJG846GD2+ur9Zundj4sCAOMUyK94/6sMvTULbRgyNKoLWK8oPk7zLuVpF+F9Zyabr37956fPf169qQh759permRFONwU5TekRHtSrG3u6oahtw0ONrf0nYfa7rau+ehAawS2ZpYVc0ezG1VNNznYDjAbZPD6x4O9hEHEOOmRCDMol59BQjPSxVAIPIC1kKZDlqb/AK7eQJ4RAwAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SPW/TQBi+poqEEqhKy4aQTmIABjsfpU1aJtd2KreuExKnFVPk2Bf3wPGZu8uXVCGxwNChIAFiZGDsT+EnIIEQKzMLA3eJURK83ePnfT7eu6tfIMsoUEMyVGPsqyFK1BHqMsyRimKO+US1PY4Y13yOh8hFcYAo+/Bn7/Lrx+pZBqzZIO9HhOE4NASPgw37qTf0CpEXh4UWpwJ/ZIPrPok59XwuOc/BC7AyxSjFoRAc9BkHmwtz+4REyIvFYC5AiUd5X0RJxzI44GB9gWyTqUWeJChOU6TUfDLoRpidLUCrLCbLXlbMUYioULjBp+X2PYZ9K5ADqza4NgNnZ6k5OzdRzyHLkIt5hJahEy8a/LcSg4hMSDYbEfrM4qifWo0TDm6VtpS6z5VysbwDi9t7xSJsHCfix6FmnGiObhrw1NQadacFNceA5uO21Tg2HRdajmFp0HYNRTs1Lfv8vGaZtgEP2g6sabpbbz6BCjzSnEa7KS57TcZRZRx1uryLn2++XN79lgErhyA7lJnHFKzPSc6g30X01dX7O/l33y8yAIwTIL/svbcyc2WeuVSeZRZwcUtpoWS5ivC+OZdNN7/x49Pn3y9fV4W99c9ebiQnHHKi+6aU6Ex7dcrV3e1KpVPi4Hbt4Khg1u/rDwq6XtjZfQhJD0qmUq5wYLiI9qGePjo4Eg+AQjZIkmgCvTiADI0Q9UIE2YSJK4A4ZjhAsCfIhAoKh0I+Sf4CygZFBR0DAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SMW/TQBi9poqEGqhKywjSJzEAg53EUkNaJtd2KreukyZOK6bIcS7ugeMz50uaShUSCwwdygCIkYGxP4WfgARCrMwsDNw5Rk247d697733ffdd/ULFlCE1pBM1JoEa4kQ9xf2UcKzimBN+pjo+xynXA04m2MPxALP0w5/ty68f6ycFtOqgUhDRlMShKXgcrTvP/Ilfjvw4LHc4E/gTB90MaMyZH3DJeYFeoqUMY4yEQnA8SjnamKvboTTCfiwKVwY48RkfiSh5WYEMOFqbIzs0syjRBMd5ipxaSsb9iKQnc9ByGtNFLzvmOMRMKNziWXM7fkoCeyALlh10YwbO7lJzdm/joUsXIY/wCC9CR340/m8kJhWZsOzslLLnNsej3GqacHSnqinNgCtaRatBpbZdqUDrIBEPe7p5pLuGZcKxpbeabgd01wTrsGu3DizXA9s1bR0cz1T0Y8t2zs8btuWYsNt1oaEbXrP9FBTY191Wty0+e1XGUWUcNRvexc+3Xy7vfyugpT1UnMjMU4bWrknueNTH7PXV+3uld98vCghNEyRP8cGhzLw5l7k6yyzgSlXp4GSxFeF9+1o2n/z6j0+ff796Uxf29j97OZEV4VASvW9IiV7WV0+rb21q9V6Vo7uN3f2y1XxoPCobRrm2VQU6BMlUtMfAke5hNgIj3zoYUgZijciQBGJ7wSATEoH8gOyFxCkZYGgIJmVn4HMQ4knyF6FdJKQbAwAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SMW/TQBi9poqEmlKVthtCOgkJtYOdxKJtWsTg2k7l1nVC4rRiqhzni3vg+Mz5kgapQmKBoUMZADEyMPYf8Bf4CUggxMrMwsBdYpSE2+7d+95733ff9S+UTxlSQzpQYxKoISTqObRTwkGFmBP+XHV8DinXA04G4EHcAZa+/7N79fVD5SyHlhxUCCKakjg0BY+jFeeJP/CLkR+HxSZnAn/goMWAxpz5AZecZ+gFmhthjJFQCPZ7KUerU3V7lEbgx6JwoQOJz3hPRMnKcqTD0fIU2aEjiwJNIM5SZNRC0m9HJD2bgubTmM562TGHEJhQuMlHze35KQnsjiyYd9CNMTi+S83xvQFdl85CHuERzELHftT/byQmFZlAdnZO2VObQy+zGiYcrZU1pRZwRStpW7i0uVsq4fpRIh4OdPNYdw3LxCeWXq+5Tay7JrYetez6keV62HZNW8eOZyr6iWU7FxdV23JMvN9ycVU3vFrjMVbwoe7WWw3x2UsyjirjqKPhXf588+Xq7rccmjtA+YHMPGRoeUJy+702sFfX7+4U3n6/zCE0TJA8+XufZebNSeayNs4s4FJZaUIy24rwvjWRzSa/8uPjp98vX1eEvf3PXk5kQTgsit5XpcTpqK9TrbJzv7x9WubodnX/sGjV1o2NomEUt3Y0TLtYMhVtm6OHHrAeNrKlw+uesYG7lGGxSqRLArHB2IogEOsZ+BGWP4Fpn6ekA1joJslf2RAFsBYDAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SMW/TQBi9poqEGlqVthuqdBISagc7iaEhbVlc26ncOk5InFZMkeNc3APnzpwvaZAqJBYYOpQBECMDY38KPwEJhFhZWFgYuEuMknDbvXvfe+/77rv+CbIJA2pIhyrBgRqiWD1HnQRzpCLCMX+uOj5HCdcDjofIQ6SLWPL+z97Vlw/lswxYcUAuiGiCSWgKHgdrzhN/6Ocjn4T5JmcC33fAzYASzvyAS84z8AIsjDHGcCgEB/2Eg/WZugNKI+QTUbjURbHPeF9EScsyuMvB6gzZoWOLHI0RSVOk1Fw86EQ4OZuBFhNC571swlGImFBY5uPmDvwEB3ZXFiw64MYEnNyl5uTeQD2XzkMe5hGah078aPDfSEwqMiHZ2TllT22O+qnVKOZgo6gptYArWkErwcLOXqEA69VYPBzp5onuGpYJTy29XnObUHdNaD1q2fWq5XrQdk1bh45nKvqpZTsXFxXbckx42HJhRTe8WuMxVOCx7tZbDfHZKzKOKuOo4+Fd/njz+erO1wxYOALZocw8YmB1SnIH/Q5ir67fbebefrvMADCKgTzZu79k5p1p5mJRZtarAi4UlSaK51sR3remsunk175//PT75euysLf/2cuJLAmHZdH7upRoj/tqa+Xd+yWtXeTgduXwOG/VtoztvGHkS7v3IO1ByVS0Bxw89BDrQyNdOrjlGduwRxkUq4R7OBAbDK0IBWI9Az+C8icgJgnuIihk4/gvmmI7TxUDAAA=" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SMW/TQBi9poqEGohKy1ZVOgkGGOw4HkJSJsd2KreOE1KnFVPkOBf3wPGZ8zlNpQqJBYYOZQDEyMDYn8JPAIEQKzMLA3eOURJuu3fve+99333Xv0AxoUAOyFSOsC8HKJbP0DDBDMkoYpidy7bHUMI0n+EpclE0QjR5/2fv6suH+mkBlG1Q8kOS4CgwOI+BLfupN/UqoRcFlSNGOf7IBjd9EjHq+UxwnoMXYC3DKMUBF0wnCQPbS3VNQkLkRbxwY4Rij7IJj5KXFfCIgc0lsk0yixKJUZSnyKmlOB2GODldgtaTiKx6WRFDAaJc4RbLmmt6CfatkShYt8GNOTi/C835vYfGDlmFXMxCtAode2H630gMwjMh0dkZoc8shia51Sxm4I7SkDo+k1RFrUGltqcosNuO+cOBZhxrjm4a8MTUuh3nCGqOAc3HfavbNh0XWo5hadB2DUk7MS374qJlmbYB9/sObGm62+k9gRI81Jxuv8c/uyziyCKOnA3v8uebz1d3vxXA2gEoTkXmGQWbC5KTToaIvrp+t1t6+/2yAMAsBuIU733lmavqInO1KjJrbQ6rNUlLg9VWuPfthWw++a0fHz/9fvm6zu2tf/ZiIhvcocx73xYSg6yvgVpvKFV1UGVgp7V/WDE79/UHFV2v1BoKJGMomJL6kIGmi+gE6vnSwTGhkG8RHmOfLy/U8RSHUMw/eyEpS/AIwTGnEnoOPQa5eBz/BTL236MbAwAA" />
+<input type="hidden" name="iterRows_0" value="VZH4sIAAAAAAAAAF1SPW/TQBi+plRCDZTSIjakk1hg8EciJURlcmMncuo6IXFaMUUX5+oc2D5zfpMGVCGxwNChDIAYGRj7U/gJSCDEwsDM0oFzEtQEb+/j530+Xvv8N1pLBVIDPlZj5qsBTdRj2k8ZUJXGwOC56hCgKRg+sDH1aDygIv1wsXP29WNlmEMbDsr7IU9ZHJiSB2jLeULGRAtJHGgdEBJ/6KBrPo9BEB8yzjP0Eq1MMSFYIAVHUQpoe2Fvl/OQklgurg9oQgREMsp8LccGgDYXyA6fWuR5QuN5ijk1n4z6IUuHC9BqGvNlLzsGGlAhFa7DtNwuSZlvD7KFVQddnYGzOdOczW165PJlyGMQ0mXogISj/05icpmJZs2OuXhqA43mVpME0K1CSWn6oBT1YhnrpR1dx639RL5oGOaB4VYtEx9aRqvpdrDhmth61LVb+5brYds1bQM7nqkYh5btnJzUbMsxcb3r4ppR9Zrtx1jBe4bb6rblx97I4qhZHHV6vNOfb7+c3f2WQysNtDbOMk8E2rwkuaOoT8Xr8/d38u++n+YQmiQoe65c/Moyl5cyF0oys4T1stIYxctVpPfNS9n55bd+fPr859WbirS3/9lnF1mXDjdk9+1Mojft1StWdL1S7hUA3a7V9zSraWt6QbM6bS0jKcUHgOpVHkVU+IyEuAssZC8IMB5jfoRhSHFBx56crJD6IDjuhCTAbRrREOS/g+9Jqfu4JeNBkvwFiKRwIxsDAAA=" />
+</div>
+										
+									<tr>
+										<td>
+											<!-- interface_elements -->
+												<table width="92%" border="0" align="center" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>&nbsp</td>
+													</tr>
+													<tr>
+														<td valign="left">
+															<table width="100%" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td valign="bottom" class="pageheader" align="left">Tenders By Organisation</td>
+																	<td align="right" width="80"><a id="PageLink_13" title="Back" class="customButton_link" value="Back" href="/eprocure/app?page=FrontEndTendersByOrganisation&amp;service=page">Back</a></td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<td>&nbsp;</td>
+													</tr>
+																								
+													<tr>
+														<td>&nbsp</td>
+													</tr>
+													<span id="If_17">	
+														<tr>
+															<td bgColor="#757575">
+															
+																
+
+<table border="0" bgColor="#f7f7f7" cellpadding="0" width="100%" cellspacing="1" id="table" class="list_table">
+	
+																	<tr class="list_header">																		
+																		<td width="5%" >S.No</td>
+																		<td  width="15%">e-Published Date</td>
+																		<td width="15%" >Closing Date</td>
+																		<td width="15%" >Opening Date</td>
+																		<td width="20%" >Title and Ref.No./Tender ID</td>
+																		<td width="15%" >Organisation Chain</td>																																														
+																	</tr>																												
+																	
+
+
+	<tr class="even" id="informal">
+																				        																												
+       																	<td align="center">1</td>
+       																	<td align="center">07-Oct-2026 06:00 PM</td>
+       																	<td align="center">24-Oct-2026 06:00 PM</td>
+       																	<td align="center">28-Oct-2026 10:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=S1rOiEay3kIXV893zkrExZw%3D%3D">[Term Contract for miscellaneous electrical work inside factory Premises]</a>
+																				[RFI/TE/RD2612/2026-27/EO (C)][2026_AWEIL_293528_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||RIFLE FACTORY ISHAPORE - KOLKATA</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="odd" id="informal_0">
+																				        																												
+       																	<td align="center">2</td>
+       																	<td align="center">01-Oct-2026 05:00 PM</td>
+       																	<td align="center">14-Oct-2026 05:00 PM</td>
+       																	<td align="center">16-Oct-2026 10:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_0" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SfOoy%2B2fVcINmFXmLyQUrRA%3D%3D">[Percentage Rate Contract for electrical work on Section-19 and associated civil works in  Section-21, Section-18, Section-17, Section-10, Section-06, Section-05, Section-04, Section-03 of SSR-2020 at Armapur Estate, Kanpur]</a>
+																				[OFC/EOC/09/RE/2026-27][2026_AWEIL_293093_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||ORDNANCE FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="even" id="informal_1">
+																				        																												
+       																	<td align="center">3</td>
+       																	<td align="center">29-Sep-2026 06:30 PM</td>
+       																	<td align="center">12-Oct-2026 05:00 PM</td>
+       																	<td align="center">14-Oct-2026 10:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_1" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SWB7Khts46pLtpQgAmR4Z7g%3D%3D">[Renovation/maintenance of Qtr No. CT/04 at Armapur Estate, Kanpur]</a>
+																				[OFC/EOC/10/RE/2026-27][2026_AWEIL_292762_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||ORDNANCE FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="odd" id="informal_2">
+																				        																												
+       																	<td align="center">4</td>
+       																	<td align="center">29-Sep-2026 05:00 PM</td>
+       																	<td align="center">12-Oct-2026 05:00 PM</td>
+       																	<td align="center">14-Oct-2026 10:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_2" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=S7V18kEk5j3jtvkfvgDjMgg%3D%3D">[Term Contract for Artificer Works in Sector-III at Armapur Estate, Kanpur]</a>
+																				[OFC/EOC/06/RE/2026-27][2026_AWEIL_292721_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||ORDNANCE FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="even" id="informal_3">
+																				        																												
+       																	<td align="center">5</td>
+       																	<td align="center">29-Sep-2026 05:00 PM</td>
+       																	<td align="center">12-Oct-2026 05:00 PM</td>
+       																	<td align="center">14-Oct-2026 10:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_3" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SagPkuLZgwuIWQXzHZZt7rw%3D%3D">[Term Contract for Artificers Work for Zone-D inside Factory at OFC, Kanpur]</a>
+																				[OFC/EOC/07/RF/2026-27][2026_AWEIL_292711_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||ORDNANCE FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="odd" id="informal_4">
+																				        																												
+       																	<td align="center">6</td>
+       																	<td align="center">21-Sep-2026 06:00 PM</td>
+       																	<td align="center">09-Oct-2026 06:00 PM</td>
+       																	<td align="center">13-Oct-2026 10:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_4" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=S3nz7u2DmUuuONEbIkqBYaQ%3D%3D">[Minor electrical work outside RFI Premises]</a>
+																				[RFI/TE/RD2510/2026-27/EO (C)][2026_AWEIL_291513_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||RIFLE FACTORY ISHAPORE - KOLKATA</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="even" id="informal_5">
+																				        																												
+       																	<td align="center">7</td>
+       																	<td align="center">15-Sep-2026 06:00 PM</td>
+       																	<td align="center">12-Oct-2026 06:00 PM</td>
+       																	<td align="center">15-Oct-2026 11:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_5" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=StoNpan3tSgWOvLcoxw3BPw%3D%3D">[Construction of Foundation for CNC Mill Turn Machining Center 1600 X 1600 X 1100 at FGK.]</a>
+																				[FGK/EO(C)/CC/696 of 2026-27][2026_AWEIL_290902_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="odd" id="informal_6">
+																				        																												
+       																	<td align="center">8</td>
+       																	<td align="center">11-Sep-2026 06:00 PM</td>
+       																	<td align="center">12-Oct-2026 06:00 PM</td>
+       																	<td align="center">15-Oct-2026 03:00 PM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_6" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SxHrjb%2FU4rGjNqWRFJ6RRWg%3D%3D">[Cleaning and Repair/ Replacement of RCC Roofs, GI/AC Sheet Roofs, Valley Gutters and Down Take Pipes of Production Shops and Non- Production Shops/Buildings at FGK.]</a>
+																				[ FGK/EO(C)/CC/695 of 2026-27][2026_AWEIL_290597_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="even" id="informal_7">
+																				        																												
+       																	<td align="center">9</td>
+       																	<td align="center">08-Sep-2026 06:00 PM</td>
+       																	<td align="center">12-Oct-2026 05:00 PM</td>
+       																	<td align="center">14-Oct-2026 11:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_7" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SyMpQbwV2RLL%2Bzwhwh8pMJQ%3D%3D">[Terms contract for Artificer works inside SAF, Kanpur]</a>
+																				[4073/950/SAF/OTE/26-27/EOC/02][2026_AWEIL_290110_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||SMALL ARMS FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="odd" id="informal_8">
+																				        																												
+       																	<td align="center">10</td>
+       																	<td align="center">03-Sep-2026 05:00 PM</td>
+       																	<td align="center">13-Oct-2026 05:00 PM</td>
+       																	<td align="center">17-Oct-2026 12:00 PM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_8" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=ShJ7jbjxKX6w8Ns8rUkuUxA%3D%3D">[Term Contract water supply and sewerage system inside factory at FGK]</a>
+																				[FGK/EO(C)/CC/694 of 2026-27][2026_AWEIL_289577_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="even" id="informal_9">
+																				        																												
+       																	<td align="center">11</td>
+       																	<td align="center">01-Sep-2026 06:00 PM</td>
+       																	<td align="center">12-Oct-2026 06:00 PM</td>
+       																	<td align="center">15-Oct-2026 01:00 PM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_9" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SlI2lHZ67RdSOB9bhA6Mdng%3D%3D">[Term Contract for artificers Civil work for inside Factory at FGK]</a>
+																				[FGK/EO(C)/CC/691 of 2026-27 ][2026_AWEIL_289528_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="odd" id="informal_10">
+																				        																												
+       																	<td align="center">12</td>
+       																	<td align="center">01-Sep-2026 05:00 PM</td>
+       																	<td align="center">12-Oct-2026 05:00 PM</td>
+       																	<td align="center">15-Oct-2026 12:00 PM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_10" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SjV1te%2FqnQXlYggIhXvcZLw%3D%3D">[Term Contract (TC) for artificers Electrical work outside FGK]</a>
+																				[FGK/EO(C)/CC/692 of 2026-27][2026_AWEIL_289417_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="even" id="informal_11">
+																				        																												
+       																	<td align="center">13</td>
+       																	<td align="center">01-Sep-2026 05:00 PM</td>
+       																	<td align="center">12-Oct-2026 05:00 PM</td>
+       																	<td align="center">15-Oct-2026 11:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_11" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SPAWXxTSISBidOlQ5jIuu9A%3D%3D">[Term Contract (TC) for artificers Electrical work inside FGK]</a>
+																				[FGK/EO(C)/CC/693 of 2026-27][2026_AWEIL_289462_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="odd" id="informal_12">
+																				        																												
+       																	<td align="center">14</td>
+       																	<td align="center">26-Aug-2026 06:00 PM</td>
+       																	<td align="center">09-Oct-2026 06:00 PM</td>
+       																	<td align="center">12-Oct-2026 11:00 AM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_12" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=SeJ79Jw5nRlhIn8%2B6nBRdRA%3D%3D">[Term Contract for artificers Civil work for outside factory at FGK]</a>
+																				[FGK/EO(C)/CC/690 of 2026-27][2026_AWEIL_289012_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+	<tr class="even" id="informal_13">
+																				        																												
+       																	<td align="center">15</td>
+       																	<td align="center">06-Jun-2026 05:00 PM</td>
+       																	<td align="center">15-Oct-2026 05:00 PM</td>
+       																	<td align="center">16-Oct-2026 05:15 PM</td>
+       																	<!-- <td align="center"><span jwcid="@Insert" value="ognl:currentRow.tenderRefNo" /></td> -->
+       																	<td align="center"><a id="DirectLink_13" title="View Tender Information" href="/eprocure/app?component=%24DirectLink&amp;page=FrontEndViewTender&amp;service=direct&amp;session=T&amp;sp=S2FDhpf5fCRtdExDAy5l0gg%3D%3D">[Commercial Utilization of the 10 Ton Electro Slag Remelting (ESR) Plant]</a>
+																				[FGK/EOI/01/ESR/2026-27][2026_AWEIL_280086_1]
+																		</td>
+       																	<td align="center">ADVANCED WEAPONS AND EQUIPMENT INDIA LTD-AWEIL||FIELD GUN FACTORY - KANPUR</td>       																	       																	       																	  
+       																
+	</tr>
+
+
+
+																	<tr>																		
+																	</tr>
+																
+</table>
+
+
+															</td>
+														</tr>
+													</span>
+													
+													<tr>
+														<td>&nbsp;</td>
+													</tr>
+											  </table>
+											  <!-- END: interface_elements -->
+										</td>
+									</tr>
+									</form>
+								</table>
+							</td>
+						</tr>								
+					</table>
+					<!-- End : Content Area -->
+			</td>
+		</tr>
+	</table>
+
+							<!-- Page content ends here -->	
+							</td>				
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td valign="bottom" height="40">
+					<table width="100%" cellspacing="0" cellpadding="0">
+	 <tr style="background-color:#E8E8E8;"> 
+	 <td height="25" class="text2" align="center"><b>Visitor No:10621811</b></td>
+		
+	  </tr>
+	 <tr style="background-color:#E8E8E8;"> 
+	
+		<td height="25" class="text2" align="center">Contents owned and maintained by concerned Departments in coordination with Finance Department and Information Technology Department, Government of India		  
+		 </td>
+	  </tr>
+	  <tr valign="top" class="secondaryBg"> 
+		<td>
+			<table width="100%" height="22" border="0" cellpadding="1" cellspacing="1">
+
+				
+				<tr class="footer">
+					<td width="40%" valign="top" align="left">Designed, Developed and Hosted by<br/>  <a href="http://www.nic.in" target="_blank" rel="noopener noreferrer" class="footerlink">National Informatics Centre</a></td>
+					<td width="40%" align="left">
+						 Version : 1.09.24 17-Jul-2026<br />
+						(c) 2017 Tenders NIC, All rights reserved.<br/>Site best viewed with a screen resolution 1920 x 1080.</td>					
+					<td width="20%" valign="top" align="right"><a id="PageLink_14" class="footerlink" href="/eprocure/app?page=Disclaimer&amp;service=page">Portal policies</a></td>
+				</tr>
+			</table>
+		</td>
+	  </tr>
+</table>
+				</td>
+			</tr>
+			<tr>
+			    <td>
+			        <form method="post" action="/eprocure/app" id="WebBorder_0">
+<div style="display:none;" id="WebBorder_0hidden"><input type="hidden" name="formids" value="domainUrl" />
+<input type="hidden" name="seedids" value="ZH4sIAAAAAAAAAF1Qy07DMBBMD/yJjz7Eoc8jFQ2qFBBqKzhGabKhVpPdyDZE5ZeAT+MfWMdVVXGxZ3fs2Zn9/o1uPqNo9DP6khbMhy5BxLIr3vxVUtsRAroBoys0gmFswVpN6FHHxyvsl2QqppRcI6s4oeKF3B6gaZi+w5OYyCVVp/B2R92ywKDUaDwqZte1UHOZkhHJjIs8FkksV40FoRZnzVz53hknHh+ohYwFWOeZDXuYT6+LWRj4RC7EuhDzQGRQu0fAd64egA3p8p+cUJNrhm3dyg0gRx3iKJkaXssKqxcN/W4g+LejI+AWSgN+ca7YNxxDuoHOtHUb6rmvHRhGVqip1FiTaYtGqLHsTdF1UHl4rw2ULhgZe8MpkfMj/gD6P5k7tgEAAA==" />
+<input type="hidden" name="component" value="$WebBorder.WebBorder" />
+<input type="hidden" name="page" value="FrontEndViewTender" />
+<input type="hidden" name="service" value="direct" />
+<input type="hidden" name="session" value="T" />
+<input type="hidden" name="submitmode" value="" />
+<input type="hidden" name="submitname" value="" />
+<input type="hidden" name="domainUrl" id="domainUrl" value="Shttps://etenders.gov.in/eprocure/app" />
+</div>
+				       
+				   </form>
+			    </td>
+			</tr>
+		</table>
+	</div>
+<script type="text/javascript"><!--
+tapestry.addOnLoad(function(e) {
+dojo.require("tapestry.form");tapestry.form.registerForm("FrontEndViewTender");
+
+tapestry.form.registerForm("WebBorder_0");});
+// --></script></body>
+</html>

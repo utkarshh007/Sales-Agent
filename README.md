@@ -8,13 +8,13 @@ The design follows three priorities: **relevance over volume, precision over cou
 
 ```
 Scheduler ─► Portal connector ─► tenders (+versions) ─► Document processor ─► Rule engine ─► LLM analysis ─► Matching ─► Scoring ─► Decision ─► Alerts
-  (worker)    (CPPP HTML)          fingerprint/dedupe     PDF/DOCX/XLSX/ZIP/OCR    no tokens      only if needed    catalog-bound   explainable   audit log    email/digest
+  (worker)    (CPPP, GePNIC)       fingerprint/dedupe     PDF/DOCX/XLSX/ZIP/OCR    no tokens      only if needed    catalog-bound   explainable   audit log    email/digest
 ```
 
 | Stage | Where | What it does |
 |---|---|---|
 | Discovery | `app/connectors/` | Walks listing pages newest-first, stops after pages with nothing new. Respects robots.txt, rate-limits, retries, and **stops at any CAPTCHA** (never bypassed). |
-| Dedupe / updates | `app/pipeline.py` | Stable fingerprint (portal + tender ID). A material change (closing date, corrigendum, value, documents) creates a new `tender_versions` row and triggers re-analysis; unchanged tenders are never re-queued. |
+| Dedupe / updates | `app/pipeline.py` | Stable fingerprint per portal (`tender_sources`). The same tender listed on several portals is merged into one record (tender ID confirmed by reference number or title). A material change (closing date, corrigendum, value, category, description) creates a new `tender_versions` row and triggers re-analysis; unchanged tenders are never re-queued. |
 | Documents | `app/documents/` | Magic-byte type detection, executable rejection, optional ClamAV, bounded ZIP handling, text extraction, OCR of scanned pages (tesseract), section detection, deterministic INR value parsing (lakh/crore). |
 | Pre-filter | `app/rules/prefilter.py` | Closed tenders, non-cyber tenders (civil works, guards, CCTV…), and service-only tenders whose stated value exceeds ₹30 lakh are rejected **without calling the LLM**. On a live 452-tender CPPP sample, all 452 were screened out at zero token cost. |
 | LLM analysis | `app/llm/` | Claude (`claude-opus-5-5` by default) extracts the 28 section-11 fields with value/confidence/evidence, maps requirements to the catalog, splits SERVICE/PRODUCT components. Structured outputs constrain capability and product IDs to the catalog, so the model cannot invent an offering. Only targeted document sections are sent. |
@@ -26,13 +26,28 @@ Scheduler ─► Portal connector ─► tenders (+versions) ─► Document pro
 
 ### Tender sources
 
-**Phase 1 portal: CPPP — Central Public Procurement Portal (eprocure.gov.in).** CPPP publishes no API or RSS feed, so the connector reads the public HTML listings (`cpppdata` for central tenders and, optionally, `mmpdata` for state tenders). These give title, reference, tender ID, organisation, published, closing and opening dates, and corrigendum status.
+None of these portals publishes an API or RSS feed, so both connectors read public HTML. Neither solves or bypasses CAPTCHAs.
 
-CPPP's tender detail pages and documents sit behind an image CAPTCHA. The system **does not solve or bypass it**. Instead:
+| Source | Connector | What is read automatically | What needs a person |
+|---|---|---|---|
+| **CPPP** — Central Public Procurement Portal (eprocure.gov.in/cppp) | `cppp_html` | Listing: title, reference, tender ID, organisation, dates, corrigendum (`cpppdata` central; `mmpdata` states optional) | Detail page **and** documents (CAPTCHA) |
+| **GePNIC** — NIC eProcurement: central CPSEs, central ministries, defence, PMGSY and 27 state/UT portals | `gepnic_html` | Organisation lists **and the tender detail page**: tender value, EMD, product category, work description, pre-qualification note, period of work, location, critical dates, inviting authority, document names | Documents only (CAPTCHA) |
 
-1. Tenders are screened on their listing data. Clear matches surface immediately, marked "Documents needed".
-2. An analyst opens the source link, completes the CAPTCHA, downloads the documents, and uploads them on the tender page.
-3. The full pipeline then runs on the documents (value extraction, requirements, eligibility, LLM analysis) and the tender is re-scored.
+GePNIC instances share one platform, so one connector serves all 31 of them (`GEPNIC_PORTALS` in `app/connectors/registry.py`, each verified live). The two central portals and defence are on by default. State portals start switched off; admins turn on the states the team bids in under **Sources & rules**.
+
+How a GePNIC run stays light on the portal: it reads the organisation index and each organisation's tender list, one request per organisation. It opens a tender's detail page only when the title shows a possible capability or security signal **and** the tender is new, changed, or has never been detailed. On the live central portal, 2,138 tenders cost 85 listing requests and 7 detail requests. GePNIC links are session-bound, so tenders carry a "How to find it" hint (portal → organisation → tender ID) instead of a permalink.
+
+Because the portal publishes the tender value, the ₹30 lakh service rule and category screening run on real data before anyone touches a document.
+
+When documents are behind a CAPTCHA:
+
+1. Tenders are screened on the listing and, for GePNIC, the detail page. Clear matches surface immediately, marked "Documents needed".
+2. An analyst opens the portal, completes the CAPTCHA, downloads the documents, and uploads them on the tender page.
+3. The full pipeline then runs on the documents (requirements, eligibility, BOQ values, LLM analysis) and the tender is re-scored.
+
+**Cross-portal merging.** CPPP aggregates tenders that are published on GePNIC portals, so the same tender is often seen twice. Tender IDs are only unique within a portal, so a match on tender ID must be confirmed by the reference number or title; otherwise the tenders stay separate. A merged tender keeps every source, and the richer GePNIC details enrich the CPPP listing.
+
+**Not yet covered.** GeM (bidplus.gem.gov.in) blocks connections from outside India, and this build was developed from a non-Indian network, so no GeM connector was written or verified. Build and verify it from an Indian network. Gujarat (nProcure), Karnataka (KPPP), Telangana, Andhra Pradesh, Bihar and Chhattisgarh use other platforms or were unreachable, and each needs its own connector.
 
 Analysts can also add tenders from any other source (partner emails, portals without a connector) under **Sources & rules → Add a tender by hand**. These go through the same analysis.
 
@@ -51,7 +66,7 @@ In rules-only mode (no API key), technical coverage is capped until the LLM item
 
 ### The capability catalog
 
-`backend/app/catalog/catalog.yaml` is the single source of truth: 50 capabilities across categories A–T, 41 OEM products, the synonym lexicon (direct / semantic / adjacent), exclusion phrases (physical security, civil works…) and generic signals. Edit the YAML and run `python -m app.cli seed`. The LLM prompt and output schema are generated from it automatically.
+`backend/app/catalog/catalog.yaml` is the single source of truth: 50 capabilities across categories A–T, 41 OEM products, the synonym lexicon (direct / semantic / adjacent), exclusion phrases (physical security, civil works…) and generic signals. Acronyms that have common non-cyber meanings in Indian tenders need cyber context: *DLP* is usually Defect Liability Period, *MDR* is Major District Road. The live-data regression tests in `tests/test_phase2_portals.py` guard these. Edit the YAML and run `python -m app.cli seed`. The LLM prompt and output schema are generated from it automatically.
 
 ## Running locally
 
@@ -73,7 +88,7 @@ npm install
 npm run dev                                        # http://localhost:3000 (proxies /api to :8000)
 ```
 
-Run one discovery pass on demand: `python -m app.cli discover cppp --max-pages 3`.
+Run one discovery pass on demand: `python -m app.cli discover cppp --max-pages 3` or `python -m app.cli discover gepnic_central`.
 
 Set `ANTHROPIC_API_KEY` to enable LLM analysis. Without it the system runs in **rules-only mode**: deterministic matching, clearly labelled in the UI and audit log.
 
@@ -114,18 +129,21 @@ Nothing in the engine, scoring, alerts or dashboard changes.
 ## Tests
 
 ```bash
-cd backend && pytest -q        # 76 tests
+cd backend && pytest -q        # 93 tests
 cd frontend && npm run lint && npm run build
 ```
 
 - `tests/test_required_cases.py`: the 12 cases from the specification (₹18 L red team → accept, ₹31 L AppSec → reject, ₹2 Cr Splunk → OEM accept, hybrid variants, civil construction → reject without LLM, SIEM/PAM/CSPM/DLP/BAS portfolio matching) plus semantic-matching examples.
 - `tests/test_pipeline_e2e.py`: discovery → dedupe → analysis → persistence → alerts → update/versioning → document upload → re-qualification, using a real CPPP page captured from the live site.
 - `tests/test_llm.py`: request shape (caching, structured output, fallbacks), catalog-bound IDs, refusal → manual review, truncation → retry.
+- `tests/test_phase2_portals.py`: GePNIC parsing against live captures, a simulated multi-organisation crawl, detail fetched only for candidates, no false updates on reruns, closing-date extensions, detail caps, cross-portal merging and ID collisions, CAPTCHA blockers, and false-friend acronyms taken from live data.
 - `tests/test_documents.py`, `tests/test_connectors.py`, `tests/test_api.py`: extraction and safety, parsing/robots/CAPTCHA handling, auth, CSRF, roles, upload, review flow.
 
 ## Known limitations and next phases
 
-- **CPPP documents need a human** because of the CAPTCHA (see above). Phase 2 candidates with better machine access: GeM bid listings (also shown on CPPP), state NIC eProcurement instances (same CAPTCHA model), and organisation-specific portals.
+- **Documents need a human** on CPPP and GePNIC because of the CAPTCHA (see above). GePNIC detail pages close most of the gap for screening.
+- **GeM** is not yet connected (see "Not yet covered").
+- A full GePNIC sweep is one request per organisation, about 4 minutes for the central portal at the polite 2-second delay. With many state portals turned on, run more than one worker so discovery doesn't delay analysis.
 - Legacy `.doc` / `.xls` files are flagged for conversion; DOCX/XLSX/PDF are fully supported.
 - The rate limiter is per-process; with several API replicas, rate-limit at the proxy as well.
 - Semantic search over historical tenders (pgvector) and win/loss analytics belong to Phases 4–6. The schema already keeps every version, score and decision needed for them.
