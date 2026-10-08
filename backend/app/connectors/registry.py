@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from app.config import Settings
 from app.connectors.base import PortalConnector
+from app.connectors.buyer_page import BuyerPageConnector
 from app.connectors.cppp import CpppConnector
 from app.connectors.gepnic import GepnicConnector
 
 CONNECTORS: dict[str, type[PortalConnector]] = {
     CpppConnector.connector_key: CpppConnector,
     GepnicConnector.connector_key: GepnicConnector,
+    BuyerPageConnector.connector_key: BuyerPageConnector,
 }
 
 # GePNIC instances verified reachable with the standard "Tenders by Organisation" layout.
@@ -78,6 +80,55 @@ DEFAULT_PORTALS = [
         }
         for code, (name, url, enabled) in GEPNIC_PORTALS.items()
     ],
+    # Buyers' own tender pages (Phase 3). Each was checked for robots.txt permission and a readable
+    # tender table; documents are linked directly (no CAPTCHA) and run through the document pipeline.
+    {
+        "code": "buyer_sbi",
+        "name": "State Bank of India — procurement news",
+        "connector": "buyer_page",
+        "base_url": "https://sbi.bank.in/web/sbi-in-the-news/procurement-news",
+        "acquisition_method": "HTML",
+        "schedule_minutes": 180,
+        "config": {
+            "pages": [{"url": "https://sbi.bank.in/web/sbi-in-the-news/procurement-news",
+                       "organization": "State Bank of India"}],
+            "render": "http",
+            "reference_regex": r"^(?P<ref>[A-Z0-9][^:]{3,80}):",
+        },
+        "blocker": None,
+    },
+    {
+        "code": "buyer_cdac",
+        "name": "C-DAC — tenders",
+        "connector": "buyer_page",
+        "base_url": "https://www.cdac.in/index.aspx?id=tenders",
+        "acquisition_method": "HTML",
+        "schedule_minutes": 360,
+        "config": {
+            "pages": [{"url": "https://www.cdac.in/index.aspx?id=tenders",
+                       "organization": "Centre for Development of Advanced Computing (C-DAC)"}],
+            "render": "http",
+            "follow_detail": True,
+        },
+        "blocker": None,
+    },
+    {
+        "code": "buyer_isro",
+        "name": "ISRO — tenders",
+        "connector": "buyer_page",
+        "base_url": "https://www.isro.gov.in/Tenders.html",
+        "acquisition_method": "HTML",
+        "enabled": False,  # rows carry only an advert number, so every new notice PDF must be read
+        "schedule_minutes": 720,
+        "config": {
+            "pages": [{"url": "https://www.isro.gov.in/Tenders.html",
+                       "organization": "Indian Space Research Organisation (ISRO)"}],
+            "render": "http",
+            "screen": "documents",
+            "max_details_per_run": 40,
+        },
+        "blocker": "Listing shows only advert numbers; tenders are screened by reading each notice PDF.",
+    },
     {
         # Pseudo-portal for tenders an analyst enters by hand (e.g. from email, partner, or a portal
         # without a connector). No discovery runs for it.

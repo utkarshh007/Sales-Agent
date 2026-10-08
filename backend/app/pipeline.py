@@ -222,12 +222,13 @@ def discover_portal(session: Session, portal: Portal, settings: Settings, connec
         select(TenderSource.fingerprint, TenderSource.listing_hash, TenderSource.detail_hash)
         .where(TenderSource.portal_id == portal.id))}
 
-    def wants_detail(item: TenderListing) -> bool:
-        """Read a detail page only for plausible matches that are new, changed or never detailed."""
+    def wants_detail(item: TenderListing, require_signal: bool = True) -> bool:
+        """Read a detail page / documents only for tenders that are new, changed or never detailed —
+        and, unless the connector screens by document text, only when the title shows a possible match."""
         prev = known.get(connector.fingerprint(item))
         if prev is not None and prev[0] == _hash(item.content_signature()) and prev[1] is not None:
             return False
-        return title_is_candidate(item.title, item.closing_at, catalog)
+        return title_is_candidate(item.title, item.closing_at, catalog) if require_signal else True
 
     result = connector.discover(lambda fp: fp in known, wants_detail)
     counts = {"NEW": 0, "MERGED": 0, "UPDATED": 0, "UNCHANGED": 0}

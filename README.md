@@ -8,7 +8,7 @@ The design follows three priorities: **relevance over volume, precision over cou
 
 ```
 Scheduler ─► Portal connector ─► tenders (+versions) ─► Document processor ─► Rule engine ─► LLM analysis ─► Matching ─► Scoring ─► Decision ─► Alerts
-  (worker)    (CPPP, GePNIC)       fingerprint/dedupe     PDF/DOCX/XLSX/ZIP/OCR    no tokens      only if needed    catalog-bound   explainable   audit log    email/digest
+  (worker)    (CPPP, GePNIC, buyer pages; HTTP or headless browser)    PDF/DOCX/XLSX/ZIP/OCR    no tokens      only if needed    catalog-bound   explainable   audit log    email/digest
 ```
 
 | Stage | Where | What it does |
@@ -44,6 +44,32 @@ When documents are behind a CAPTCHA:
 1. Tenders are screened on the listing and, for GePNIC, the detail page. Clear matches surface immediately, marked "Documents needed".
 2. An analyst opens the portal, completes the CAPTCHA, downloads the documents, and uploads them on the tender page.
 3. The full pipeline then runs on the documents (requirements, eligibility, BOQ values, LLM analysis) and the tender is re-scored.
+
+### Buyer tender pages (Phase 3)
+
+Many banks, regulators and agencies publish tenders on their own websites, usually as a table that links each tender's notice PDF, with no CAPTCHA. The `buyer_page` connector reads these pages, by plain HTTP or, for pages built by JavaScript, a headless Chromium browser (`render: "browser"`). It maps table columns by their headers, parses Indian date formats (including ranges like "28 Sept – 10 Nov"), and pulls references out of titles. For likely matches it **downloads the linked documents**, which then go through the full document pipeline automatically.
+
+| Source | Status | Notes |
+|---|---|---|
+| State Bank of India (procurement news) | on | ~200 open tenders; the live run surfaced 2 cybersecurity tenders from SBI's Information Security Department and read their RFPs automatically |
+| C-DAC tenders | on | Opens each tender's detail page for its document |
+| ISRO tenders | off | Rows show only advert numbers, so `screen: "documents"` reads every new notice; heavier, so admins choose |
+
+**Adding a page needs no code.** Under **Sources & rules → Add a buyer's tender page**, an admin enters the page address and runs **Preview**, a dry run showing what would be extracted. Saving requires confirming that the site's terms allow automated reading, plus a note on how that was confirmed; both are kept in the audit log. Pages whose robots.txt disallows them are refused.
+
+Checked and **not added**, because automated access isn't permitted or the page was unreachable from the development network:
+
+| Site | Reason |
+|---|---|
+| NCRB, IRDAI | robots.txt disallows all |
+| MeitY, NPCI, NIC | Return HTTP 403 to automated clients (treated as not permitted) |
+| NHAI, BSNL, NABARD, several banks, GeM | Unreachable from the development network |
+
+Browser automation follows the same rules as plain HTTP:
+- robots.txt is honoured and requests are rate-limited.
+- Any CAPTCHA, or an HTTP 401/403/407/429 response, stops the run. The browser is never used to get past a block a plain client hits.
+- Images, fonts and media are not loaded.
+- Requests from page scripts to private addresses are aborted.
 
 **Cross-portal merging.** CPPP aggregates tenders that are published on GePNIC portals, so the same tender is often seen twice. Tender IDs are only unique within a portal, so a match on tender ID must be confirmed by the reference number or title; otherwise the tenders stay separate. A merged tender keeps every source, and the richer GePNIC details enrich the CPPP listing.
 
@@ -114,13 +140,15 @@ All rules, thresholds, weights, schedules and integrations are environment varia
 - Passwords hashed with Argon2id; sessions are signed JWTs in `HttpOnly`, `SameSite=Lax` cookies (`Secure` in production) with a double-submit CSRF token on every mutation.
 - Role-based access, login and API rate limiting, strict security headers, HSTS via Caddy, API docs disabled in production.
 - No credentials in code. Portal credentials are referenced by env-var name in `portal_credentials_metadata`; any stored secret is Fernet-encrypted with `FERNET_KEY`. Emails never contain secrets.
+- **SSRF protection.** Every fetch, including each redirect hop, document links found on pages, and requests made by scripts inside the headless browser, is refused if it targets a private, loopback, link-local or metadata address. Admin-supplied buyer-page URLs go through the same check.
+- **Browser isolation.** Chromium runs headless as the container's unprivileged user. As is Playwright's default, it runs without Chromium's own sandbox, so the container is the isolation boundary. Pages can't download files, and page-initiated requests are filtered as above.
 - Documents are treated as hostile: type is detected from content, executables are refused, archives are bounded (member count, total size, nesting) and never extracted to archive-supplied paths, macros are never executed, optional ClamAV scanning, and files are stored under hash names.
 - Tender text is passed to the LLM as untrusted data, and the prompt instructs the model to ignore instructions inside it.
 - Portal access respects robots.txt and rate limits. CAPTCHA, anti-bot and login walls stop the connector and are logged as blockers.
 
 ## Adding a portal
 
-1. Subclass `PortalConnector` (`app/connectors/base.py`). Implement `list_page()`, and `fetch_detail()` / `download_document()` if the portal exposes them without human intervention. Use `BrowserPortalConnector` for JavaScript-only portals where automation is permitted.
+1. Subclass `PortalConnector` (`app/connectors/base.py`). Implement `list_page()`, and `fetch_detail()` / `download_document()` if the portal exposes them without human intervention. For organisations' own tender pages you usually need no code: add a `buyer_page` source (see "Buyer tender pages").
 2. Register it in `app/connectors/registry.py` and add a `portals` row (or a `DEFAULT_PORTALS` entry).
 3. Add a parser test against a saved page in `tests/fixtures/`.
 
@@ -129,7 +157,7 @@ Nothing in the engine, scoring, alerts or dashboard changes.
 ## Tests
 
 ```bash
-cd backend && pytest -q        # 93 tests
+cd backend && pytest -q        # 120 tests (one launches headless Chromium; run `python -m playwright install chromium` first)
 cd frontend && npm run lint && npm run build
 ```
 
@@ -137,6 +165,7 @@ cd frontend && npm run lint && npm run build
 - `tests/test_pipeline_e2e.py`: discovery → dedupe → analysis → persistence → alerts → update/versioning → document upload → re-qualification, using a real CPPP page captured from the live site.
 - `tests/test_llm.py`: request shape (caching, structured output, fallbacks), catalog-bound IDs, refusal → manual review, truncation → retry.
 - `tests/test_phase2_portals.py`: GePNIC parsing against live captures, a simulated multi-organisation crawl, detail fetched only for candidates, no false updates on reruns, closing-date extensions, detail caps, cross-portal merging and ID collisions, CAPTCHA blockers, and false-friend acronyms taken from live data.
+- `tests/test_phase3_buyer_pages.py`: SBI, C-DAC and ISRO parsing against live captures, date formats, documents fetched only for candidates and then qualified end to end from the PDF, document-screening mode, robots.txt and SSRF refusals, and a real headless-browser test showing JavaScript-built tables are read where plain HTTP sees nothing.
 - `tests/test_documents.py`, `tests/test_connectors.py`, `tests/test_api.py`: extraction and safety, parsing/robots/CAPTCHA handling, auth, CSRF, roles, upload, review flow.
 
 ## Known limitations and next phases

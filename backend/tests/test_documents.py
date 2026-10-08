@@ -4,7 +4,7 @@ import io
 import zipfile
 
 import docx
-import fitz
+import pymupdf
 import openpyxl
 import pytest
 
@@ -59,7 +59,7 @@ def _docx(paras):
 
 
 def _pdf(text):
-    doc = fitz.open()
+    doc = pymupdf.open()
     page = doc.new_page()
     page.insert_text((72, 72), text)
     out = doc.tobytes()

@@ -123,6 +123,8 @@ export default function SourcesPage() {
         </Panel>
       )}
 
+      {isAdmin && <BuyerPageForm onSaved={(name) => { setMsg(`${name} added. It will be checked on its schedule; use “Check now” to run it immediately.`); load(); }} />}
+
       <Panel title="Commercial and relevance rules">
         <dl className="grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2">
           <Rule label="Service tenders" value={c.SERVICE_VALUE_RULE_ENABLED ? `Rejected above ${inr(Number(c.SERVICE_MAX_VALUE_INR))}` : "No value limit"} />
@@ -189,5 +191,110 @@ function Field({ label, className = "", ...props }: React.InputHTMLAttributes<HT
       <span className="text-muted">{label}</span>
       <input {...props} className="mt-1 w-full rounded-md border border-line bg-surface px-2.5 py-1.5" />
     </label>
+  );
+}
+
+interface PreviewOut {
+  open_tenders: number;
+  blockers: string[];
+  errors: string[];
+  items: { title: string; reference: string | null; closing_at: string | null; documents: number; detail_url: string | null }[];
+}
+
+function BuyerPageForm({ onSaved }: { onSaved: (name: string) => void }) {
+  const [form, setForm] = useState({ name: "", url: "", organization: "", render: "http", follow_detail: false, screen: "title" });
+  const [preview, setPreview] = useState<PreviewOut | null>(null);
+  const [permission, setPermission] = useState(false);
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  const set = (k: string, v: string | boolean) => { setForm({ ...form, [k]: v }); setPreview(null); };
+
+  async function runPreview(e: FormEvent) {
+    e.preventDefault();
+    setBusy(true); setErr(""); setPreview(null);
+    try {
+      setPreview(await api<PreviewOut>("/portals/preview", { method: "POST", body: JSON.stringify(form) }));
+    } catch (e2) { setErr((e2 as Error).message); } finally { setBusy(false); }
+  }
+
+  async function save() {
+    setBusy(true); setErr("");
+    try {
+      await api("/portals", { method: "POST", body: JSON.stringify({ ...form, permission_confirmed: permission, permission_note: note }) });
+      onSaved(form.name);
+      setForm({ name: "", url: "", organization: "", render: "http", follow_detail: false, screen: "title" });
+      setPreview(null); setPermission(false); setNote("");
+    } catch (e2) { setErr((e2 as Error).message); } finally { setBusy(false); }
+  }
+
+  return (
+    <Panel title="Add a buyer’s tender page">
+      <p className="mb-4 max-w-3xl text-sm text-muted">
+        Many banks, regulators and agencies publish tenders on their own websites. Add the page that lists them; the
+        system reads the table, downloads linked tender documents for likely matches, and analyses them like any other tender.
+      </p>
+      <form onSubmit={runPreview} className="grid gap-3 text-sm sm:grid-cols-2">
+        <label className="block"><span className="text-muted">Source name</span>
+          <input required minLength={3} value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="e.g. Canara Bank tenders"
+            className="mt-1 w-full rounded-md border border-line bg-surface px-2.5 py-1.5" /></label>
+        <label className="block"><span className="text-muted">Organisation</span>
+          <input required minLength={2} value={form.organization} onChange={(e) => set("organization", e.target.value)}
+            className="mt-1 w-full rounded-md border border-line bg-surface px-2.5 py-1.5" /></label>
+        <label className="block sm:col-span-2"><span className="text-muted">Tender page address</span>
+          <input required type="url" value={form.url} onChange={(e) => set("url", e.target.value)} placeholder="https://"
+            className="mt-1 w-full rounded-md border border-line bg-surface px-2.5 py-1.5" /></label>
+        <label className="block"><span className="text-muted">How the page is built</span>
+          <select value={form.render} onChange={(e) => set("render", e.target.value)} className="mt-1 w-full rounded-md border border-line bg-surface px-2 py-1.5">
+            <option value="http">Ordinary web page</option>
+            <option value="browser">Built by JavaScript (read with a headless browser)</option>
+          </select></label>
+        <label className="block"><span className="text-muted">Which tenders to read documents for</span>
+          <select value={form.screen} onChange={(e) => set("screen", e.target.value)} className="mt-1 w-full rounded-md border border-line bg-surface px-2 py-1.5">
+            <option value="title">Only titles that look relevant</option>
+            <option value="documents">All new tenders (titles carry no subject)</option>
+          </select></label>
+        <label className="flex items-center gap-2 sm:col-span-2">
+          <input type="checkbox" checked={form.follow_detail} onChange={(e) => set("follow_detail", e.target.checked)} />
+          Tender documents are on a separate page per tender (open each listed tender to find them)
+        </label>
+        <div className="sm:col-span-2"><Button type="submit" variant="quiet" disabled={busy}>{busy && !preview ? "Reading the page…" : "Preview"}</Button></div>
+      </form>
+
+      {err && <p className="mt-3 text-sm text-hot" role="alert">{err}</p>}
+
+      {preview && (
+        <div className="mt-5 border-t border-line pt-4">
+          {preview.blockers.concat(preview.errors).map((m, i) => <p key={i} className="text-sm text-high">{m}</p>)}
+          <p className="text-sm"><b>{preview.open_tenders}</b> open tender{preview.open_tenders === 1 ? "" : "s"} found{preview.items.length < preview.open_tenders ? `; first ${preview.items.length} shown` : ""}.</p>
+          {preview.items.length > 0 && (
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full min-w-[36rem] text-sm">
+                <thead className="text-left text-muted"><tr><th className="py-1 pr-3 font-medium">Title</th><th className="py-1 pr-3 font-medium">Reference</th><th className="py-1 pr-3 font-medium">Closes</th><th className="py-1 text-right font-medium">Documents</th></tr></thead>
+                <tbody className="divide-y divide-line">
+                  {preview.items.map((it, i) => (
+                    <tr key={i} className="align-top"><td className="py-1.5 pr-3">{it.title}</td><td className="py-1.5 pr-3 text-muted">{it.reference ?? "—"}</td>
+                      <td className="whitespace-nowrap py-1.5 pr-3">{dateTime(it.closing_at)}</td><td className="num py-1.5 text-right">{it.documents || (it.detail_url ? "on detail page" : 0)}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {preview.open_tenders > 0 && (
+            <div className="mt-4 space-y-3 text-sm">
+              <label className="flex items-start gap-2">
+                <input type="checkbox" className="mt-1" checked={permission} onChange={(e) => setPermission(e.target.checked)} />
+                <span>I have checked that this site&apos;s terms allow automated reading of this page. (robots.txt was checked and allows it.)</span>
+              </label>
+              <label className="block"><span className="text-muted">How you confirmed it (kept in the audit log)</span>
+                <input value={note} onChange={(e) => setNote(e.target.value)} minLength={10} placeholder="e.g. Terms of use reviewed on 8 Oct 2026; no restriction on automated access"
+                  className="mt-1 w-full rounded-md border border-line bg-surface px-2.5 py-1.5" /></label>
+              <Button onClick={save} disabled={busy || !permission || note.trim().length < 10}>Add source</Button>
+            </div>
+          )}
+        </div>
+      )}
+    </Panel>
   );
 }

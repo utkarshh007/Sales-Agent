@@ -42,6 +42,35 @@ class PortalAccessDenied(Exception):
     """robots.txt or the portal's terms disallow automated access to this URL."""
 
 
+def is_public_host(host: str) -> bool:
+    """False when a hostname resolves to a private, loopback, link-local or otherwise non-public
+    address. Portal and document URLs come from web pages and admins, so every fetch is checked to
+    keep the server from being used to reach internal services (SSRF). Unresolvable names are let
+    through: the connection itself will fail."""
+    import ipaddress
+    import socket
+
+    host = (host or "").split(":")[0].strip("[]")
+    if not host:
+        return False
+    try:
+        candidates = {ipaddress.ip_address(host)}
+    except ValueError:
+        try:
+            candidates = {ipaddress.ip_address(info[4][0]) for info in socket.getaddrinfo(host, None)}
+        except (socket.gaierror, UnicodeError, OSError):
+            return True
+    return all(ip.is_global and not ip.is_multicast for ip in candidates)
+
+
+def ensure_public_url(url: str) -> None:
+    parts = urlparse(url)
+    if parts.scheme not in ("http", "https"):
+        raise PortalAccessDenied(f"only http(s) URLs may be fetched, not {url!r}")
+    if not is_public_host(parts.hostname or ""):
+        raise PortalAccessDenied(f"refusing to fetch {url}: it points at a private or internal network address")
+
+
 @dataclass
 class DocumentRef:
     url: str
@@ -133,6 +162,8 @@ class PoliteHttpClient:
             headers={"User-Agent": settings.HTTP_USER_AGENT, "Accept-Language": "en-IN,en;q=0.8"},
             timeout=httpx.Timeout(60.0, connect=15.0),
             follow_redirects=True,
+            # every request, including each redirect hop, must target a public address
+            event_hooks={"request": [lambda request: ensure_public_url(str(request.url))]},
         )
 
     def close(self) -> None:
@@ -147,6 +178,7 @@ class PoliteHttpClient:
         self._last_request[host] = time.monotonic()
 
     def _allowed(self, url: str) -> bool:
+        ensure_public_url(url)
         if not self.respect_robots:
             return True
         parts = urlparse(url)

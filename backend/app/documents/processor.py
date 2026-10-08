@@ -113,11 +113,11 @@ def _ocr_image_bytes(img_bytes: bytes, lang: str) -> str:
 
 
 def _extract_pdf(data: bytes, settings: Settings, res: ExtractionResult) -> None:
-    import fitz  # PyMuPDF
+    import pymupdf
 
     ocr_ok = settings.OCR_ENABLED and _tesseract_available()
     parts, ocr_pages = [], 0
-    with fitz.open(stream=data, filetype="pdf") as doc:
+    with pymupdf.open(stream=data, filetype="pdf") as doc:
         if doc.needs_pass:
             res.status, res.error = "FAILED", "PDF is password-protected"
             return

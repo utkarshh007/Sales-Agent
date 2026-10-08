@@ -10,6 +10,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Headless Chromium for buyer pages that build their tender lists with JavaScript (Phase 3).
+# Installed to a shared path so the unprivileged runtime user can launch it.
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN python -m playwright install --with-deps --only-shell chromium && chmod -R o+rx /ms-playwright
+
 COPY alembic.ini .
 COPY migrations ./migrations
 COPY app ./app

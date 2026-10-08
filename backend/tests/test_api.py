@@ -112,3 +112,48 @@ def test_settings_endpoint_hides_secrets(client):
     cfg = c.get("/api/settings").json()
     assert cfg["SERVICE_MAX_VALUE_INR"] == 3_000_000
     assert "SECRET_KEY" not in cfg and "ANTHROPIC_API_KEY" not in cfg and "SMTP_PASSWORD" not in cfg
+
+
+BUYER = {"name": "Example Bank tenders", "url": "https://bank.example.in/tenders", "organization": "Example Bank"}
+
+
+def test_buyer_page_preview_and_create_are_admin_only_and_need_permission(client, monkeypatch):
+    from app.connectors.base import DiscoveryResult, TenderListing
+
+    c, Session = client
+    monkeypatch.setattr("app.connectors.base.PoliteHttpClient._allowed", lambda self, url: True)
+    monkeypatch.setattr("app.connectors.buyer_page.BuyerPageConnector.discover",
+                        lambda self, is_known, wants=None: DiscoveryResult(items=[TenderListing(
+                            title="Procurement of SIEM solution", source_url="https://bank.example.in/t/1",
+                            reference_number="EB/1", raw={"doc_links": [{"name": "rfp.pdf", "url": "u"}]})]))
+    csrf = login(c, "analyst@x.io")
+    assert c.post("/api/portals/preview", headers={"X-CSRF-Token": csrf}, json=BUYER).status_code == 403
+    c.post("/api/auth/logout")
+    csrf = login(c, "admin@x.io")
+    r = c.post("/api/portals/preview", headers={"X-CSRF-Token": csrf}, json=BUYER)
+    assert r.status_code == 200 and r.json()["items"][0]["reference"] == "EB/1" and r.json()["items"][0]["documents"] == 1
+
+    r = c.post("/api/portals", headers={"X-CSRF-Token": csrf},
+               json={**BUYER, "permission_confirmed": False, "permission_note": "terms reviewed on 1 Oct"})
+    assert r.status_code == 400
+    r = c.post("/api/portals", headers={"X-CSRF-Token": csrf},
+               json={**BUYER, "render": "browser", "permission_confirmed": True,
+                     "permission_note": "Terms of use reviewed; robots.txt allows /tenders"})
+    assert r.status_code == 201 and r.json()["code"] == "buyer_example_bank_tenders"
+    with Session() as s:
+        from app.models import AuditLog, Portal
+        p = s.scalar(select(Portal).where(Portal.code == "buyer_example_bank_tenders"))
+        assert p.acquisition_method == "BROWSER" and p.config["render"] == "browser"
+        entry = s.scalar(select(AuditLog).where(AuditLog.action == "PORTAL_CREATED"))
+        assert entry.details["permission_confirmed_by"] == "admin@x.io"
+
+
+def test_buyer_page_refused_when_robots_disallow_or_url_internal(client, monkeypatch):
+    c, _ = client
+    csrf = login(c, "admin@x.io")
+    with monkeypatch.context() as m:
+        m.setattr("app.connectors.base.PoliteHttpClient._allowed", lambda self, url: False)
+        r = c.post("/api/portals/preview", headers={"X-CSRF-Token": csrf}, json=BUYER)
+        assert r.status_code == 400 and "robots.txt" in r.json()["detail"]
+    r = c.post("/api/portals/preview", headers={"X-CSRF-Token": csrf}, json={**BUYER, "url": "http://169.254.169.254/x"})
+    assert r.status_code == 400 and "private or internal" in r.json()["detail"]

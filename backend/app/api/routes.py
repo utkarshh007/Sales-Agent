@@ -387,6 +387,94 @@ def run_portal(portal_id: int, db: Session = Depends(get_db), user: User = Depen
     return {"queued": job is not None}
 
 
+class BuyerPageIn(BaseModel):
+    """An organisation's own tender page. Advanced options mirror app/connectors/buyer_page.py."""
+    name: str = Field(min_length=3, max_length=200)
+    url: HttpUrl
+    organization: str = Field(min_length=2, max_length=300)
+    render: Literal["http", "browser"] = "http"
+    follow_detail: bool = False
+    screen: Literal["title", "documents"] = "title"
+    reference_regex: str | None = Field(None, max_length=200)
+    schedule_minutes: int = Field(360, ge=30, le=24 * 60)
+
+
+def _buyer_config(body: BuyerPageIn) -> dict:
+    import re as _re
+    if body.reference_regex:
+        try:
+            if "ref" not in _re.compile(body.reference_regex).groupindex:
+                raise HTTPException(400, "reference_regex needs a named group (?P<ref>…)")
+        except _re.error as e:
+            raise HTTPException(400, f"reference_regex is not a valid regular expression: {e}") from e
+    cfg = {"pages": [{"url": str(body.url), "organization": body.organization}], "render": body.render,
+           "follow_detail": body.follow_detail, "screen": body.screen}
+    if body.reference_regex:
+        cfg["reference_regex"] = body.reference_regex
+    return cfg
+
+
+def _check_permitted(url: str) -> None:
+    from app.connectors.base import PoliteHttpClient, PortalAccessDenied
+    http = PoliteHttpClient(get_settings(), delay_seconds=0)
+    try:
+        if not http._allowed(url):
+            raise HTTPException(400, "This site's robots.txt does not allow automated reading of that page.")
+    except PortalAccessDenied as e:
+        raise HTTPException(400, str(e)) from e
+    finally:
+        http.close()
+
+
+@router.post("/portals/preview")
+def preview_buyer_page(body: BuyerPageIn, user: User = Depends(require_role("admin"))):
+    """Dry run: read the page once and show what would be extracted. Nothing is saved."""
+    from app.connectors.buyer_page import BuyerPageConnector
+
+    _check_permitted(str(body.url))
+    connector = BuyerPageConnector("preview", _buyer_config(body), get_settings())
+    try:
+        result = connector.discover(lambda fp: False, None)
+    finally:
+        connector.http.close()
+    return {
+        "robots_allowed": True,
+        "open_tenders": len(result.items),
+        "blockers": result.blockers, "errors": result.errors,
+        "items": [{"title": i.title, "reference": i.reference_number, "organization": i.organization,
+                   "published_at": _iso(i.published_at), "closing_at": _iso(i.closing_at),
+                   "documents": len(i.raw.get("doc_links", [])), "detail_url": i.raw.get("detail_url")}
+                  for i in result.items[:15]],
+    }
+
+
+class BuyerPageCreate(BuyerPageIn):
+    permission_confirmed: bool
+    permission_note: str = Field(min_length=10, max_length=1000,
+                                 description="Why automated access is permitted (terms reviewed, robots.txt, agreement…)")
+
+
+@router.post("/portals", status_code=201)
+def create_buyer_page(body: BuyerPageCreate, db: Session = Depends(get_db), user: User = Depends(require_role("admin"))):
+    import re as _re
+    if not body.permission_confirmed:
+        raise HTTPException(400, "Confirm that the site permits automated reading of its tender page.")
+    _check_permitted(str(body.url))
+    code = "buyer_" + _re.sub(r"[^a-z0-9]+", "_", body.name.lower()).strip("_")[:40]
+    if db.scalar(select(Portal.id).where(Portal.code == code)):
+        raise HTTPException(409, "A source with this name already exists")
+    p = Portal(code=code, name=body.name, connector="buyer_page", base_url=str(body.url),
+               acquisition_method="BROWSER" if body.render == "browser" else "HTML", enabled=True,
+               schedule_minutes=body.schedule_minutes, config=_buyer_config(body), blocker=None)
+    db.add(p)
+    db.flush()
+    audit.record(db, "PORTAL_CREATED", actor=user.email, reason=body.permission_note,
+                 details={"portal": code, "url": str(body.url), "render": body.render,
+                          "permission_confirmed_by": user.email, "permission_note": body.permission_note})
+    db.commit()
+    return {"id": p.id, "code": code}
+
+
 @router.get("/settings")
 def get_public_settings(_: User = Depends(current_user)):
     return get_settings().public_view()
