@@ -481,6 +481,10 @@ def analyze_tender(session: Session, tender: Tender, settings: Settings, catalog
     ctx = build_context(tender, settings, load_company_profile(session))
     decision = evaluate(ctx, catalog, settings, analyzer, now=now)
     _persist_decision(session, tender, decision, ctx, catalog)
+    if settings.SEMANTIC_MATCHING_ENABLED:  # history: vector for similar-tender search
+        from app.history import embed_tender
+        from app.semantic import get_semantic_matcher
+        embed_tender(session, tender, get_semantic_matcher(catalog, settings))
     session.flush()
     if should_alert_immediately(tender, settings):
         jobs.enqueue(session, jobs.SEND_ALERT, {"tender_id": tender.id, "version": tender.version},

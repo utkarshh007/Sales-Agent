@@ -107,6 +107,11 @@ class SemanticMatcher:
             log.info("semantic matcher ready: %d capability anchors, %d negative anchors",
                      len(self._anchor_texts), len(self.catalog.negative_anchors))
 
+    def vector(self, text: str) -> np.ndarray:
+        """Normalised embedding of a text (cached); used for similar-tender search."""
+        self._ensure_ready()
+        return self._vector(_normalise((text or "")[:1000]))
+
     # ------------------------------------------------------------------ matching
     def match(self, text: str, top_k: int = 3, settings: Settings | None = None) -> list[SemanticHit]:
         """Thresholds come from `settings` when given (the caller's configuration), else from the

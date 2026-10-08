@@ -340,6 +340,9 @@ def resolve_review(review_id: int, body: ResolveIn, db: Session = Depends(get_db
             o.status, o.resolution, o.resolved_by, o.resolved_at = "RESOLVED", "REJECTED", user.email, utcnow()
     elif others_open == 0:
         t.decision = "ACCEPTED"
+        from app.models import BidOutcome
+        if db.get(BidOutcome, t.id) is None:
+            db.add(BidOutcome(tender_id=t.id, stage="CONSIDERING", updated_by=user.email))
         from app.pipeline import should_alert_immediately
         if should_alert_immediately(t, get_settings()):
             jobs.enqueue(db, jobs.SEND_ALERT, {"tender_id": t.id, "version": t.version}, dedupe_key=f"alert:{t.id}:v{t.version}")
@@ -526,6 +529,94 @@ def put_company_profile(body: CompanyProfileIn, db: Session = Depends(get_db), u
         requeued += 1
     db.commit()
     return {"ok": True, "changed": changed, "requeued": requeued}
+
+
+# ------------------------------------------------------------------ Phase 6: outcomes, history, analytics
+STAGES = ("CONSIDERING", "BIDDING", "NO_BID", "SUBMITTED", "WON", "LOST", "CANCELLED")
+NO_BID_REASONS = ("not_eligible", "outside_scope", "value_too_low", "value_too_high", "timeline_too_short",
+                  "low_win_chance", "oem_not_available", "resource_constraint", "other")
+LOSS_REASONS = ("price", "technical_score", "disqualified", "incumbent", "oem_preference", "other")
+
+
+class OutcomeIn(BaseModel):
+    stage: Literal["CONSIDERING", "BIDDING", "NO_BID", "SUBMITTED", "WON", "LOST", "CANCELLED"]
+    no_bid_reason: Literal[NO_BID_REASONS] | None = None  # type: ignore[valid-type]
+    our_bid_value_inr: int | None = Field(None, ge=0, le=10**13)
+    award_value_inr: int | None = Field(None, ge=0, le=10**13)
+    winner: str | None = Field(None, max_length=300)
+    our_rank: int | None = Field(None, ge=1, le=100)
+    loss_reason: Literal[LOSS_REASONS] | None = None  # type: ignore[valid-type]
+    notes: str | None = Field(None, max_length=4000)
+
+
+def _outcome_out(o) -> dict | None:
+    if o is None:
+        return None
+    return {"stage": o.stage, "no_bid_reason": o.no_bid_reason, "our_bid_value_inr": o.our_bid_value_inr,
+            "award_value_inr": o.award_value_inr, "winner": o.winner, "our_rank": o.our_rank,
+            "loss_reason": o.loss_reason, "notes": o.notes, "updated_by": o.updated_by, "updated_at": _iso(o.updated_at)}
+
+
+@router.get("/tenders/{tender_id}/outcome")
+def get_outcome(tender_id: int, db: Session = Depends(get_db), _: User = Depends(current_user)):
+    from app.models import BidOutcome
+    return {"outcome": _outcome_out(db.get(BidOutcome, tender_id)), "stages": STAGES,
+            "no_bid_reasons": NO_BID_REASONS, "loss_reasons": LOSS_REASONS}
+
+
+@router.put("/tenders/{tender_id}/outcome")
+def put_outcome(tender_id: int, body: OutcomeIn, db: Session = Depends(get_db), user: User = Depends(require_role("analyst"))):
+    from app.models import BidOutcome
+    if db.get(Tender, tender_id) is None:
+        raise HTTPException(404, "Tender not found")
+    if body.stage == "NO_BID" and not body.no_bid_reason:
+        raise HTTPException(400, "Choose why the team is not bidding")
+    o = db.get(BidOutcome, tender_id) or BidOutcome(tender_id=tender_id)
+    before = _outcome_out(o) if o.stage else None
+    for k, v in body.model_dump().items():
+        setattr(o, k, v)
+    o.updated_by = user.email
+    db.add(o)
+    audit.record(db, "BID_OUTCOME_UPDATED", tender_id=tender_id, actor=user.email, decision=body.stage,
+                 reason=body.notes, details={"before": before, "after": body.model_dump()})
+    db.commit()
+    return {"outcome": _outcome_out(o)}
+
+
+@router.get("/tenders/{tender_id}/history")
+def tender_history(tender_id: int, db: Session = Depends(get_db), _: User = Depends(current_user)):
+    from app.history import buyer_history, recurrence, similar_tenders
+    t = db.get(Tender, tender_id)
+    if t is None:
+        raise HTTPException(404, "Tender not found")
+    return {"similar": similar_tenders(db, t), "buyer": buyer_history(db, t), "recurrence": recurrence(db, t)}
+
+
+@router.get("/analytics")
+def analytics(days: int = Query(90, ge=7, le=730), db: Session = Depends(get_db), _: User = Depends(current_user)):
+    from app.analytics import overview
+    return overview(db, days)
+
+
+@router.get("/pipeline")
+def pipeline(db: Session = Depends(get_db), _: User = Depends(current_user)):
+    """Surfaced tenders that are still open, plus everything the team has acted on, grouped by stage."""
+    from app.models import BidOutcome
+    now = utcnow()
+    outcomes = {o.tender_id: o for o in db.scalars(select(BidOutcome))}
+    live = db.scalars(select(Tender).where(Tender.decision.in_(("ACCEPTED", "MANUAL_REVIEW")),
+                                           or_(Tender.closing_at.is_(None), Tender.closing_at >= now))).all()
+    ids = {t.id for t in live} | set(outcomes)
+    tenders = db.scalars(select(Tender).where(Tender.id.in_(ids))).all() if ids else []
+    rows = _rows_with_scores(db, tenders)
+    columns: dict[str, list] = {s: [] for s in ("NOT_STARTED", *STAGES)}
+    for r in rows:
+        o = outcomes.get(r["id"])
+        r["outcome"] = _outcome_out(o)
+        columns[o.stage if o else "NOT_STARTED"].append(r)
+    for col in columns.values():
+        col.sort(key=lambda r: (r["closing_at"] or "9999"))
+    return columns
 
 
 @router.get("/settings")

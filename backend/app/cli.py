@@ -41,6 +41,7 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("portal")
     d.add_argument("--max-pages", type=int, default=None)
     sub.add_parser("run-once")
+    sub.add_parser("embed", help="store embeddings for tenders analysed before Phase 6 (similar-tender search)")
     sub.add_parser("worker")
     args = ap.parse_args(argv)
 
@@ -83,6 +84,25 @@ def main(argv: list[str] | None = None) -> int:
             connector = build_connector(portal.connector, portal.code, config, settings)
             print(discover_portal(s, portal, settings, connector))
         print(f"processed {Worker(settings).drain()} queued jobs")
+    elif args.cmd == "embed":
+        from app.history import embed_tender
+        from app.models import Tender, TenderEmbedding
+        from app.semantic import get_semantic_matcher
+        matcher = get_semantic_matcher(get_catalog(), get_settings())
+        if matcher is None:
+            print("semantic matching is disabled or the model is unavailable", file=sys.stderr)
+            return 1
+        done = 0
+        with SessionLocal() as s:
+            have = set(s.scalars(select(TenderEmbedding.tender_id)))
+            for t in s.scalars(select(Tender)):
+                if t.id not in have:
+                    embed_tender(s, t, matcher)
+                    done += 1
+                    if done % 500 == 0:
+                        s.commit()
+            s.commit()
+        print(f"embedded {done} tenders")
     elif args.cmd == "run-once":
         from app.worker import Worker
         w = Worker()

@@ -6,7 +6,7 @@ const publicSans = Public_Sans({ variable: "--font-public-sans", subsets: ["lati
 const sourceSerif = Source_Serif_4({ variable: "--font-source-serif", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Tender Desk",
+  title: "Trever RFP Portal",
   description: "Cybersecurity tender intelligence: qualified opportunities, evidence and decisions.",
 };
 

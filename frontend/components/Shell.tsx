@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { createContext, Suspense, useContext, useEffect, useState, type ReactNode } from "react";
 import { api } from "@/lib/api";
 import type { Me } from "@/lib/types";
+import { LogoMark } from "./Logo";
 
 const MeContext = createContext<Me | null>(null);
 export const useMe = () => useContext(MeContext);
@@ -14,6 +15,8 @@ const NAV = [
   { href: "/", label: "Today" },
   { href: "/tenders", label: "Tenders" },
   { href: "/reviews", label: "Review queue" },
+  { href: "/pipeline", label: "Bid pipeline" },
+  { href: "/insights", label: "Insights" },
   { href: "/profile", label: "Company profile" },
   { href: "/sources", label: "Sources & rules" },
 ];
@@ -56,9 +59,12 @@ export default function Shell({ children }: { children: ReactNode }) {
       <div className="min-h-screen md:grid md:grid-cols-[13.5rem_1fr]">
         <aside className="border-b border-line bg-surface md:sticky md:top-0 md:h-screen md:border-b-0 md:border-r">
           <div className="flex items-center justify-between px-5 py-4 md:block">
-            <Link href="/" className="block">
-              <span className="font-serif text-xl font-semibold tracking-tight">Tender Desk</span>
-              <span className="mt-0.5 hidden text-xs text-muted md:block">Cybersecurity opportunities</span>
+            <Link href="/" className="flex items-center gap-2.5" aria-label="Trever RFP Portal, home">
+              <LogoMark size={34} className="shrink-0" />
+              <span className="leading-tight">
+                <span className="block font-serif text-lg font-semibold tracking-tight">Trever</span>
+                <span className="block text-xs text-muted">RFP Portal</span>
+              </span>
             </Link>
             <button className="rounded-md border border-line px-2.5 py-1 text-sm md:hidden" onClick={() => setOpen(!open)}
               aria-expanded={open} aria-controls="main-nav">Menu</button>

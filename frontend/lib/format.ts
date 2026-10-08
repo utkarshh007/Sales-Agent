@@ -43,3 +43,19 @@ export const TYPE_LABEL: Record<string, string> = {
 export const DECISION_LABEL: Record<string, string> = {
   ACCEPTED: "Pursue", MANUAL_REVIEW: "Needs review", REJECTED: "Rejected", PENDING: "Analysing",
 };
+
+export const STAGE_LABEL: Record<string, string> = {
+  NOT_STARTED: "Not started", CONSIDERING: "Considering", BIDDING: "Preparing bid", NO_BID: "Not bidding",
+  SUBMITTED: "Submitted", WON: "Won", LOST: "Lost", CANCELLED: "Cancelled by buyer",
+};
+
+export const REASON_LABEL: Record<string, string> = {
+  not_eligible: "Not eligible", outside_scope: "Outside our scope", value_too_low: "Value too low", value_too_high: "Value too high",
+  timeline_too_short: "Not enough time", low_win_chance: "Low chance of winning", oem_not_available: "No OEM partnership",
+  resource_constraint: "No team available", other: "Other", price: "Price", technical_score: "Technical score",
+  disqualified: "Disqualified", incumbent: "Incumbent retained", oem_preference: "Buyer preferred another OEM",
+};
+
+export function pct(v: number | null | undefined, digits = 0): string {
+  return v === null || v === undefined ? "—" : `${(v * 100).toFixed(digits)}%`;
+}

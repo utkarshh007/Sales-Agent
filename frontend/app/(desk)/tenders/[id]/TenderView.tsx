@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { canEdit, useMe } from "@/components/Shell";
 import { Button, DecisionTag, Loading, MatchType, Notice, Panel, ScoreBar, ScoreMark } from "@/components/ui";
 import { api } from "@/lib/api";
+import { BidStatusPanel, PastTendersPanel } from "./BidPanels";
 import { closesIn, date, dateTime, inr, TYPE_LABEL } from "@/lib/format";
 import { SCORE_LABEL, SCORE_ORDER, type EligibilityCheck, type TenderDetail } from "@/lib/types";
 
@@ -246,9 +247,12 @@ export default function TenderView() {
               </div>
             ) : null}
           </Panel>
+          <PastTendersPanel tenderId={t.id} />
         </div>
 
         <aside className="min-w-0 space-y-6">
+          <BidStatusPanel tenderId={t.id} editable={editable} onSaved={load} />
+
           <Panel title="Dates">
             <dl className="space-y-2 text-sm">
               <div><dt className="text-muted">Published</dt><dd>{dateTime(t.published_at)}</dd></div>
@@ -269,7 +273,7 @@ export default function TenderView() {
             <div><Button variant="quiet" onClick={reanalyze}>Re-run analysis</Button></div>
           )}
 
-          <Panel title="History">
+          <Panel title="Activity">
             <ol className="space-y-3 text-sm">
               {t.audit.slice(0, 15).map((a, i) => (
                 <li key={i}>
