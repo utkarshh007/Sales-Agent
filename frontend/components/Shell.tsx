@@ -13,6 +13,7 @@ export const canEdit = (me: Me | null) => me?.role === "analyst" || me?.role ===
 
 const NAV = [
   { href: "/", label: "Today" },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/tenders", label: "Tenders" },
   { href: "/reviews", label: "Review queue" },
   { href: "/pipeline", label: "Bid pipeline" },

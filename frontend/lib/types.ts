@@ -220,3 +220,29 @@ export interface Analytics {
   pipeline_value: { open_opportunities: number; with_stated_value: number; stated_value_inr: number;
     stated_value_by_type: Record<string, number>; bidding_now: number };
 }
+
+export interface DashKpi { key: string; label: string; value: number | null; prev: number | null; delta: number | null;
+  format: "int" | "inr" | "pct" | "score"; note: string | null; spark: number[] | null; lower_is_better: boolean }
+export interface DashGroup { label: string; count: number; value: number; avg_score: number | null }
+export interface Dashboard {
+  as_of: string;
+  window: { days: number; since: string | null; history_days: number; bucket: "day" | "week"; has_previous: boolean };
+  filters: { applied: Record<string, string>; options: { portals: { code: string; name: string }[];
+    types: { code: string; label: string }[]; segments: string[]; capabilities: string[] } };
+  kpis: DashKpi[];
+  trend: { date: string; read: number; surfaced: number }[];
+  funnel: { stage: string; count: number }[];
+  type_mix: { code: string; label: string; count: number; value: number }[];
+  by_capability: DashGroup[];
+  by_segment: DashGroup[];
+  value_bands: { label: string; count: number }[];
+  deadlines: { label: string; count: number; value: number }[];
+  sources: { code: string; name: string; read: number; surfaced: number; avg_score: number | null; yield: number | null;
+    status: string | null; last_run_at: string | null }[];
+  rejections: { code: string; label: string; count: number }[];
+  pipeline: { stage: string; count: number }[];
+  top: { id: number; title: string; organization: string | null; score: number | null; priority: string | null; type: string;
+    capability: string | null; value: number | null; closing_at: string | null; decision: string; stage: string | null;
+    plain_summary: string | null }[];
+  insights: { kind: "risk" | "opportunity" | "trend" | "anomaly" | "info"; title: string; detail: string; tender_ids?: number[] }[];
+}

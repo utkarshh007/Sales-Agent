@@ -782,6 +782,18 @@ def analytics(days: int = Query(90, ge=7, le=730), db: Session = Depends(get_db)
     return overview(db, days)
 
 
+@router.get("/dashboard")
+def dashboard(db: Session = Depends(get_db), _: User = Depends(current_user),
+              days: int = Query(90, ge=0, le=3650, description="0 = all time"),
+              portal: str | None = Query(None, max_length=50),
+              type: Literal["SERVICE", "OEM", "HYBRID", "UNRELATED", "UNKNOWN"] | None = None,
+              segment: str | None = Query(None, max_length=200),
+              capability: str | None = Query(None, max_length=200)):
+    """Executive dashboard: every KPI, chart, table and insight for one filtered slice."""
+    from app.dashboard import build
+    return build(db, days=days, portal=portal, type=type, segment=segment, capability=capability)
+
+
 @router.get("/pipeline")
 def pipeline(db: Session = Depends(get_db), _: User = Depends(current_user)):
     """Surfaced tenders that are still open, plus everything the team has acted on, grouped by stage."""
