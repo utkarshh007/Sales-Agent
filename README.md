@@ -128,6 +128,31 @@ Holdout2 is the honest estimate for the final version. On the live database, re-
   - Strategic value comes from the **buyer segment** (`buyer_segments:` in the catalog): regulator, bank, defence and law enforcement, government IT, critical infrastructure, state, PSU, ministry.
 - **Next actions.** Each tender lists what would change its score, with estimated points: get the documents, confirm the value, find the hybrid split, complete the profile, eligibility gaps, OEM authorisation, competitor-OEM checks, and the pre-bid meeting.
 
+## Bid tracking, history and analytics (Phase 6)
+
+- **Bid status** (tender page → Bid status; analysts and admins edit, viewers read).
+  - Stages: considering, preparing bid, not bidding, submitted, won, lost, cancelled by buyer.
+  - "Not bidding" requires a reason. A lost bid records the winner, the award value, our rank and the main reason.
+  - Pursuing a tender from the review queue starts its record at "considering".
+  - Every change is audited (`BID_OUTCOME_UPDATED`).
+  - Results are entered by hand because CPPP and GePNIC keep award results behind a CAPTCHA, which the agent does not bypass.
+- **Bid pipeline** (`/pipeline`): every surfaced tender that is still open, plus every tender with a bid record, grouped by stage.
+- **Past tenders like this** (tender page):
+  - Each tender's subject is embedded locally after analysis (`tender_embeddings`, float16) and searched in memory. At tens of thousands of tenders, move this to pgvector.
+  - On short titles the embedding alone scores unrelated tenders high, so a match also needs distinctive shared words. Overlap is IDF-weighted on the subject, after stripping "EOI for selection of partner for…" boilerplate and the trailing location.
+  - Below 0.40 overlap, the titles must also share a two-word phrase: "security operation centre" matches, but "operations of data centre" does not.
+  - The panel also shows the buyer's record with us.
+  - It flags a likely **annual re-issue**: same buyer, near-identical wording, at least 300 days apart. The panel then gives the expected date of the next one.
+  - Backfill embeddings with `python -m app.cli embed`.
+- **Insights** (`/insights`, 30/90/365 days):
+  - Funnel: read → surfaced → pursued → submitted → won.
+  - Why tenders were set aside, including the share decided by rules alone, before any LLM call.
+  - Each source's yield: tenders read per relevant one.
+  - Weekly volume as two separate charts, each on its own scale.
+  - Capability and buyer mix.
+  - Review-queue turnaround.
+  - Bid results: win rate by capability, buyer and type; who beat us; median price gap on losses; reasons for not bidding. Win rates stay hidden until 10 bids have a result, to avoid reading noise.
+
 ## Business rules
 
 | Opportunity | Rule |
@@ -208,7 +233,7 @@ Nothing in the engine, scoring, alerts or dashboard changes.
 ## Tests
 
 ```bash
-cd backend && pytest -q        # 157 tests (one launches headless Chromium, the quality gate loads the embedding model)
+cd backend && pytest -q        # 170 tests (one launches headless Chromium, the quality gate loads the embedding model)
 cd frontend && npm run lint && npm run build
 ```
 
@@ -219,6 +244,7 @@ cd frontend && npm run lint && npm run build
 - `tests/test_phase3_buyer_pages.py`: SBI, C-DAC and ISRO parsing against live captures, date formats, documents fetched only for candidates and then qualified end to end from the PDF, document-screening mode, robots.txt and SSRF refusals, and a real headless-browser test showing JavaScript-built tables are read where plain HTTP sees nothing.
 - `tests/test_phase4_semantic.py`: semantic thresholds, the non-cyber margin, title segments, exclusion vetoes, fallback-only behaviour, competitor OEMs, and the matching-quality gate on the real model.
 - `tests/test_phase5_scoring.py`: eligibility extraction on the real SBI RFP appendices, checks against the profile (met, not met, unknown, relaxed, CMMI levels, OEM authorisation), EMD bands, the hybrid shortcut, the priced-BOQ split, buyer segments, timeline by type, next actions, and an end-to-end eligibility gap.
+- `tests/test_phase6_analytics.py`: subject extraction, similar tenders (meaning plus distinctive wording, no matches on place names or generic words), annual re-issue detection, the analytics funnel, source yield, rejection reasons and outcomes, bid-status permissions, validation and audit, and review → pipeline.
 - `tests/test_documents.py`, `tests/test_connectors.py`, `tests/test_api.py`: extraction and safety, parsing/robots/CAPTCHA handling, auth, CSRF, roles, upload, review flow.
 
 ## Known limitations and next phases
@@ -228,4 +254,5 @@ cd frontend && npm run lint && npm run build
 - A full GePNIC sweep is one request per organisation, about 4 minutes for the central portal at the polite 2-second delay. With many state portals turned on, run more than one worker so discovery doesn't delay analysis.
 - Legacy `.doc` / `.xls` files are flagged for conversion; DOCX/XLSX/PDF are fully supported.
 - The rate limiter is per-process; with several API replicas, rate-limit at the proxy as well.
-- Semantic search over historical tenders (pgvector) and win/loss analytics belong to Phases 4–6. The schema already keeps every version, score and decision needed for them.
+- Historical similarity search is in memory. That's fine for tens of thousands of tenders; beyond that, move `tender_embeddings` to pgvector.
+- Analytics depend on recorded bid results. Until about 10 bids have a result, Insights shows volumes and yield but not win rates.

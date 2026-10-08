@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from sqlalchemy import (
-    JSON, BigInteger, Boolean, DateTime, Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint,
+    JSON, BigInteger, Boolean, DateTime, Float, ForeignKey, Index, Integer, LargeBinary, String, Text, UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -347,3 +347,34 @@ class CompanyProfile(Base):
     data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     updated_by: Mapped[str | None] = mapped_column(String(320))
     updated_at: Mapped[datetime] = _ts(onupdate=utcnow)
+
+
+class BidOutcome(Base):
+    """What the team did with a tender and what happened (Phase 6). Portals publish award results only
+    behind CAPTCHAs, so outcomes are recorded by the team; every change is also audited."""
+    __tablename__ = "bid_outcomes"
+    tender_id: Mapped[int] = mapped_column(ForeignKey("tenders.id", ondelete="CASCADE"), primary_key=True)
+    # CONSIDERING | BIDDING | NO_BID | SUBMITTED | WON | LOST | CANCELLED
+    stage: Mapped[str] = mapped_column(String(20), default="CONSIDERING", index=True)
+    no_bid_reason: Mapped[str | None] = mapped_column(String(40))
+    our_bid_value_inr: Mapped[int | None] = mapped_column(BigInteger)
+    award_value_inr: Mapped[int | None] = mapped_column(BigInteger)
+    winner: Mapped[str | None] = mapped_column(String(300))
+    our_rank: Mapped[int | None] = mapped_column(Integer)  # 1 = L1
+    loss_reason: Mapped[str | None] = mapped_column(String(40))
+    notes: Mapped[str | None] = mapped_column(Text)
+    updated_by: Mapped[str | None] = mapped_column(String(320))
+    created_at: Mapped[datetime] = _ts()
+    updated_at: Mapped[datetime] = _ts(onupdate=utcnow)
+    tender: Mapped[Tender] = relationship()
+
+
+class TenderEmbedding(Base):
+    """Semantic vector of a tender's title/description, for similar-tender search (Phase 6).
+    Stored as float16 bytes; searched in memory. For very large histories, pgvector is the drop-in path."""
+    __tablename__ = "tender_embeddings"
+    tender_id: Mapped[int] = mapped_column(ForeignKey("tenders.id", ondelete="CASCADE"), primary_key=True)
+    model: Mapped[str] = mapped_column(String(100))
+    text_hash: Mapped[str] = mapped_column(String(64))
+    vector: Mapped[bytes] = mapped_column(LargeBinary)
+    created_at: Mapped[datetime] = _ts()

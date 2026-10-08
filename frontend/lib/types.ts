@@ -150,3 +150,49 @@ export interface NextAction {
   why: string;
   points: number;
 }
+
+export interface Outcome {
+  stage: string;
+  no_bid_reason: string | null;
+  our_bid_value_inr: number | null;
+  award_value_inr: number | null;
+  winner: string | null;
+  our_rank: number | null;
+  loss_reason: string | null;
+  notes: string | null;
+  updated_by: string | null;
+  updated_at: string | null;
+}
+
+export interface HistoryOut {
+  similar: { id: number; title: string; organization: string | null; similarity: number; published_at: string | null;
+    decision: string; value_inr: number | null; outcome: string | null; award_value_inr: number | null; winner: string | null }[];
+  buyer: { organization: string; tenders_seen: number; surfaced: number; bid: number; won: number; lost: number;
+    recent: { id: number; title: string; decision: string; published_at: string | null; outcome: string | null }[] } | null;
+  recurrence: { previous_id: number; previous_title: string; previous_published_at: string; interval_days: number;
+    similarity: number; next_expected_around: string } | null;
+}
+
+export interface Analytics {
+  window_days: number;
+  history_days: number;
+  funnel: { discovered: number; surfaced: number; pursued: number; submitted: number; won: number;
+    surfaced_rate: number | null; win_rate: number | null; win_rate_sample: number };
+  sources: { code: string; name: string; enabled: boolean; seen: number; surfaced: number; detailed: number;
+    yield: number | null; tenders_per_relevant: number | null }[];
+  screening: { decided_without_llm: number; decided_without_llm_rate: number | null; analysed_by_llm: number;
+    analysed_by_rules: number; rejection_reasons: { code: string; label: string; count: number; share: number }[] };
+  mix: Record<"by_capability" | "by_type" | "by_segment" | "by_priority", { label: string; count: number }[]>;
+  trend: { week: string; discovered: number; surfaced: number }[];
+  reviews: { open: number; resolved: number; pursued_after_review: number; median_hours_to_decide: number | null;
+    by_reason: { code: string; count: number }[] };
+  outcomes: { decided: number; enough_data: boolean;
+    win_rate_by_capability: { label: string; won: number; lost: number; win_rate: number | null }[];
+    win_rate_by_segment: { label: string; won: number; lost: number; win_rate: number | null }[];
+    win_rate_by_type: { label: string; won: number; lost: number; win_rate: number | null }[];
+    competitors: { name: string; wins_against_us: number }[];
+    no_bid_reasons: { reason: string; count: number }[]; loss_reasons: { reason: string; count: number }[];
+    median_price_gap_when_lost: number | null };
+  pipeline_value: { open_opportunities: number; with_stated_value: number; stated_value_inr: number;
+    stated_value_by_type: Record<string, number>; bidding_now: number };
+}

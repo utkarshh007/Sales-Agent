@@ -18,6 +18,7 @@
   --review: #6b4fa0;
   --reject: #8a8f91;
   --focus: #1f6feb;
+  --chart-1: #14998f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,6 +39,7 @@
     --review: #ab95dc;
     --reject: #7d8a8c;
     --focus: #79b0ff;
+    --chart-1: #22a69c;
   }
 }
 :root[data-theme="dark"] {
@@ -57,6 +59,7 @@
   --review: #ab95dc;
   --reject: #7d8a8c;
   --focus: #79b0ff;
+  --chart-1: #22a69c;
 }
 
 @theme inline {
@@ -75,6 +78,7 @@
   --color-accept: var(--accept);
   --color-review: var(--review);
   --color-reject: var(--reject);
+  --color-chart-1: var(--chart-1);
   --font-sans: var(--font-public-sans), system-ui, sans-serif;
   --font-serif: var(--font-source-serif), Georgia, serif;
 }
