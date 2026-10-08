@@ -28,6 +28,18 @@ from app.config import Settings
 
 log = logging.getLogger(__name__)
 _STOPWORDS = {"of", "for", "and", "the", "to", "in", "at", "on", "with", "a", "an", "by", "as", "per", "or"}
+def _normalise(text: str) -> str:
+    """Indian portals often publish titles in capitals; embedding models read sentence case better."""
+    letters = [c for c in text if c.isalpha()]
+    return text.lower() if letters and sum(c.isupper() for c in letters) / len(letters) > 0.6 else text
+
+
+def _segments(text: str, min_words: int) -> list[str]:
+    """The whole text, plus each comma/semicolon segment long enough to be judged on its own."""
+    parts = [p.strip() for p in re.split(r"[,;]| - ", text) if len(_CONTENT_WORD.findall(p)) >= min_words - 1]
+    return [text] + (parts if len(parts) > 1 else [])
+
+
 _CONTENT_WORD = re.compile(r"\b(?!(?:" + "|".join(_STOPWORDS) + r")\b)[A-Za-z][A-Za-z-]{1,}\b", re.IGNORECASE)
 
 
@@ -105,19 +117,29 @@ class SemanticMatcher:
         if len(_CONTENT_WORD.findall(text)) < s.SEMANTIC_MIN_WORDS:
             return []
         self._ensure_ready()
-        v = self._vector(text[:1000])
-        sims = self._anchors @ v
-        best_neg = float((self._negatives @ v).max()) if self._negatives is not None else 0.0
-        best_by_cap: dict[str, tuple[float, str]] = {}
-        for i, cap_id in enumerate(self._anchor_caps):
-            s_i = float(sims[i])
-            if s_i > best_by_cap.get(cap_id, (-1.0, ""))[0]:
-                best_by_cap[cap_id] = (s_i, self._anchor_texts[i])
+        # capability -> (similarity, margin over the same segment's nearest non-cyber reference, anchor, qualifies)
+        best_by_cap: dict[str, tuple[float, float, str, bool]] = {}
+        # Long titles list several topics ("TRAINING, AWARENESS, RESEARCH, CYBER DEFENCE…"); one embedding
+        # of the whole string dilutes each. Score the full text and each substantial comma/semicolon
+        # segment; each capability keeps its best-scoring segment.
+        for piece in _segments(_normalise(text[:1000]), s.SEMANTIC_MIN_WORDS):
+            v = self._vector(piece)
+            sims = self._anchors @ v
+            neg = float((self._negatives @ v).max()) if self._negatives is not None else 0.0
+            for i, cap_id in enumerate(self._anchor_caps):
+                sim = float(sims[i])
+                margin = sim - neg
+                ok = sim >= s.SEMANTIC_ADJACENT_THRESHOLD and margin >= s.SEMANTIC_NEGATIVE_MARGIN
+                prev = best_by_cap.get(cap_id)
+                # keep each capability's best *qualifying* segment; a noisy segment that fails the
+                # non-cyber margin must never displace one that passes
+                if prev is None or (ok, sim) > (prev[3], prev[0]):
+                    best_by_cap[cap_id] = (sim, margin, self._anchor_texts[i], ok)
         hits = []
-        for cap_id, (sim, anchor) in sorted(best_by_cap.items(), key=lambda kv: -kv[1][0])[:top_k]:
-            margin = sim - best_neg
-            if sim < s.SEMANTIC_ADJACENT_THRESHOLD or margin < s.SEMANTIC_NEGATIVE_MARGIN:
-                continue
+        if not best_by_cap:
+            return hits
+        qualifying = [(cap_id, v) for cap_id, v in best_by_cap.items() if v[3]]  # filter first, then rank
+        for cap_id, (sim, margin, anchor, _) in sorted(qualifying, key=lambda kv: -kv[1][0])[:top_k]:
             kind = "SEMANTIC" if sim >= s.SEMANTIC_STRONG_THRESHOLD else "ADJACENT"
             hits.append(SemanticHit(cap_id, round(sim, 3), anchor, kind, round(margin, 3)))
         return hits

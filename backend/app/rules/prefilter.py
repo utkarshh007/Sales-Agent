@@ -80,8 +80,14 @@ def prefilter(ctx: TenderContext, catalog: Catalog, settings: Settings, now: dat
     sem = [] if excl else semantic_hits(semantic_text(ctx.title, ctx.document_text), catalog, settings)
     res = PrefilterResult("CONTINUE", lexicon_hits=hits, oem_hits=oems, exclusions=excl,
                           generic_signal=generic, value=value, emd=emd, semantic_hits=sem, competitor_hits=competitors)
-    extra_caps = [h.capability_id for h in sem if h.match_type == "SEMANTIC"] + [c.capability_id for c in competitors]
-    weak_caps = [h.capability_id for h in sem if h.match_type == "ADJACENT"]
+    # Semantic similarity is fallback evidence for wording the lexicon can't read. When the lexicon or a
+    # named product already gives strong evidence, embeddings must not reclassify the tender (they blur
+    # e.g. a red-team *service* with adversary-simulation *tools*, turning a service into a hybrid).
+    fallback = not hits and not oems
+    extra_caps = ([h.capability_id for h in sem if h.match_type == "SEMANTIC"] if fallback else []) \
+        + [c.capability_id for c in competitors]
+    weak_caps = [h.capability_id for h in sem if h.match_type == "ADJACENT"] if fallback else []
+    res.semantic_hits = sem if fallback else []  # only shown/used when it is the evidence
     res.heuristic_type = heuristic_type(ctx.title + "\n" + ctx.document_text[:30000], hits, oems, catalog,
                                         extra_caps, weak_caps)
 

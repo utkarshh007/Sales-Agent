@@ -147,6 +147,7 @@ export default function TenderView() {
                       <span className="font-semibold">{m.capability_name}</span>
                       <MatchType type={m.match_type} />
                       <span className="num text-sm text-muted">confidence {m.confidence}</span>
+                      <span className="text-sm text-muted">{matchedBy(m.source)}</span>
                     </div>
                     {m.sub_capability && <p className="text-sm text-muted">{m.sub_capability}</p>}
                     {m.evidence && <blockquote className="mt-2 border-l-2 border-line pl-3 font-serif text-[15px] italic text-muted">{m.evidence}</blockquote>}
@@ -394,4 +395,10 @@ function SourcesPanel({ t }: { t: TenderDetail }) {
       </ul>
     </Panel>
   );
+}
+
+/** How a match was found, in words: wording rules, meaning similarity, the LLM's reading, or a mix. */
+function matchedBy(source: string): string {
+  const parts = source.split("+").map((s) => ({ LEXICON: "keywords", EMBEDDING: "meaning", LLM: "LLM reading" })[s] ?? s.toLowerCase());
+  return `matched by ${parts.join(" + ")}`;
 }

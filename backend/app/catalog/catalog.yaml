@@ -58,6 +58,8 @@ capabilities:
       - {p: 'vulnerability assessment (and|&) penetration test(ing)?', t: S, sub: Vulnerability Assessment & Penetration Testing}
       - {p: '(infrastructure|network) (penetration testing|pen[- ]?test|vapt)', t: S, sub: Infrastructure Penetration Testing}
       - {p: 'penetration test(ing)?', t: S, sub: Penetration Testing}
+      - {p: 'VA\s*[/&-]\s*PT', t: S, cs: true, sub: Vulnerability Assessment & Penetration Testing}
+      - {p: 'ethical hacking', t: S, sub: Ethical Hacking}
       - {p: 'firewall (rule|configuration|policy) (review|audit)', t: S, sub: Firewall Configuration Review}
   - id: svc_redteam
     name: Red Team Assessment
@@ -207,7 +209,7 @@ capabilities:
     synonyms:
       - {p: '(incident response|CSIRT|CERT) capacity building', t: D, sub: IR Capacity Building}
       - {p: '(setting up|establishment of|setup of) (a )?(CSIRT|CERT|sectoral CERT)', t: S, sub: CSIRT Setup}
-      - {p: 'cyber security (training|capacity building|awareness program(me)?)', t: A, sub: Cyber Security Training}
+      - {p: 'cyber ?security (training|capacity building|awareness( program(me)?)?)', t: A, sub: Cyber Security Training}
 
   # ---------------- E. DIGITAL FORENSICS (SERVICES) ----------------
   - id: df_acquisition
@@ -264,6 +266,7 @@ capabilities:
       - {p: '(security operations? cent(re|er)|SOC)( as a service| services| operations| monitoring)', t: S, sub: SOC as a Service}
       - {p: '(24 ?x ?7|round the clock) (security )?monitoring', t: S, sub: 24x7 Security Monitoring}
       - {p: 'managed SOC', t: S, sub: Managed SOC}
+      - {p: '((next[- ]gen(eration)?|cyber) )?security operations? cent(re|er)s?|NGSOC|CSOC', t: S, sub: Security Operations Centre}
       - {p: '(setting up|set-up|setup|establishment|implementation) of (a |the )?(SOC|security operations? cent(re|er))', t: S, sub: SOC Setup}
   - id: mss_infra_mgmt
     name: Security Infrastructure Management

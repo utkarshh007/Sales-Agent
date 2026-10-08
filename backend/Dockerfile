@@ -15,6 +15,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN python -m playwright install --with-deps --only-shell chromium && chmod -R o+rx /ms-playwright
 
+# Local embedding model for semantic matching (Phase 4), baked in so production never downloads at runtime.
+ENV EMBEDDING_CACHE_DIR=/models HF_HUB_DISABLE_TELEMETRY=1
+RUN python -c "from fastembed import TextEmbedding; TextEmbedding('BAAI/bge-small-en-v1.5', cache_dir='/models')"  && chmod -R o+rX /models
+
 COPY alembic.ini .
 COPY migrations ./migrations
 COPY app ./app

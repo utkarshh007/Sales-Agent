@@ -18,7 +18,7 @@ Scheduler ─► Portal connector ─► tenders (+versions) ─► Document pro
 | Documents | `app/documents/` | Magic-byte type detection, executable rejection, optional ClamAV, bounded ZIP handling, text extraction, OCR of scanned pages (tesseract), section detection, deterministic INR value parsing (lakh/crore). |
 | Pre-filter | `app/rules/prefilter.py` | Closed tenders, non-cyber tenders (civil works, guards, CCTV…), and service-only tenders whose stated value exceeds ₹30 lakh are rejected **without calling the LLM**. On a live 452-tender CPPP sample, all 452 were screened out at zero token cost. |
 | LLM analysis | `app/llm/` | Claude (`claude-opus-5-5` by default) extracts the 28 section-11 fields with value/confidence/evidence, maps requirements to the catalog, splits SERVICE/PRODUCT components. Structured outputs constrain capability and product IDs to the catalog, so the model cannot invent an offering. Only targeted document sections are sent. |
-| Matching | `app/matching.py` | Merges explicit OEM mentions, LLM semantic mapping and the deterministic lexicon. Functional requirements expand to the supported portfolio (e.g. "security event correlation" → SIEM → Splunk / QRadar / ArcSight / XSIAM). |
+| Matching | `app/matching.py`, `app/semantic.py` | Merges explicit OEM mentions, competitor-OEM mentions, the deterministic lexicon, local semantic (embedding) similarity and the LLM's mapping. Functional requirements expand to the supported portfolio (e.g. "security event correlation" → SIEM → Splunk / QRadar / ArcSight / XSIAM). Each match records how it was found. |
 | Commercial rules | `app/rules/commercial.py` | ₹30 lakh cap for SERVICE only; no cap for OEM/product; HYBRID evaluated per component; all configurable. |
 | Scoring | `app/scoring.py` | 0–100 with configurable weights; every component carries a reason. Components that don't apply (OEM match on a service tender) are excluded and the score normalised. |
 | Alerts | `app/alerts/email.py` | HOT immediately, HIGH immediately or in the digest, MEDIUM in the daily digest, LOW never. |
@@ -76,6 +76,37 @@ Browser automation follows the same rules as plain HTTP:
 **Not yet covered.** GeM (bidplus.gem.gov.in) blocks connections from outside India, and this build was developed from a non-Indian network, so no GeM connector was written or verified. Build and verify it from an Indian network. Gujarat (nProcure), Karnataka (KPPP), Telangana, Andhra Pradesh, Bihar and Chhattisgarh use other platforms or were unreachable, and each needs its own connector.
 
 Analysts can also add tenders from any other source (partner emails, portals without a connector) under **Sources & rules → Add a tender by hand**. These go through the same analysis.
+
+## Semantic matching and measured quality (Phase 4)
+
+The lexicon only recognises wording it has been taught. Tenders often describe the same need in other words: "recording administrator sessions" is PAM, and "centralised collection of logs with real-time correlation" is SIEM. Phase 4 adds three things, each measured before it was kept.
+
+- **Semantic matching** (`app/semantic.py`): a small local embedding model (`BAAI/bge-small-en-v1.5`, run with ONNX; no tender text leaves the server) compares the tender title, plus the portal's work description when available, with each capability's name, description and sub-capabilities.
+  - A match must clear a similarity threshold **and** beat the closest non-cyber reference text (CCTV, IT hardware AMC, ERP, construction, non-IT audits…) by a margin.
+  - Catalog exclusions always veto it.
+  - Very short generic titles aren't judged.
+  - It's fallback evidence only: when the lexicon or a named product already gives strong evidence, embeddings don't reclassify the tender.
+  - If the model can't load, the engine continues with lexicon matching.
+- **Competitor OEMs** (`competitors:` in the catalog): a tender naming CyberArk, Qualys, CrowdStrike and so on still states a requirement your portfolio can meet. It's matched to the capability, flagged as a bid risk, and checked for an "or equivalent" clause.
+- **An evaluation harness** (`app/evaluation/`): labelled cases from real live titles and realistic paraphrases, plus about 2,745 real non-cyber titles from the live portals as negatives.
+
+```bash
+python -m app.evaluation.run --split holdout2 --errors   # precision / recall and every error
+python -m app.evaluation.sweep                           # threshold sweep (dev split only)
+```
+
+Rules-only engine, title-level evidence only (the hardest case):
+
+| Split | Title-screen recall | Precision | Recall |
+|---|---|---|---|
+| Before Phase 4 (dev) | 39% | 92% | 31% |
+| Dev (thresholds tuned here) | 97% | 97% | 97% |
+| Holdout, first look before fixes | 84% | 100% (0 false positives in 1,378 real titles) | 80% |
+| **Holdout2: written before the final fixes, scored once** | **100%** | **100%** | **94%** |
+
+Holdout2 is the honest estimate for the final version. On the live database, re-analysis recovered a real missed opportunity, the "Next Generation Security Operation Centre" EOI from SLDC Uttarakhand, with no new false positives across about 2,950 real tenders.
+
+`tests/test_phase4_semantic.py` includes a quality gate that fails if precision or recall regresses on these splits. With an `ANTHROPIC_API_KEY`, `--llm` runs the same evaluation through the LLM analyser. This costs API credits and hasn't been run yet.
 
 ## Business rules
 
@@ -157,7 +188,7 @@ Nothing in the engine, scoring, alerts or dashboard changes.
 ## Tests
 
 ```bash
-cd backend && pytest -q        # 120 tests (one launches headless Chromium; run `python -m playwright install chromium` first)
+cd backend && pytest -q        # 133 tests (one launches headless Chromium, the quality gate loads the embedding model)
 cd frontend && npm run lint && npm run build
 ```
 
@@ -166,6 +197,7 @@ cd frontend && npm run lint && npm run build
 - `tests/test_llm.py`: request shape (caching, structured output, fallbacks), catalog-bound IDs, refusal → manual review, truncation → retry.
 - `tests/test_phase2_portals.py`: GePNIC parsing against live captures, a simulated multi-organisation crawl, detail fetched only for candidates, no false updates on reruns, closing-date extensions, detail caps, cross-portal merging and ID collisions, CAPTCHA blockers, and false-friend acronyms taken from live data.
 - `tests/test_phase3_buyer_pages.py`: SBI, C-DAC and ISRO parsing against live captures, date formats, documents fetched only for candidates and then qualified end to end from the PDF, document-screening mode, robots.txt and SSRF refusals, and a real headless-browser test showing JavaScript-built tables are read where plain HTTP sees nothing.
+- `tests/test_phase4_semantic.py`: semantic thresholds, the non-cyber margin, title segments, exclusion vetoes, fallback-only behaviour, competitor OEMs, and the matching-quality gate on the real model.
 - `tests/test_documents.py`, `tests/test_connectors.py`, `tests/test_api.py`: extraction and safety, parsing/robots/CAPTCHA handling, auth, CSRF, roles, upload, review flow.
 
 ## Known limitations and next phases
