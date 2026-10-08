@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest==9.1.1
+# Optional: browser automation for future JS-only portals (Phase 3)
+# playwright

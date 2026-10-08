@@ -1,0 +1,577 @@
+# COMPANY CAPABILITY CATALOG — SOURCE OF TRUTH
+#
+# capabilities: what the company can deliver. `offering` is SERVICE or PRODUCT.
+#   synonyms: lexicon rules used by the deterministic matcher (and shown to the LLM).
+#     p   = regex (case-insensitive unless cs: true); word boundaries are added automatically
+#     t   = D (direct), S (semantic/functional), A (adjacent)
+#     sub = sub-capability label reported in the match explanation
+# products: OEM products the company supports, linked to functional capabilities.
+#   aliases are explicit brand/product mentions (always a DIRECT OEM match).
+# exclusions: phrases that indicate the tender is NOT cyber (physical security, civil works...).
+# generic_signals: wording that hints at security but is insufficient on its own (section 15).
+
+version: 1
+
+categories:
+  A: Assessment Services
+  B: Compliance Management
+  C: Consulting
+  D: Incident Response
+  E: Digital Forensics
+  F: Managed Security Services
+  G: Security Management / Products
+  H: Content Security / XDR
+  I: Identity Management / PAM
+  J: Vulnerability Management & Penetration Testing
+  K: Breach & Attack Simulation
+  L: Cloud Security
+  M: Mobile Security
+  N: SIEM / Security Analytics
+  O: Application Security Products
+  P: DFIR Software / Capabilities
+  Q: DFIR Hardware
+  R: Threat Intelligence & Brand Monitoring
+  S: OT Security
+  T: SASE / Network Security
+
+capabilities:
+  # ---------------- A. ASSESSMENT SERVICES ----------------
+  - id: svc_appsec
+    name: Application Security Assessment
+    category: A
+    offering: SERVICE
+    synonyms:
+      - {p: 'application security (assessment|audit|testing)', t: D, sub: Application Security Assessment}
+      - {p: 'web ?application (security )?(penetration testing|pen[- ]?test|vapt|security audit|security testing|audit)', t: S, sub: Web Application Penetration Testing}
+      - {p: 'mobile app(lication)? (security )?(audit|penetration testing|vapt|security testing)', t: S, sub: Mobile Application Security Testing}
+      - {p: 'api (security )?(testing|audit|penetration testing)', t: S, sub: API Security Testing}
+      - {p: 'source code (review|audit)', t: S, sub: Secure Code Review}
+      - {p: 'website (security )?audit', t: S, sub: Website Security Audit}
+      - {p: '(security audit|vapt) of (web ?site|portal|application)s?', t: S, sub: Web Application Security Audit}
+  - id: svc_netsec
+    name: Network Security Assessment
+    category: A
+    offering: SERVICE
+    synonyms:
+      - {p: 'network security (assessment|audit|testing)', t: D, sub: Network Security Assessment}
+      - {p: 'VAPT', t: S, cs: true, sub: Vulnerability Assessment & Penetration Testing}
+      - {p: 'vulnerability assessment (and|&) penetration test(ing)?', t: S, sub: Vulnerability Assessment & Penetration Testing}
+      - {p: '(infrastructure|network) (penetration testing|pen[- ]?test|vapt)', t: S, sub: Infrastructure Penetration Testing}
+      - {p: 'penetration test(ing)?', t: S, sub: Penetration Testing}
+      - {p: 'firewall (rule|configuration|policy) (review|audit)', t: S, sub: Firewall Configuration Review}
+  - id: svc_redteam
+    name: Red Team Assessment
+    category: A
+    offering: SERVICE
+    synonyms:
+      - {p: 'red[- ]team(ing)?( assessment| exercise| engagement)?', t: D, sub: Red Team Assessment}
+      - {p: 'adversary (simulation|emulation)', t: S, sub: Adversary Simulation}
+      - {p: 'purple team(ing)?', t: S, sub: Purple Teaming}
+      - {p: 'assumed breach (assessment|exercise)', t: S, sub: Assumed Breach Assessment}
+  - id: svc_cyber_drill
+    name: Cyber Drill
+    category: A
+    offering: SERVICE
+    synonyms:
+      - {p: 'cyber (security )?drills?', t: D, sub: Cyber Drill}
+      - {p: 'cyber (security )?(range|war ?game) exercises?', t: S, sub: Cyber Range Exercise}
+      - {p: 'cyber (security )?mock drills?', t: S, sub: Cyber Mock Drill}
+  - id: svc_cloud_assessment
+    name: Cloud Security Assessment
+    category: A
+    offering: SERVICE
+    synonyms:
+      - {p: 'cloud security (assessment|audit|review)', t: D, sub: Cloud Security Assessment}
+      - {p: '(aws|azure|gcp|cloud) (configuration|posture) (audit|review|assessment)', t: S, sub: Cloud Configuration Review}
+      - {p: 'security audit of (the )?cloud', t: S, sub: Cloud Security Audit}
+  - id: svc_container_security
+    name: Container Security Assessment
+    category: A
+    offering: SERVICE
+    synonyms:
+      - {p: 'container security( assessment| audit| review)?', t: D, sub: Container Security}
+      - {p: '(kubernetes|docker|k8s) security( assessment| audit| review| hardening)?', t: S, sub: Kubernetes / Container Security Review}
+
+  # ---------------- B. COMPLIANCE MANAGEMENT ----------------
+  - id: cmp_iso27001
+    name: ISO 27001 Compliance
+    category: B
+    offering: SERVICE
+    synonyms:
+      - {p: 'ISO[ /:-]*(IEC)?[ /:-]*27001', t: D, sub: ISO 27001 Implementation / Audit}
+      - {p: 'ISMS (implementation|certification|audit|consultan(cy|t))', t: S, sub: ISMS Implementation}
+      - {p: 'information security management system', t: S, sub: ISMS Implementation}
+  - id: cmp_pci_dss
+    name: PCI DSS QSA Assessment
+    category: B
+    offering: SERVICE
+    synonyms:
+      - {p: 'PCI[ -]?DSS', t: D, sub: PCI DSS Assessment}
+      - {p: 'QSA', t: D, cs: true, sub: PCI DSS QSA}
+      - {p: 'payment card industry data security', t: D, sub: PCI DSS Assessment}
+  - id: cmp_cyber_risk
+    name: Cyber Risk Assessment
+    category: B
+    offering: SERVICE
+    synonyms:
+      - {p: 'cyber (security )?risk assessment', t: D, sub: Cyber Risk Assessment}
+      - {p: '(information|IT|cyber) security (risk )?(audit|assessment)', t: S, sub: Information Security Audit}
+      - {p: 'CERT-?In empanel+ed', t: S, sub: CERT-In Empanelled Security Audit}
+      - {p: 'comprehensive (cyber|information|IT) security audit', t: S, sub: Comprehensive Security Audit}
+      - {p: '(cyber|information) security (maturity|gap) assessment', t: S, sub: Security Maturity / Gap Assessment}
+      - {p: '(third[- ]party|vendor) (security )?risk assessment', t: S, sub: Third-Party Risk Assessment}
+  - id: cmp_data_localization
+    name: Data Localization Audit
+    category: B
+    offering: SERVICE
+    synonyms:
+      - {p: 'data locali[sz]ation( audit| compliance)?', t: D, sub: Data Localization Audit}
+      - {p: 'system audit report.{0,40}(payment data|data storage)', t: S, sub: RBI Payment Data Storage Audit}
+  - id: cmp_regulatory_audit
+    name: Regulatory Guidelines Audit (RBI / IRDAI / Aadhaar / NHB)
+    category: B
+    offering: SERVICE
+    synonyms:
+      - {p: '(RBI|IRDA|IRDAI|UIDAI|Aadhaar|NHB|SEBI|NABARD)( cyber security| IT| information security)? (framework |guidelines? )?(compliance )?(audit|assessment)', t: D, sub: Regulatory Guidelines Audit}
+      - {p: 'information systems? audit', t: S, sub: Information Systems Audit}
+      - {p: 'IS audit', t: S, cs: true, sub: Information Systems Audit}
+      - {p: 'AUA ?/ ?KUA (compliance )?audit', t: D, sub: Aadhaar AUA/KUA Audit}
+      - {p: 'cyber security framework (compliance|audit)', t: S, sub: Cyber Security Framework Audit}
+      - {p: 'CSITE|cyber resilience (audit|assessment)', t: S, sub: Regulatory Cyber Resilience Audit}
+
+  # ---------------- C. CONSULTING ----------------
+  - id: con_digital_transformation
+    name: Digital Transformation Consulting
+    category: C
+    offering: SERVICE
+    synonyms:
+      - {p: 'secure digital transformation', t: D, sub: Digital Transformation}
+      - {p: 'digital transformation (security )?consult(ing|ancy)', t: A, sub: Digital Transformation Consulting}
+  - id: con_devsecops
+    name: DevSecOps Consulting
+    category: C
+    offering: SERVICE
+    synonyms:
+      - {p: 'DevSecOps', t: D, sub: DevSecOps}
+      - {p: 'secure (SDLC|software development life ?cycle)', t: S, sub: Secure SDLC}
+  - id: con_cloud_arch_review
+    name: Cloud Architecture Review
+    category: C
+    offering: SERVICE
+    synonyms:
+      - {p: 'cloud (security )?architecture review', t: D, sub: Cloud Architecture Review}
+      - {p: '(security )?architecture review', t: S, sub: Security Architecture Review}
+  - id: con_security_framework
+    name: Security Framework Design
+    category: C
+    offering: SERVICE
+    synonyms:
+      - {p: '(cyber|information) security (framework|policy|policies) (design|development|formulation|drafting)', t: D, sub: Security Framework Design}
+      - {p: '(cyber|information) security consult(ant|ancy|ing)', t: S, sub: Security Consulting}
+      - {p: 'CISO (as a service|advisory)|virtual CISO|vCISO', t: S, sub: CISO Advisory}
+
+  # ---------------- D. INCIDENT RESPONSE ----------------
+  - id: ir_breach_response
+    name: Incident & Breach Response
+    category: D
+    offering: SERVICE
+    synonyms:
+      - {p: '(cyber )?(security )?incident response( services| retainer)?', t: D, sub: Incident Response}
+      - {p: 'breach response', t: D, sub: Breach Response}
+      - {p: 'DFIR( services)?', t: S, cs: true, sub: DFIR Services}
+  - id: ir_crisis_management
+    name: Cyber Crisis Management
+    category: D
+    offering: SERVICE
+    synonyms:
+      - {p: 'cyber crisis management( plan)?', t: D, sub: Cyber Crisis Management Plan}
+      - {p: 'CCMP', t: D, cs: true, sub: Cyber Crisis Management Plan}
+  - id: ir_tabletop
+    name: Tabletop Exercise
+    category: D
+    offering: SERVICE
+    synonyms:
+      - {p: 'table[- ]?top exercises?', t: D, sub: Tabletop Exercise}
+  - id: ir_readiness_compromise
+    name: IR Readiness & Compromise Assessment
+    category: D
+    offering: SERVICE
+    synonyms:
+      - {p: 'compromise assessment', t: D, sub: Compromise Assessment}
+      - {p: '(incident response|IR) readiness( assessment)?', t: D, sub: IR Readiness Assessment}
+      - {p: 'threat hunting( services| assessment)?', t: S, sub: Threat Hunting}
+  - id: ir_capacity_building
+    name: Capacity Building of Incident Response
+    category: D
+    offering: SERVICE
+    synonyms:
+      - {p: '(incident response|CSIRT|CERT) capacity building', t: D, sub: IR Capacity Building}
+      - {p: '(setting up|establishment of|setup of) (a )?(CSIRT|CERT|sectoral CERT)', t: S, sub: CSIRT Setup}
+      - {p: 'cyber security (training|capacity building|awareness program(me)?)', t: A, sub: Cyber Security Training}
+
+  # ---------------- E. DIGITAL FORENSICS (SERVICES) ----------------
+  - id: df_acquisition
+    name: Forensic Acquisition / Imaging
+    category: E
+    offering: SERVICE
+    synonyms:
+      - {p: 'forensic (acquisition|imaging)', t: D, sub: Forensic Acquisition / Imaging}
+  - id: df_analysis
+    name: Forensic Analysis
+    category: E
+    offering: SERVICE
+    synonyms:
+      - {p: '(digital|cyber|computer) forensic (analysis|investigation|examination|services)', t: D, sub: Forensic Analysis}
+      - {p: 'forensic (audit|investigation) of (digital|IT|computer|email)', t: S, sub: Digital Forensic Investigation}
+  - id: df_data_recovery
+    name: Data Recovery & Reconstruction
+    category: E
+    offering: SERVICE
+    synonyms:
+      - {p: 'forensic data recovery|data (recovery and|&) reconstruction', t: D, sub: Data Recovery & Reconstruction}
+  - id: df_lab_setup
+    name: Forensic Lab Design / Setup / Upgradation
+    category: E
+    offering: SERVICE
+    synonyms:
+      - {p: '(cyber|digital|computer|mobile) forensics? (lab|laboratory)', t: D, sub: Forensic Lab Setup}
+      - {p: '(setting up|setup|establishment|upgradation|upgrade) of (a |the )?(cyber|digital)? ?forensics? (lab|laboratory)', t: D, sub: Forensic Lab Setup}
+      - {p: 'cyber (crime )?(investigation )?lab', t: S, sub: Cyber Crime Lab}
+  - id: df_eee_79a
+    name: Notify Labs as Examiner of Electronic Evidence (Section 79A, IT Act)
+    category: E
+    offering: SERVICE
+    synonyms:
+      - {p: 'examiner of electronic evidence', t: D, sub: EEE Notification under Section 79A}
+      - {p: 'section 79 ?A', t: D, sub: EEE Notification under Section 79A}
+  - id: df_training
+    name: Forensic Training
+    category: E
+    offering: SERVICE
+    synonyms:
+      - {p: '(digital|cyber|mobile) forensics? training', t: D, sub: Forensic Training}
+      - {p: 'cyber crime investigation training', t: S, sub: Cyber Crime Investigation Training}
+
+  # ---------------- F. MANAGED SECURITY SERVICES ----------------
+  - id: mss_mdr
+    name: Managed Detection & Response
+    category: F
+    offering: SERVICE
+    synonyms:
+      - {p: 'managed detection (and|&) response', t: D, sub: Managed Detection & Response}
+      - {p: 'MDR( services)?', t: D, cs: true, sub: Managed Detection & Response}
+      - {p: '(security operations? cent(re|er)|SOC)( as a service| services| operations| monitoring)', t: S, sub: SOC as a Service}
+      - {p: '(24 ?x ?7|round the clock) (security )?monitoring', t: S, sub: 24x7 Security Monitoring}
+      - {p: 'managed SOC', t: S, sub: Managed SOC}
+      - {p: 'SOC', t: A, cs: true, sub: Security Operations Centre}
+  - id: mss_infra_mgmt
+    name: Security Infrastructure Management
+    category: F
+    offering: SERVICE
+    synonyms:
+      - {p: 'security (infrastructure|devices?) management', t: D, sub: Security Infrastructure Management}
+      - {p: 'managed security services?', t: S, sub: Managed Security Services}
+      - {p: 'facility management of (security|SOC)', t: S, sub: Security Facility Management}
+  - id: mss_cloud
+    name: Managed Cloud Security
+    category: F
+    offering: SERVICE
+    synonyms:
+      - {p: 'managed cloud security', t: D, sub: Managed Cloud Security}
+  - id: mss_appsec
+    name: Managed Application Security
+    category: F
+    offering: SERVICE
+    synonyms:
+      - {p: 'managed (app(lication)?[ -]?sec(urity)?)', t: D, sub: Managed AppSec}
+      - {p: 'continuous (application security testing|vulnerability assessment)', t: S, sub: Continuous AppSec Testing}
+  - id: mss_network
+    name: Managed Network Security
+    category: F
+    offering: SERVICE
+    synonyms:
+      - {p: 'managed network security', t: D, sub: Managed Network Security}
+      - {p: 'managed firewall', t: S, sub: Managed Firewall}
+      - {p: '(next[- ]generation )?firewalls?|NGFW', t: A, sub: Firewall}
+
+  # ---------------- G. SECURITY MANAGEMENT / PRODUCTS ----------------
+  - id: prd_audit_lifecycle
+    name: Audit Lifecycle Management Platform
+    category: G
+    offering: PRODUCT
+    synonyms:
+      - {p: 'audit (lifecycle|life cycle|management) (platform|software|tool|solution)', t: S, sub: Audit Lifecycle Management}
+      - {p: '(GRC|governance,? risk (and|&) compliance) (platform|tool|solution|software)', t: A, sub: GRC Platform}
+  - id: prd_firewall_orchestration
+    name: Firewall Policy Orchestration
+    category: G
+    offering: PRODUCT
+    synonyms:
+      - {p: '(firewall|network security) policy (orchestration|management|automation)( solution| tool| software)?', t: D, sub: Firewall Policy Orchestration}
+      - {p: 'security policy orchestration', t: S, sub: Security Policy Orchestration}
+
+  # ---------------- H. CONTENT SECURITY / XDR ----------------
+  - id: prd_dlp
+    name: Data Loss Prevention
+    category: H
+    offering: PRODUCT
+    synonyms:
+      - {p: 'data (loss|leak(age)?) prevention', t: D, sub: Data Loss Prevention}
+      - {p: 'DLP', t: D, cs: true, sub: Data Loss Prevention}
+      - {p: '(endpoint|network) data protection', t: A, sub: Data Protection}
+  - id: prd_xdr
+    name: XDR / EDR
+    category: H
+    offering: PRODUCT
+    synonyms:
+      - {p: 'extended detection (and|&) response', t: D, sub: Extended Detection & Response}
+      - {p: 'XDR', t: D, cs: true, sub: Extended Detection & Response}
+      - {p: 'endpoint detection (and|&) response', t: S, sub: Endpoint Detection & Response}
+      - {p: 'EDR', t: S, cs: true, sub: Endpoint Detection & Response}
+      - {p: 'endpoint protection platform|next[- ]gen(eration)? anti-?virus|NGAV', t: A, sub: Endpoint Protection}
+      - {p: 'anti-?virus|end ?point security', t: A, sub: Endpoint Security}
+
+  # ---------------- I. IDENTITY MANAGEMENT / PAM ----------------
+  - id: prd_pam
+    name: Privileged Access Management
+    category: I
+    offering: PRODUCT
+    synonyms:
+      - {p: 'privileged (access|account|identity|user) management', t: D, sub: Privileged Access Management}
+      - {p: 'PAM', t: D, cs: true, sub: Privileged Access Management}
+      - {p: 'privileged (session|password) (management|recording|vault(ing)?)', t: S, sub: Privileged Session Management}
+      - {p: 'session recording', t: A, sub: Session Recording}
+  - id: prd_iam
+    name: Identity & Access Management
+    category: I
+    offering: PRODUCT
+    synonyms:
+      - {p: 'identity (and|&) access management|IAM solution', t: D, sub: Identity & Access Management}
+      - {p: 'identity governance( and administration)?', t: S, sub: Identity Governance}
+      - {p: '(single sign[- ]on|SSO) (solution|platform)', t: A, sub: Single Sign-On}
+      - {p: 'multi[- ]factor authentication (solution|platform)', t: A, sub: Multi-Factor Authentication}
+
+  # ---------------- J. VULNERABILITY MANAGEMENT & PT TOOLS ----------------
+  - id: prd_vuln_mgmt
+    name: Vulnerability Management Platform
+    category: J
+    offering: PRODUCT
+    synonyms:
+      - {p: 'vulnerability management (solution|platform|tool|software|system)', t: D, sub: Vulnerability Management}
+      - {p: 'vulnerability (scanner|scanning (tool|solution|software))', t: S, sub: Vulnerability Scanning}
+      - {p: '(risk[- ]based|continuous) vulnerability management', t: S, sub: Vulnerability Management}
+  - id: prd_pentest_tools
+    name: Penetration Testing Tools
+    category: J
+    offering: PRODUCT
+    synonyms:
+      - {p: 'penetration testing (tool|software|framework|platform|suite)s?', t: D, sub: Penetration Testing Tools}
+      - {p: '(adversary|red team) (simulation|emulation) (tool|software|framework|platform)s?', t: S, sub: Adversary Simulation Tool}
+      - {p: 'command (and|&) control framework', t: S, sub: C2 Framework}
+
+  # ---------------- K. BREACH & ATTACK SIMULATION ----------------
+  - id: prd_bas
+    name: Breach & Attack Simulation
+    category: K
+    offering: PRODUCT
+    synonyms:
+      - {p: 'breach (and|&) attack simulation', t: D, sub: Breach & Attack Simulation}
+      - {p: 'security (control )?validation (platform|solution|tool)', t: S, sub: Security Validation Platform}
+      - {p: 'continuous (security|threat) (validation|exposure management)|CTEM', t: S, sub: Continuous Threat Exposure Management}
+      - {p: 'attack path (analysis|management)', t: S, sub: Attack Path Management}
+
+  # ---------------- L. CLOUD SECURITY ----------------
+  - id: prd_cspm
+    name: Cloud Security Platform (CSPM / CNAPP)
+    category: L
+    offering: PRODUCT
+    synonyms:
+      - {p: 'cloud security posture management|CSPM', t: D, sub: Cloud Security Posture Management}
+      - {p: 'cloud[- ]native application protection( platform)?|CNAPP', t: D, sub: CNAPP}
+      - {p: 'cloud workload protection( platform)?|CWPP', t: S, sub: Cloud Workload Protection}
+      - {p: 'cloud (posture|configuration) (and )?(risk )?(management|monitoring)', t: S, sub: Cloud Posture Management}
+      - {p: 'cloud security (platform|solution|tool)', t: S, sub: Cloud Security Platform}
+
+  # ---------------- M. MOBILE SECURITY ----------------
+  - id: prd_mobile_security
+    name: Mobile Security / Mobile Threat Defense
+    category: M
+    offering: PRODUCT
+    synonyms:
+      - {p: 'mobile threat (defen[cs]e|detection)', t: D, sub: Mobile Threat Defense}
+      - {p: 'mobile (device )?security (solution|platform)', t: S, sub: Mobile Security}
+
+  # ---------------- N. SIEM / SECURITY ANALYTICS ----------------
+  - id: prd_siem
+    name: SIEM / Security Analytics
+    category: N
+    offering: PRODUCT
+    synonyms:
+      - {p: 'security information (and|&) event management', t: D, sub: SIEM}
+      - {p: 'SIEM', t: D, sub: SIEM}
+      - {p: 'security (event|log) (correlation|analytics)', t: S, sub: Security Event Correlation}
+      - {p: 'cent(ral|ralised|ralized) (security )?log (monitoring|management|correlation)', t: S, sub: Centralized Log Monitoring}
+      - {p: 'security analytics( platform)?', t: S, sub: Security Analytics}
+      - {p: 'security orchestration,? automation (and|&) response', t: S, sub: SOAR}
+      - {p: 'SOAR', t: S, cs: true, sub: SOAR}
+      - {p: 'UEBA|user (and|&) entity behaviou?r analytics', t: S, sub: UEBA}
+      - {p: 'log management (solution|system)', t: A, sub: Log Management}
+
+  # ---------------- O. APPLICATION SECURITY PRODUCTS ----------------
+  - id: prd_appsec_tools
+    name: Application Security Testing Tools
+    category: O
+    offering: PRODUCT
+    synonyms:
+      - {p: 'application security testing (tool|solution|software|platform)s?', t: D, sub: Application Security Testing Tool}
+      - {p: 'SAST|DAST|IAST', t: S, cs: true, sub: SAST / DAST}
+      - {p: 'static (application security|code) (testing|analysis)', t: S, sub: Static Application Security Testing}
+      - {p: 'dynamic application security testing', t: S, sub: Dynamic Application Security Testing}
+      - {p: '(source )?code (analy[sz]er|scanning) (tool|software)', t: S, sub: Code Scanning Tool}
+      - {p: 'web (application )?vulnerability scanner', t: S, sub: Web Vulnerability Scanner}
+
+  # ---------------- P. DFIR SOFTWARE / CAPABILITIES ----------------
+  - id: prd_dfir_software
+    name: DFIR Software
+    category: P
+    offering: PRODUCT
+    synonyms:
+      - {p: '(computer|disk) forensics? (software|tool|solution)s?', t: D, sub: Computer Forensics}
+      - {p: 'network forensics?( software| tool| solution)?', t: D, sub: Network Forensics}
+      - {p: 'mobile (phone )?forensics?( software| tool| solution| kit)?', t: D, sub: Mobile Forensics}
+      - {p: '(image|video|audio|CCTV|DVR|email|social media) forensics?', t: D, sub: Multimedia / Email / Social Media Forensics}
+      - {p: 'password (recovery|cracking) (software|tool|solution)', t: D, sub: Password Recovery}
+      - {p: 'crypt(o)?analysis', t: S, sub: Cryptoanalysis}
+      - {p: '(deep|dark) web (analysis|monitoring|intelligence|investigation)', t: S, sub: Deep / Dark Web Analysis}
+      - {p: '(digital|cyber) forensics? (software|tools?|solutions?|suite)', t: D, sub: Digital Forensics Software}
+      - {p: 'OSINT (tool|platform|software|solution)', t: S, sub: OSINT Investigation}
+
+  # ---------------- Q. DFIR HARDWARE ----------------
+  - id: prd_dfir_hardware
+    name: DFIR Hardware
+    category: Q
+    offering: PRODUCT
+    synonyms:
+      - {p: 'write[- ]?blockers?', t: D, sub: Write Blocker}
+      - {p: 'forensic (duplicator|imager)s?|(hard )?disk duplicator', t: D, sub: Forensic Duplicator}
+      - {p: 'JTAG|chip[- ]off|ISP (forensic|extraction)', t: D, sub: Advanced Mobile Forensics — JTAG / CHIP-OFF / ISP}
+      - {p: 'forensic workstations?', t: D, sub: Digital Forensic Workstation}
+      - {p: 'faraday (bags?|box(es)?|tent|enclosure)', t: D, sub: Faraday Bags}
+      - {p: '(incident response|IR|forensic field) kit', t: D, sub: IR Kit}
+      - {p: 'forensic kiosk|mobile forensic kiosk', t: D, sub: Forensic Kiosk}
+      - {p: 'forensic (hardware|equipment|tools? and equipment)', t: S, sub: Forensic Hardware}
+
+  # ---------------- R. THREAT INTELLIGENCE & BRAND MONITORING ----------------
+  - id: prd_threat_intel
+    name: Threat Intelligence Platform
+    category: R
+    offering: PRODUCT
+    synonyms:
+      - {p: '(cyber )?threat intelligence( platform| feeds?| services?| solution)?', t: D, sub: Threat Intelligence}
+      - {p: 'social media (monitoring|intelligence|analytics) (tool|platform|solution)', t: S, sub: Social Media Intelligence}
+      - {p: 'open source intelligence|OSINT', t: S, sub: OSINT}
+  - id: prd_brand_monitoring
+    name: Brand Monitoring / Digital Risk Protection
+    category: R
+    offering: PRODUCT
+    synonyms:
+      - {p: 'brand (monitoring|protection)', t: D, sub: Brand Monitoring}
+      - {p: 'digital risk protection', t: S, sub: Digital Risk Protection}
+      - {p: '(anti[- ]?phishing|phishing site|rogue (app|domain)) (monitoring|takedown)', t: S, sub: Phishing / Rogue App Takedown}
+      - {p: 'take ?down services?', t: S, sub: Takedown Services}
+
+  # ---------------- S. OT SECURITY ----------------
+  - id: prd_ot_security
+    name: OT / ICS Security
+    category: S
+    offering: PRODUCT
+    synonyms:
+      - {p: '(OT|operational technology) (cyber )?security', t: D, sub: OT Security}
+      - {p: '(ICS|industrial control systems?|SCADA) (cyber )?security', t: S, sub: Industrial Control System Security}
+      - {p: 'OT (network )?(monitoring|asset visibility|anomaly detection)', t: S, sub: OT Network Monitoring}
+      - {p: 'IEC[ -]?62443', t: S, sub: IEC 62443}
+
+  # ---------------- T. SASE / NETWORK SECURITY ----------------
+  - id: prd_sase
+    name: SASE / Secure SD-WAN
+    category: T
+    offering: PRODUCT
+    synonyms:
+      - {p: 'secure access service edge|SASE', t: D, sub: SASE}
+      - {p: 'secure SD-?WAN', t: S, sub: Secure SD-WAN}
+      - {p: 'SD-?WAN', t: A, sub: SD-WAN}
+      - {p: 'zero trust network access|ZTNA', t: S, sub: Zero Trust Network Access}
+
+products:
+  - {id: nxsam, name: NxSAM — Audit Lifecycle Management, oem: NxSAM, capabilities: [prd_audit_lifecycle], aliases: ['NxSAM']}
+  - {id: tufin, name: Tufin Orchestration Suite, oem: Tufin, capabilities: [prd_firewall_orchestration], aliases: ['Tufin', 'SecureTrack', 'SecureChange']}
+  - {id: digital_guardian, name: Digital Guardian DLP, oem: Digital Guardian (Fortra), capabilities: [prd_dlp], aliases: ['Digital Guardian']}
+  - {id: forcepoint_dlp, name: Forcepoint DLP, oem: Forcepoint, capabilities: [prd_dlp], aliases: ['Forcepoint']}
+  - {id: cortex_xdr, name: Cortex XDR, oem: Palo Alto Networks, capabilities: [prd_xdr], aliases: ['Cortex XDR']}
+  - {id: sentinelone, name: SentinelOne XDR, oem: SentinelOne, capabilities: [prd_xdr], aliases: ['SentinelOne', 'Sentinel One', 'Singularity XDR']}
+  - {id: netiq, name: Micro Focus NetIQ, oem: OpenText (Micro Focus), capabilities: [prd_iam, prd_pam], aliases: ['NetIQ']}
+  - {id: ibm_verify, name: IBM Security Verify, oem: IBM, capabilities: [prd_iam, prd_pam], aliases: ['IBM Security Verify', 'IBM Verify']}
+  - {id: delinea, name: Delinea PAM, oem: Delinea, capabilities: [prd_pam], aliases: ['Delinea', 'Thycotic', 'Centrify', 'Secret Server']}
+  - {id: arcos, name: ARCON PAM, oem: ARCON, capabilities: [prd_pam], aliases: ['ARCOS', 'ARCON PAM', 'ARCON Privileged']}
+  - {id: tenable_sc, name: Tenable SecurityCenter, oem: Tenable, capabilities: [prd_vuln_mgmt], aliases: ['Tenable\.?sc', 'Tenable Security ?Center', 'Nessus']}
+  - {id: tenable_io, name: Tenable.io, oem: Tenable, capabilities: [prd_vuln_mgmt], aliases: ['Tenable\.io', 'Tenable Vulnerability Management']}
+  - {id: cobalt_strike, name: Cobalt Strike, oem: Fortra, capabilities: [prd_pentest_tools], aliases: ['Cobalt Strike']}
+  - {id: core_impact, name: Core Impact, oem: Fortra, capabilities: [prd_pentest_tools], aliases: ['Core Impact']}
+  - {id: attackiq, name: AttackIQ, oem: AttackIQ, capabilities: [prd_bas], aliases: ['AttackIQ', 'Attack IQ']}
+  - {id: xm_cyber, name: XM Cyber, oem: XM Cyber, capabilities: [prd_bas], aliases: ['XM Cyber']}
+  - {id: prisma_cloud, name: Prisma Cloud, oem: Palo Alto Networks, capabilities: [prd_cspm], aliases: ['Prisma Cloud']}
+  - {id: orca, name: Orca CSPM, oem: Orca Security, capabilities: [prd_cspm], aliases: ['Orca Security', 'Orca CSPM']}
+  - {id: tenable_cs, name: Tenable.cs, oem: Tenable, capabilities: [prd_cspm], aliases: ['Tenable\.cs', 'Tenable Cloud Security']}
+  - {id: zecops, name: ZecOps Mobile Security, oem: Jamf (ZecOps), capabilities: [prd_mobile_security], aliases: ['ZecOps']}
+  - {id: zimperium, name: Zimperium, oem: Zimperium, capabilities: [prd_mobile_security], aliases: ['Zimperium']}
+  - {id: qradar, name: IBM Security QRadar, oem: IBM, capabilities: [prd_siem], aliases: ['QRadar', 'Q Radar']}
+  - {id: cortex_xsiam, name: Cortex XSIAM, oem: Palo Alto Networks, capabilities: [prd_siem, prd_xdr], aliases: ['XSIAM', 'Cortex XSIAM']}
+  - {id: splunk, name: Splunk, oem: Splunk (Cisco), capabilities: [prd_siem], aliases: ['Splunk']}
+  - {id: arcsight, name: ArcSight, oem: OpenText (Micro Focus), capabilities: [prd_siem], aliases: ['ArcSight', 'Arc Sight']}
+  - {id: hcl_appscan, name: HCL AppScan, oem: HCL, capabilities: [prd_appsec_tools], aliases: ['AppScan', 'App Scan']}
+  - {id: webinspect, name: WebInspect, oem: OpenText, capabilities: [prd_appsec_tools], aliases: ['WebInspect', 'Web Inspect']}
+  - {id: checkmarx, name: Checkmarx, oem: Checkmarx, capabilities: [prd_appsec_tools], aliases: ['Checkmarx']}
+  - {id: netsparker, name: Netsparker (Invicti), oem: Invicti, capabilities: [prd_appsec_tools], aliases: ['Netsparker', 'Invicti']}
+  - {id: burp_suite, name: PortSwigger Burp Suite, oem: PortSwigger, capabilities: [prd_appsec_tools, prd_pentest_tools], aliases: ['Burp ?Suite', 'PortSwigger']}
+  - {id: acunetix, name: Acunetix, oem: Invicti, capabilities: [prd_appsec_tools], aliases: ['Acunetix']}
+  - {id: fortify, name: HP Fortify, oem: OpenText, capabilities: [prd_appsec_tools], aliases: ['HP Fortify', '(Micro Focus|OpenText) Fortify', 'Fortify (SCA|Static Code Analy[sz]er|on Demand|WebInspect)']}
+  - {id: drona_dfir, name: Drona DFIR Portfolio (Workstation / Faraday / Labs / IR Kit / Kiosk), oem: Drona, capabilities: [prd_dfir_hardware, df_lab_setup], aliases: ['Drona (digital )?(forensic|workstation|faraday|labs?|IR kit|kiosk)']}
+  - {id: recorded_future, name: Recorded Future, oem: Recorded Future, capabilities: [prd_threat_intel, prd_brand_monitoring], aliases: ['Recorded Future']}
+  - {id: anomali, name: Anomali ThreatStream, oem: Anomali, capabilities: [prd_threat_intel], aliases: ['Anomali', 'ThreatStream']}
+  - {id: izoologic, name: Izoologic Brand Monitoring, oem: Izoologic, capabilities: [prd_brand_monitoring], aliases: ['Izoologic']}
+  - {id: voyager_labs, name: Voyager Labs, oem: Voyager Labs, capabilities: [prd_threat_intel, prd_dfir_software], aliases: ['Voyager ?Labs']}
+  - {id: social_links, name: Social Links, oem: Social Links, capabilities: [prd_threat_intel, prd_dfir_software], aliases: ['Social Links']}
+  - {id: sectrio, name: Sectrio OT Security, oem: Sectrio, capabilities: [prd_ot_security], aliases: ['Sectrio']}
+  - {id: tenable_ot, name: Tenable.ot, oem: Tenable, capabilities: [prd_ot_security], aliases: ['Tenable\.ot']}
+  - {id: cato, name: Cato Networks SD-WAN / SASE, oem: Cato Networks, capabilities: [prd_sase], aliases: ['Cato Networks', 'Cato SASE']}
+
+# Phrases that indicate NON-cyber "security" or unrelated work. A tender whose title/text
+# matches an exclusion and has no DIRECT/SEMANTIC capability match is rejected deterministically.
+exclusions:
+  - {p: 'security (guards?|personnel|staff|manpower)', reason: Physical security manpower}
+  - {p: 'watch (and|&) ward', reason: Physical security manpower}
+  - {p: 'ex[- ]servicem[ae]n', reason: Physical security manpower}
+  - {p: 'CCTV( cameras?| surveillance| system)?', reason: Physical surveillance (CCTV)}
+  - {p: 'surveillance cameras?', reason: Physical surveillance}
+  - {p: 'fire (safety|fighting|alarm|detection)', reason: Fire safety}
+  - {p: 'access control (system|door)s?|boom barriers?|baggage scanner|metal detector', reason: Physical access control}
+  - {p: 'construction|civil works?|repair(s)? (and|&) maintenance of (building|road)|road works?|building works?', reason: Civil / construction works}
+  - {p: 'electrical works?|electrification|transformer|substation|transmission line', reason: Electrical works}
+  - {p: 'plumbing|painting|waterproofing|horticulture|housekeeping|cleaning services?|catering|canteen', reason: Facility services}
+  - {p: 'supply of (furniture|stationery|uniforms?|medicines?|vehicles?)', reason: Unrelated supply}
+  - {p: 'hiring of (vehicles?|taxis?|cars?|buses)', reason: Vehicle hiring}
+  - {p: 'security deposit', reason: Financial term (security deposit), not cyber}
+  - {p: 'food security|social security|national security guard', reason: Non-cyber use of "security"}
+
+# Generic security wording — insufficient on its own (section 15). Routes to LLM / review, never auto-accepts.
+generic_signals:
+  - 'cyber ?security'
+  - 'information security'
+  - 'IT security'
+  - 'security audit'
+  - 'data security'
+  - 'network security'
+  - 'security solutions?'
+  - 'security (software|tools?)'
+  - 'cyber'
+  - 'quantum[- ]?secure|post[- ]quantum|secure (IT|network|communications?) infrastructure'
