@@ -4,6 +4,7 @@
   seed                    re-sync catalog.yaml into the database
   create-user EMAIL ROLE  create a user (password read from TENDER_USER_PASSWORD or prompted)
   reset-2fa EMAIL         turn off a user's two-factor authentication (lost phone and recovery codes)
+  set-email OLD NEW       change a user's sign-in email
   discover PORTAL_CODE    run one discovery pass for a portal and process the resulting queue
   run-once                schedule due work and drain the queue, then exit
   worker                  run the scheduler + job worker forever
@@ -40,6 +41,9 @@ def main(argv: list[str] | None = None) -> int:
     cu.add_argument("role", choices=["admin", "analyst", "viewer"])
     r2 = sub.add_parser("reset-2fa")
     r2.add_argument("email")
+    se = sub.add_parser("set-email")
+    se.add_argument("old")
+    se.add_argument("new")
     d = sub.add_parser("discover")
     d.add_argument("portal")
     d.add_argument("--max-pages", type=int, default=None)
@@ -86,6 +90,28 @@ def main(argv: list[str] | None = None) -> int:
             audit.record(s, "MFA_RESET", actor="cli", reason=f"2FA reset for {user.email} by an operator")
             s.commit()
         print(f"two-factor authentication reset for {args.email}; they will set it up again at next sign-in if their role requires it")
+    elif args.cmd == "set-email":
+        from email_validator import EmailNotValidError, validate_email
+
+        from app import audit
+        from app.models import User
+        try:
+            new = validate_email(args.new, check_deliverability=False).normalized.lower()
+        except EmailNotValidError as e:
+            print(f"invalid email: {e}", file=sys.stderr)
+            return 2
+        with SessionLocal() as s:
+            user = s.scalar(select(User).where(User.email == args.old.lower()))
+            if user is None:
+                print("no such user", file=sys.stderr)
+                return 1
+            if s.scalar(select(User.id).where(User.email == new)) is not None:
+                print("that email is already in use", file=sys.stderr)
+                return 1
+            old, user.email = user.email, new
+            audit.record(s, "USER_EMAIL_CHANGED", actor="cli", reason=f"sign-in email changed from {old} to {new}")
+            s.commit()
+        print(f"sign-in email changed: {old} -> {new}")
     elif args.cmd == "discover":
         from app.models import Portal
         from app.pipeline import discover_portal
