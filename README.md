@@ -1,6 +1,6 @@
-# Tender Desk — Cybersecurity Tender Intelligence Agent
+# Trever RFP Portal — Cybersecurity Tender Intelligence Agent
 
-Tender Desk watches public tender portals, screens every tender against the company's capability catalog, and shows the team only the opportunities it can realistically pursue. Every decision is explained: which capability matched, which evidence supports it, how the score was built and which commercial rule applied.
+Trever RFP Portal watches public tender portals, screens every tender against the company's capability catalog, and shows the team only the opportunities it can realistically pursue. Every decision is explained: which capability matched, which evidence supports it, how the score was built and which commercial rule applied.
 
 The design follows three priorities: **relevance over volume, precision over count, explainability over black-box decisions.**
 

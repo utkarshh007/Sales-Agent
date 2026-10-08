@@ -91,7 +91,7 @@ def render_tender_alert(t: Tender, settings: Settings, catalog: Catalog) -> tupl
         text += "\nKey requirements:\n" + "\n".join(f"- {r}" for r in reqs) + "\n"
     if issues:
         text += "\nRisks / eligibility issues:\n" + "\n".join(f"- {i}" for i in issues[:8]) + "\n"
-    text += f"\nSource: {t.source_url or '—'}\nDashboard: {link}\n"
+    text += f"\nSource: {t.source_url or '—'}\nTrever RFP Portal: {link}\n"
 
     e = html.escape
     html_body = (
@@ -103,7 +103,8 @@ def render_tender_alert(t: Tender, settings: Settings, catalog: Catalog) -> tupl
         f"<h3>Value rule</h3><p>{e(value_rule)}</p>"
         + (("<h3>Key requirements</h3><ul>" + "".join(f"<li>{e(r)}</li>" for r in reqs) + "</ul>") if reqs else "")
         + (("<h3>Risks / eligibility issues</h3><ul>" + "".join(f"<li>{e(i)}</li>" for i in issues[:8]) + "</ul>") if issues else "")
-        + f"<p><a href='{e(t.source_url or '#')}'>Source tender</a> · <a href='{e(link)}'>Open in dashboard</a></p></div>"
+        + f"<p><a href='{e(t.source_url or '#')}'>Source tender</a> · <a href='{e(link)}'>Open in Trever RFP Portal</a></p>"
+        "<p style='color:#777;font-size:12px'>Sent by Trever RFP Portal.</p></div>"
     )
     return subject, text, html_body
 

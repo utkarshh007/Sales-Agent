@@ -44,7 +44,7 @@ def create_app() -> FastAPI:
         _bootstrap_admin()
         yield
 
-    app = FastAPI(title="Tender Intelligence API", version="1.0.0", lifespan=lifespan,
+    app = FastAPI(title="Trever RFP Portal API", version="1.0.0", lifespan=lifespan,
                   docs_url=None if settings.is_production else "/api/docs", redoc_url=None, openapi_url=None
                   if settings.is_production else "/api/openapi.json")
     app.add_middleware(CORSMiddleware, allow_origins=[o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()],
