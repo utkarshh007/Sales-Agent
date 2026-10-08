@@ -20,7 +20,9 @@ Scheduler ─► Portal connector ─► tenders (+versions) ─► Document pro
 | LLM analysis | `app/llm/` | Claude (`claude-opus-5-5` by default) extracts the 28 section-11 fields with value/confidence/evidence, maps requirements to the catalog, splits SERVICE/PRODUCT components. Structured outputs constrain capability and product IDs to the catalog, so the model cannot invent an offering. Only targeted document sections are sent. |
 | Matching | `app/matching.py`, `app/semantic.py` | Merges explicit OEM mentions, competitor-OEM mentions, the deterministic lexicon, local semantic (embedding) similarity and the LLM's mapping. Functional requirements expand to the supported portfolio (e.g. "security event correlation" → SIEM → Splunk / QRadar / ArcSight / XSIAM). Each match records how it was found. |
 | Commercial rules | `app/rules/commercial.py` | ₹30 lakh cap for SERVICE only; no cap for OEM/product; HYBRID evaluated per component; all configurable. |
-| Scoring | `app/scoring.py` | 0–100 with configurable weights; every component carries a reason. Components that don't apply (OEM match on a service tender) are excluded and the score normalised. |
+| Scoring | `app/scoring.py` | 0–100 with configurable weights; every component carries a reason. Components that don't apply (OEM match on a service tender) are excluded and the score normalised. Each tender also gets a list of next actions, with how many points each could add. |
+| Eligibility | `app/rules/eligibility.py` | Reads pre-qualification criteria (turnover, profitability, experience, references, certifications, CERT-In, local-supplier class, OEM authorisation…) from the tender and checks them against the **company profile**. Each criterion is met, not met, unknown or relaxed (startups/MSEs), with the tender's wording as evidence. |
+| Hybrid and value analysis | `app/rules/hybrid.py`, `app/rules/commercial.py` | Splits service and product from a priced bill of quantities, estimates a value range from the EMD when none is stated (GFR 2–5%, always labelled as an estimate), and accepts a hybrid whose total is within the service limit without a split. |
 | Alerts | `app/alerts/email.py` | HOT immediately, HIGH immediately or in the digest, MEDIUM in the daily digest, LOW never. |
 | Audit | `audit_logs` table | Every decision with classification, values, matches, OEMs, score breakdown, reasons and model version. |
 
@@ -108,6 +110,24 @@ Holdout2 is the honest estimate for the final version. On the live database, re-
 
 `tests/test_phase4_semantic.py` includes a quality gate that fails if precision or recall regresses on these splits. With an `ANTHROPIC_API_KEY`, `--llm` runs the same evaluation through the LLM analyser. This costs API credits and hasn't been run yet.
 
+## Scoring v2, eligibility and hybrid analysis (Phase 5)
+
+- **Company profile** (dashboard → Company profile; admins edit, everyone can view): turnover, profitable years, net worth, years in business, citable similar projects, largest similar order, certifications, empanelments, Make in India local-supplier class, Indian registration, debarment status, DPIIT-startup and MSE status, and the OEMs that will issue authorisations. **Empty fields are unknown, never assumed to be met.** Saving re-scores all open tenders. Every change is audited.
+- **Eligibility check.** Criteria are read from a window after every eligibility heading in the documents: the clause, the appendix table, the table of contents. Section boundaries are unreliable here: in real RFPs the column header "Documents to be submitted" ends the section early. Definitions ("'Class-I local supplier' means…") are not mistaken for requirements, and a startup or MSE relaxation clause is honoured when the profile qualifies. Verified on the real SBI RFPs (CSCoE empanelment, 127 pages; TTX tool EOI, 37 pages). A gap sets eligibility to 0 and flags `ELIGIBILITY_GAP`. Unknowns lower the score only partially and generate a "complete the company profile" action.
+- **Value estimation.** When a service tender states no value but has an EMD, the EMD implies a value of about EMD/5% to EMD/2%:
+  - Entirely above ₹30 lakh: `SERVICE_LIKELY_OVER_CAP`, sent to review by default (`SERVICE_EMD_OVER_CAP_ACTION`).
+  - Entirely within: `SERVICE_LIKELY_WITHIN_CAP`, accepted by default (`SERVICE_EMD_WITHIN_CAP_ACTION`).
+  - Straddling the limit: stays "value unknown".
+  - A stated value always wins.
+- **Hybrid analysis.**
+  - A hybrid whose total is within the service limit is accepted; its service part can't exceed the total.
+  - A priced BOQ (XLSX/CSV) is split line by line into service and product, so the hybrid rules can run without the LLM. Blank price-bid formats are ignored.
+- **Scoring changes.**
+  - Commercial fit reflects how certain the value is.
+  - Timeline is judged against the preparation each type needs (`LEAD_DAYS_SERVICE/OEM/HYBRID`, default 7/14/21 days).
+  - Strategic value comes from the **buyer segment** (`buyer_segments:` in the catalog): regulator, bank, defence and law enforcement, government IT, critical infrastructure, state, PSU, ministry.
+- **Next actions.** Each tender lists what would change its score, with estimated points: get the documents, confirm the value, find the hybrid split, complete the profile, eligibility gaps, OEM authorisation, competitor-OEM checks, and the pre-bid meeting.
+
 ## Business rules
 
 | Opportunity | Rule |
@@ -188,7 +208,7 @@ Nothing in the engine, scoring, alerts or dashboard changes.
 ## Tests
 
 ```bash
-cd backend && pytest -q        # 133 tests (one launches headless Chromium, the quality gate loads the embedding model)
+cd backend && pytest -q        # 157 tests (one launches headless Chromium, the quality gate loads the embedding model)
 cd frontend && npm run lint && npm run build
 ```
 
@@ -198,6 +218,7 @@ cd frontend && npm run lint && npm run build
 - `tests/test_phase2_portals.py`: GePNIC parsing against live captures, a simulated multi-organisation crawl, detail fetched only for candidates, no false updates on reruns, closing-date extensions, detail caps, cross-portal merging and ID collisions, CAPTCHA blockers, and false-friend acronyms taken from live data.
 - `tests/test_phase3_buyer_pages.py`: SBI, C-DAC and ISRO parsing against live captures, date formats, documents fetched only for candidates and then qualified end to end from the PDF, document-screening mode, robots.txt and SSRF refusals, and a real headless-browser test showing JavaScript-built tables are read where plain HTTP sees nothing.
 - `tests/test_phase4_semantic.py`: semantic thresholds, the non-cyber margin, title segments, exclusion vetoes, fallback-only behaviour, competitor OEMs, and the matching-quality gate on the real model.
+- `tests/test_phase5_scoring.py`: eligibility extraction on the real SBI RFP appendices, checks against the profile (met, not met, unknown, relaxed, CMMI levels, OEM authorisation), EMD bands, the hybrid shortcut, the priced-BOQ split, buyer segments, timeline by type, next actions, and an end-to-end eligibility gap.
 - `tests/test_documents.py`, `tests/test_connectors.py`, `tests/test_api.py`: extraction and safety, parsing/robots/CAPTCHA handling, auth, CSRF, roles, upload, review flow.
 
 ## Known limitations and next phases

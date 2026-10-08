@@ -32,6 +32,7 @@ def apply_commercial_rules(
     total_value_inr: int | None,
     service_value_inr: int | None = None,
     product_value_inr: int | None = None,
+    value_band=None,  # app.rules.hybrid.ValueBand, used only when no value is stated
 ) -> CommercialDecision:
     cap = settings.SERVICE_MAX_VALUE_INR
     cap_s = format_inr(cap)
@@ -44,10 +45,25 @@ def apply_commercial_rules(
         value = service_value_inr if service_value_inr is not None else total_value_inr
         if not settings.SERVICE_VALUE_RULE_ENABLED:
             return d(ACCEPT, "SERVICE_RULE_DISABLED", "Service value rule is disabled in configuration.", sv=value)
+        if value is None and value_band is not None:
+            band = f"{format_inr(value_band.low)}–{format_inr(value_band.high)}"
+            if value_band.low > cap:
+                status = REJECT if settings.SERVICE_EMD_OVER_CAP_ACTION == "REJECT" else REVIEW
+                return d(status, "SERVICE_LIKELY_OVER_CAP",
+                         f"Service opportunity with no stated value; {value_band.basis}, about {band}, which is above the "
+                         f"{cap_s} service limit. Confirm the estimated cost before bidding.",
+                         ["VALUE_UNKNOWN", "VALUE_ESTIMATED_FROM_EMD", "LIKELY_OVER_SERVICE_CAP"], sv=None)
+            if value_band.high <= cap:
+                status = ACCEPT if settings.SERVICE_EMD_WITHIN_CAP_ACTION == "ACCEPT" else REVIEW
+                return d(status, "SERVICE_LIKELY_WITHIN_CAP",
+                         f"Service opportunity with no stated value; {value_band.basis}, about {band}, which is within the "
+                         f"{cap_s} service limit.", ["VALUE_UNKNOWN", "VALUE_ESTIMATED_FROM_EMD"], sv=None)
         if value is None:
             status = _unknown_action(settings.SERVICE_UNKNOWN_VALUE_ACTION)
+            note = (f" The EMD suggests about {format_inr(value_band.low)}–{format_inr(value_band.high)}, "
+                    f"which straddles the limit." if value_band is not None else "")
             return d(status, "SERVICE_VALUE_UNKNOWN",
-                     f"Service opportunity; value could not be determined (configured action: {settings.SERVICE_UNKNOWN_VALUE_ACTION}).",
+                     f"Service opportunity; value could not be determined (configured action: {settings.SERVICE_UNKNOWN_VALUE_ACTION}).{note}",
                      ["VALUE_UNKNOWN"], sv=None)
         if value > cap:
             return d(REJECT, "SERVICE_OVER_CAP",
@@ -79,6 +95,15 @@ def apply_commercial_rules(
             return d(ACCEPT, "HYBRID_COMPONENTS_OK",
                      f"Hybrid tender (total {total_txt}): service component {format_inr(service_value_inr)} is within the "
                      f"{cap_s} service limit; the product component is not subject to the cap.")
+        # The service part of a hybrid can never exceed its total: a total within the cap settles it.
+        if total_value_inr is not None and total_value_inr <= cap:
+            return d(ACCEPT, "HYBRID_TOTAL_WITHIN_CAP",
+                     f"Hybrid tender worth {total_txt} in total, so its service component is necessarily within the "
+                     f"{cap_s} service limit; no split needed.")
+        if total_value_inr is None and value_band is not None and value_band.high <= cap:
+            return d(ACCEPT, "HYBRID_LIKELY_WITHIN_CAP",
+                     f"Hybrid tender with no stated value; {value_band.basis}, at most {format_inr(value_band.high)}, "
+                     f"so the service component is within the {cap_s} service limit.", ["VALUE_ESTIMATED_FROM_EMD"])
         if settings.HYBRID_REVIEW_ENABLED:
             return d(REVIEW, "HYBRID_REVIEW_REQUIRED",
                      f"Hybrid tender (total {total_txt}) without a separately stated service value; "

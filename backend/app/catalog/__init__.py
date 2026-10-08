@@ -112,6 +112,15 @@ class Catalog:
     generic_signals: list[re.Pattern[str]]
     competitors: dict[str, list[tuple[str, re.Pattern[str]]]] = field(default_factory=dict)
     negative_anchors: list[str] = field(default_factory=list)
+    buyer_segments: list[tuple[str, float, re.Pattern[str]]] = field(default_factory=list)
+
+    def buyer_segment(self, *names: str | None) -> tuple[str, float]:
+        """(segment name, strategic weight) for the buying organisation; first matching rule wins."""
+        text = " | ".join(n for n in names if n)
+        for name, weight, rx in self.buyer_segments:
+            if text and rx.search(text):
+                return name, weight
+        return "Other", 0.4
 
     # ---------------------------------------------------------------- lookups
     def products_for(self, capability_id: str) -> list[Product]:
@@ -239,8 +248,9 @@ def load_catalog(path: Path = CATALOG_PATH) -> Catalog:
         if cap_id not in capabilities:
             raise ValueError(f"competitors references unknown capability {cap_id}")
         competitors[cap_id] = [(o, _compile(re.escape(o).replace(r"\ ", r"\s*"))) for o in oems]
+    segments = [(s["name"], float(s["weight"]), re.compile(s["p"], re.IGNORECASE)) for s in data.get("buyer_segments") or []]
     return Catalog(int(data.get("version", 1)), categories, capabilities, products, exclusions, generic,
-                   competitors, list(data.get("negative_anchors") or []))
+                   competitors, list(data.get("negative_anchors") or []), segments)
 
 
 @lru_cache
