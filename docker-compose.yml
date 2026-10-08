@@ -1,0 +1,67 @@
+# Production-style stack: Caddy (HTTPS) -> web (Next.js) + api (FastAPI); worker runs discovery,
+# document processing, LLM analysis and alerts; PostgreSQL holds everything.
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tender_intel
+      POSTGRES_USER: tender
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tender -d tender_intel"]
+      interval: 5s
+      retries: 20
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://tender:${POSTGRES_PASSWORD}@db:5432/tender_intel
+      ENVIRONMENT: production
+    volumes:
+      - documents:/data/documents
+    depends_on:
+      db:
+        condition: service_healthy
+
+  worker:
+    build: ./backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://tender:${POSTGRES_PASSWORD}@db:5432/tender_intel
+      ENVIRONMENT: production
+    volumes:
+      - documents:/data/documents
+    command: ["python", "-m", "app.cli", "worker"]
+    depends_on:
+      api:
+        condition: service_started  # api runs the migrations
+
+  web:
+    build: ./frontend
+    restart: unless-stopped
+    environment:
+      API_URL: http://api:8000
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [api, web]
+
+volumes:
+  pgdata:
+  documents:
+  caddy_data:

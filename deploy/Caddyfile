@@ -1,0 +1,24 @@
+# Automatic HTTPS (Let's Encrypt) when SITE_ADDRESS is a public domain; a local CA for "localhost".
+{$SITE_ADDRESS} {
+	encode zstd gzip
+
+	# API traffic goes straight to FastAPI (uploads up to the 50 MB document limit + headroom)
+	handle /api/* {
+		request_body {
+			max_size 60MB
+		}
+		reverse_proxy api:8000
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
+
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+}

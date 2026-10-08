@@ -1,0 +1,148 @@
+# Labelled matching cases (Phase 4).
+#
+# label: RELEVANT   — must be surfaced (accepted or review) and should map to one of `expect`
+#        IRRELEVANT — must be screened out
+#        EITHER     — genuinely borderline; reported but not scored
+# split: dev (used while tuning) | holdout (first unseen check) | holdout2 (written after the first holdout
+#        was scored, before fixes; measures those fixes on unseen wording)
+# source: live (real title captured from CPPP / GePNIC / SBI during Phases 1–3) | written (paraphrase
+#         in Indian tender style, deliberately avoiding the catalog's exact synonym phrases)
+#
+# The ~2,700 other live titles collected in Phases 1–3 (all non-cyber) are added as IRRELEVANT
+# from fixtures/live_negative_titles.json.
+
+cases:
+  # ------------------------------------------------------------------ live positives
+  - {split: holdout, source: live, label: RELEVANT, expect: [mss_mdr, prd_siem], text: "EOI Document for Selection of partner for Establishment of Next Generation Security Operation Centre (NGSOC) and Network Operation Centre (NOC) at SLDC, Uttarakhand"}
+  - {split: dev, source: live, label: RELEVANT, expect: [cmp_cyber_risk, cmp_regulatory_audit], text: "Expression of Interest (EOI) for appointment of a CERT-In empaneled Third-Party Auditor (TPA) for assessment of implementation of Technology Refresh Project"}
+  - {split: dev, source: live, label: RELEVANT, expect: [mss_infra_mgmt, prd_siem, prd_xdr, prd_ot_security], text: "EOI for Selection of partner for SITC of Cyber Security Infrastructure for CNS ATM Systems at Chennai Airport"}
+  - {split: holdout, source: live, label: RELEVANT, expect: [ir_capacity_building, df_training], text: "TENDER NOTICE FOR EMPANELMENT OF VENDORS FOR CYBERSECURITY TRAINING, CITIZEN CENTRIC AWARENESS, RESEARCH, CYBER DEFENSE AND CYBER INNOVATION ACTIVITIES UNDER CYBER SECURITY"}
+  - {split: dev, source: live, label: RELEVANT, expect: [ir_tabletop], text: "TENDER NOTICE FOR REQUEST FOR EXPRESSION OF INTEREST FOR PROCUREMENT OF TOOL FOR CONDUCTING TABLE-TOP EXERCISES"}
+  - {split: dev, source: live, label: EITHER, expect: [], text: "EOI Document For Selection of a PreBid Partner for Supply, Installation and Commissioning of QuantumSecure IT and Network Infrastructure for Indian Army"}
+
+  # ------------------------------------------------------------------ live hard negatives (IT but not cyber, or cyber-looking words)
+  - {split: dev, source: live, label: IRRELEVANT, text: "Selection of partner for the Supply, Installation and Maintenance of Enterprise Network Management System (NMS) Solution for Pune / Hyderabad based Bank"}
+  - {split: dev, source: live, label: IRRELEVANT, text: "Upgradation of web streaming gateway (WSG) system for secure CCTV video streaming."}
+  - {split: dev, source: live, label: IRRELEVANT, text: "Selection of Meity empaneled Cloud Service Provider CSP for KVIC"}
+  - {split: dev, source: live, label: IRRELEVANT, text: "Renewal of Maintenance and Support (M and S) Contract for SIEMENS Make PSSE Software Licenses on OEM/PAC basis"}
+  - {split: holdout, source: live, label: IRRELEVANT, text: "RFP FOR AMC OF COMPUTER HARDWARE, SOFTWARE, CTS SCANNER, PRINTERS, SCANNERS AND OTHER PERIPHERALS 2026-27 FOR ITS BRANCHES/OFFICES OF SBI LUCKNOW CIRCLE"}
+  - {split: holdout, source: live, label: IRRELEVANT, text: "Pre Bid EoI for Selection of Implementation Partner for Supply, Installation, Testing, Commissioning and Comprehensive Maintenance of an IP - Based CCTV Surveillance System"}
+  - {split: dev, source: live, label: IRRELEVANT, text: "Request for Proposal for Survey Implementation of Wi-Fi Infrastructure Over 10G GPON Networks at District and Session Court NAGPUR premises on turnkey basis"}
+  - {split: holdout, source: live, label: IRRELEVANT, text: "Pre-bid EoI for Selection of Consortium Partner for Design, Implementation and Support of ERP System and Development of Non-Core ERP Applications"}
+  - {split: dev, source: live, label: IRRELEVANT, text: "EOI Document for Selection of Implementation Partner for replacement or renewal of data centre infrastructure and providing the annual maintenance support AMC"}
+  - {split: holdout, source: live, label: IRRELEVANT, text: "Supply, Installation and Commissioning of LAN and Internet Connectivity at GM Office, Rajhara Area"}
+  - {split: dev, source: live, label: IRRELEVANT, text: "Supply, Installation, Testing and Commissioning of Packaged, ducted and Split AC type Air Conditioners along with all accessories with 2 year DLP and 10 years Comprehensive Annual Maintenance Contract"}
+  - {split: holdout, source: live, label: IRRELEVANT, text: "Construction of 4lane GF Amritsar-Katra connectivity of Amritsar with DAK Expressway from MDR Junction at ch.40.900"}
+  - {split: dev, source: live, label: IRRELEVANT, text: "SITC of Cyber knife"}
+  - {split: holdout, source: live, label: IRRELEVANT, text: "Design Development Implementation Cloud Hosting and Operation of the NSDC Intelligence Unit"}
+
+  # ------------------------------------------------------------------ written positives, by catalog area
+  # A. assessment
+  - {split: dev, source: written, label: RELEVANT, expect: [svc_appsec], text: "Hiring of agency for security testing of 18 web applications and 6 mobile apps before go-live"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [svc_appsec], text: "Engagement of auditor to carry out security audit of department websites as per CERT-In guidelines"}
+  - {split: dev, source: written, label: RELEVANT, expect: [svc_netsec], text: "Vulnerability scanning and ethical hacking of network devices, servers and perimeter for the year 2026-27"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [svc_netsec, svc_appsec], text: "Annual third party VA/PT of IT infrastructure and applications"}
+  - {split: dev, source: written, label: RELEVANT, expect: [svc_redteam], text: "Engagement of firm to simulate real-world attacks against the bank's people, processes and technology over twelve weeks"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [svc_redteam], text: "Red teaming exercise for critical information infrastructure of the power utility"}
+  - {split: dev, source: written, label: RELEVANT, expect: [svc_cyber_drill], text: "Conduct of national level cyber security exercise for state departments"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [svc_cloud_assessment, prd_cspm], text: "Security review of the AWS and Azure tenancy against CIS benchmarks"}
+  - {split: dev, source: written, label: RELEVANT, expect: [svc_container_security], text: "Hardening review of the Kubernetes clusters and container images used by the citizen platform"}
+  # B. compliance
+  - {split: dev, source: written, label: RELEVANT, expect: [cmp_iso27001], text: "Consultancy for obtaining ISO/IEC 27001:2022 certification for the data centre"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [cmp_iso27001], text: "Selection of consultant for establishing an information security management system and certification audit support"}
+  - {split: dev, source: written, label: RELEVANT, expect: [cmp_pci_dss], text: "Appointment of qualified security assessor for card data environment compliance of the payment switch"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [cmp_cyber_risk], text: "Assessment of cyber risk posture of the corporation and preparation of risk register"}
+  - {split: dev, source: written, label: RELEVANT, expect: [cmp_data_localization], text: "Audit of compliance with RBI directions on storage of payment system data in India"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [cmp_regulatory_audit], text: "Annual IS audit as per IRDAI information and cyber security guidelines"}
+  - {split: dev, source: written, label: RELEVANT, expect: [cmp_regulatory_audit], text: "Audit of Aadhaar authentication user agency infrastructure as per UIDAI requirements"}
+  # C. consulting
+  - {split: dev, source: written, label: RELEVANT, expect: [con_devsecops], text: "Integration of security tooling into the CI/CD pipeline of the e-governance applications"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [con_security_framework], text: "Drafting of information security policy, procedures and cyber security framework for the board"}
+  - {split: dev, source: written, label: RELEVANT, expect: [con_cloud_arch_review, svc_cloud_assessment], text: "Independent review of the security architecture of the state cloud"}
+  # D. incident response
+  - {split: dev, source: written, label: RELEVANT, expect: [ir_breach_response], text: "Retainer for handling of cyber security incidents and ransomware attacks on 24x7 basis"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [ir_breach_response, ir_readiness_compromise], text: "Engagement of agency to investigate the recent intrusion and contain the attacker"}
+  - {split: dev, source: written, label: RELEVANT, expect: [ir_crisis_management], text: "Preparation of crisis management plan for countering cyber attacks as per CERT-In template"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [ir_tabletop], text: "Conduct of discussion-based cyber attack simulation exercise for senior management"}
+  - {split: dev, source: written, label: RELEVANT, expect: [ir_readiness_compromise], text: "Assessment to identify indicators of attack and hidden adversaries in the corporate network"}
+  # E. forensics
+  - {split: dev, source: written, label: RELEVANT, expect: [df_lab_setup, prd_dfir_hardware], text: "Establishment of cyber crime investigation lab at police headquarters including hardware and software"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [df_analysis], text: "Examination of seized mobile phones and hard disks and preparation of expert report for court"}
+  - {split: dev, source: written, label: RELEVANT, expect: [df_eee_79a], text: "Consultancy for notification of the state FSL as examiner of electronic evidence"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [df_training], text: "Training of investigating officers in collection and examination of digital evidence"}
+  # F. managed security
+  - {split: dev, source: written, label: RELEVANT, expect: [mss_mdr], text: "Round the clock threat monitoring and response services for 3 years"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [mss_mdr, prd_siem], text: "Setting up and operation of security operations centre for the state data centre"}
+  - {split: dev, source: written, label: RELEVANT, expect: [mss_infra_mgmt, mss_network], text: "Facility management services for firewalls, IPS and proxy appliances at DC and DR"}
+  - {split: dev, source: written, label: RELEVANT, expect: [mss_cloud, prd_cspm], text: "Managed services for securing workloads hosted on public cloud"}
+  # products
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_siem], text: "Supply of solution for centralized collection of logs from servers and network devices with real time correlation and alerting"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_siem], text: "Procurement of Splunk licences with 3 years support"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_pam], text: "Procurement of tool for managing and recording administrator sessions on critical servers"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_pam], text: "Supply of CyberArk or equivalent solution for 600 privileged users"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_dlp], text: "Solution to prevent leakage of sensitive data through email, USB and web uploads"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_dlp], text: "Supply of Symantec DLP or equivalent with 3 years ATS"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_xdr], text: "Next generation endpoint protection with behavioural detection and automated response for 5000 desktops"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_xdr], text: "Renewal of CrowdStrike Falcon subscription for 2000 endpoints"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_iam], text: "Single sign-on and identity governance platform for 20,000 employees"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_vuln_mgmt], text: "Supply of continuous vulnerability scanning software with asset discovery"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_vuln_mgmt], text: "Qualys VMDR subscription renewal for 1500 assets"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_bas], text: "Platform to continuously test effectiveness of security controls by simulating attacker techniques"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_cspm], text: "Tool for detecting misconfigurations across multi-cloud accounts"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_mobile_security], text: "Solution to protect officers' smartphones from malicious apps and phishing"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_appsec_tools], text: "Supply of source code security scanner for in-house development team"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_appsec_tools], text: "Procurement of Veracode or equivalent application security testing licences"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_dfir_hardware, prd_dfir_software], text: "Supply of mobile phone data extraction kits and write-protection devices for forensic units"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_dfir_software, prd_dfir_hardware], text: "Procurement of Cellebrite UFED or equivalent mobile forensic tool"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_threat_intel], text: "Subscription to cyber threat intelligence feeds with dark web monitoring"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_brand_monitoring, prd_threat_intel], text: "Services for detection and takedown of fake websites and apps impersonating the bank"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_ot_security], text: "Security monitoring solution for SCADA and industrial control networks of substations"}
+  - {split: holdout, source: written, label: RELEVANT, expect: [prd_ot_security], text: "Supply of Nozomi Networks or equivalent OT anomaly detection"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_sase], text: "Cloud delivered secure web gateway and zero trust remote access for branches"}
+  - {split: dev, source: written, label: RELEVANT, expect: [prd_firewall_orchestration], text: "Tool for automated firewall rule review and change management across 40 firewalls"}
+
+  # ------------------------------------------------------------------ written hard negatives
+  - {split: dev, source: written, label: IRRELEVANT, text: "Hiring of security guards and supervisors for regional office"}
+  - {split: holdout, source: written, label: IRRELEVANT, text: "Supply and installation of CCTV cameras and NVR at school buildings"}
+  - {split: dev, source: written, label: IRRELEVANT, text: "Annual maintenance of desktops, printers and UPS"}
+  - {split: holdout, source: written, label: IRRELEVANT, text: "Development of website and mobile app for tourism department"}
+  - {split: dev, source: written, label: IRRELEVANT, text: "Supply of servers and storage for data centre"}
+  - {split: holdout, source: written, label: IRRELEVANT, text: "Laying of optical fibre cable and structured LAN cabling"}
+  - {split: dev, source: written, label: IRRELEVANT, text: "Fire detection and alarm system for office building"}
+  - {split: holdout, source: written, label: IRRELEVANT, text: "Supply of boom barriers and RFID access control for parking"}
+  - {split: dev, source: written, label: IRRELEVANT, text: "Implementation of SAP S/4HANA ERP for finance and HR"}
+  - {split: holdout, source: written, label: IRRELEVANT, text: "Repair of road with 2 years defect liability period"}
+  - {split: dev, source: written, label: IRRELEVANT, text: "Hiring of manpower for data entry operators"}
+  - {split: holdout, source: written, label: IRRELEVANT, text: "Social security scheme awareness campaign in rural areas"}
+  - {split: dev, source: written, label: IRRELEVANT, text: "Supply of laptops with antivirus pre-installed for students"}
+
+  # ------------------------------------------------------------------ holdout2: written AFTER the first holdout
+  # was scored and BEFORE any fix was applied, so it measures the fixes on unseen wording.
+  - {split: holdout2, source: written, label: RELEVANT, expect: [mss_mdr, prd_siem], text: "RFP for selection of system integrator for cyber security operations centre of the transmission utility"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [svc_netsec, svc_appsec], text: "Engagement of CERT-In empanelled agency for VAPT and configuration audit of the e-office system"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [ir_capacity_building, df_training], text: "CYBERSECURITY AWARENESS AND TRAINING PROGRAMME FOR EMPLOYEES OF THE CORPORATION"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_siem, mss_mdr], text: "SUPPLY OF LOG ANALYTICS AND SECURITY MONITORING PLATFORM WITH ONSITE SUPPORT"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_pam], text: "Procurement of solution for securing privileged credentials of database and server administrators"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_dlp], text: "Supply and implementation of data leak protection for endpoints and email gateway"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [svc_redteam], text: "Hiring of agency to carry out adversary emulation and assumed breach testing"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [cmp_iso27001, cmp_cyber_risk], text: "Consultancy for gap assessment and certification against ISO 27001:2022"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [ir_breach_response, ir_readiness_compromise], text: "Empanelment of agencies for cyber incident response and forensic investigation services"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [df_lab_setup, prd_dfir_hardware, prd_dfir_software], text: "Upgradation of digital forensic laboratory of the state police with tools and training"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_xdr], text: "Procurement of EDR/XDR licences with 3 years subscription for 3500 nodes"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_vuln_mgmt, svc_netsec], text: "Supply of tool for scanning servers and network devices for security weaknesses with patch prioritisation"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_ot_security], text: "Cyber security of SCADA system for water supply scheme including anomaly detection"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_cspm, svc_cloud_assessment, mss_cloud], text: "Cloud security posture assessment and continuous monitoring for the bank's Azure environment"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_brand_monitoring, prd_threat_intel], text: "Anti phishing and rogue mobile app monitoring with takedown services for the bank"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [cmp_regulatory_audit, cmp_cyber_risk], text: "Appointment of auditor for cyber security and IT examination as per SEBI CSCRF"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [svc_appsec, prd_appsec_tools], text: "Source code review and penetration testing of the core insurance application"}
+  - {split: holdout2, source: written, label: RELEVANT, expect: [prd_sase], text: "Supply of SASE solution for 200 branch offices with zero trust access"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "SUPPLY OF NETWORK SWITCHES, ROUTERS AND RACKS FOR NEW CAMPUS"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Security and housekeeping services for hostel buildings on contract basis"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Annual energy audit and electrical safety audit of substations"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Development and maintenance of the online grievance redressal portal"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Supply of IP cameras and video management software for railway stations"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Hiring of cloud hosting for the GIS application for three years"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Comprehensive maintenance of data centre UPS, precision air conditioning and fire suppression"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Procurement of biometric attendance machines for offices"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Printing of security stationery and cheque books for the bank"}
+  - {split: holdout2, source: written, label: IRRELEVANT, text: "Supply of server rack, KVM switch and storage for the record room"}

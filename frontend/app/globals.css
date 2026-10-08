@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* Bid desk palette: cool institutional slate/teal; seal-red reserved for HOT verdicts. */
+:root {
+  --paper: #f2f5f4;
+  --surface: #ffffff;
+  --sunken: #e8eeed;
+  --ink: #18282b;
+  --muted: #586a6d;
+  --line: #d2dbd9;
+  --teal: #0f5257;
+  --teal-soft: #dcecea;
+  --hot: #b4232c;
+  --high: #9a5f0c;
+  --medium: #2c6787;
+  --low: #7a8a8d;
+  --accept: #2c7a4b;
+  --review: #6b4fa0;
+  --reject: #8a8f91;
+  --focus: #1f6feb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1a1c;
+    --surface: #152326;
+    --sunken: #1b2c30;
+    --ink: #e3ecea;
+    --muted: #93a6a8;
+    --line: #2b3f43;
+    --teal: #5fb7b0;
+    --teal-soft: #1d3a3c;
+    --hot: #f0626a;
+    --high: #e0a54a;
+    --medium: #6db2d6;
+    --low: #8d9ea1;
+    --accept: #5cc58a;
+    --review: #ab95dc;
+    --reject: #7d8a8c;
+    --focus: #79b0ff;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1a1c;
+  --surface: #152326;
+  --sunken: #1b2c30;
+  --ink: #e3ecea;
+  --muted: #93a6a8;
+  --line: #2b3f43;
+  --teal: #5fb7b0;
+  --teal-soft: #1d3a3c;
+  --hot: #f0626a;
+  --high: #e0a54a;
+  --medium: #6db2d6;
+  --low: #8d9ea1;
+  --accept: #5cc58a;
+  --review: #ab95dc;
+  --reject: #7d8a8c;
+  --focus: #79b0ff;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --color-hot: var(--hot);
+  --color-high: var(--high);
+  --color-medium: var(--medium);
+  --color-low: var(--low);
+  --color-accept: var(--accept);
+  --color-review: var(--review);
+  --color-reject: var(--reject);
+  --font-sans: var(--font-public-sans), system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), Georgia, serif;
+}
+
+html {
+  background: var(--paper);
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
