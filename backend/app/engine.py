@@ -94,7 +94,8 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
                                         "deterministic_evidence": pf.value.evidence if pf.value else None})
 
     hints = {"lexicon_hits": pf.lexicon_hits, "oem_hits": pf.oem_hits, "value": pf.value, "emd": pf.emd,
-             "heuristic_type": pf.heuristic_type}
+             "heuristic_type": pf.heuristic_type, "semantic_hits": pf.semantic_hits,
+             "competitor_hits": pf.competitor_hits}
     analysis = analyzer.analyze(ctx, hints)
     reviews: list[tuple[str, str]] = []
     if analysis.refused:
@@ -103,7 +104,7 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
         analysis = RulesAnalyzer(settings, catalog).analyze(ctx, hints)
         analysis.notes = refused_notes + analysis.notes
 
-    matches = build_matches(catalog, pf.lexicon_hits, pf.oem_hits, analysis)
+    matches = build_matches(catalog, pf.lexicon_hits, pf.oem_hits, analysis, pf.semantic_hits, pf.competitor_hits)
     if analysis.mode == "LLM" and analysis.components:
         opp_type = classify_components(analysis.components)
     else:
@@ -125,7 +126,7 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
     commercial = apply_commercial_rules(opp_type, settings, total_value_inr=total,
                                         service_value_inr=sv, product_value_inr=pv) if opp_type != "UNRELATED" else None
 
-    other_oems = sorted({o for r in analysis.requirements for o in r.other_oems_named})
+    other_oems = sorted({o for r in analysis.requirements for o in r.other_oems_named} | {c.oem for c in pf.competitor_hits})
     if other_oems:
         flags.append("NON_PORTFOLIO_OEM_SPECIFIED")
     score = compute_score(settings=settings, matches=matches, opportunity_type=opp_type,

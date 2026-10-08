@@ -174,6 +174,23 @@ class RulesAnalyzer:
                 explanation=f"Lexicon rule matched “{h.sub_capability}” ({h.match_type.lower()}).",
                 explicit_product_ids=[o.product_id for o in oems if cap.id in self.catalog.products[o.product_id].capabilities],
             ))
+        for sh in hints.get("semantic_hits", []):
+            cap = self.catalog.capabilities[sh.capability_id]
+            a.requirements.append(Requirement(
+                text=ctx.title, kind=cap.offering, capability_ids=[cap.id], sub_capability=sh.anchor,
+                match_type=sh.match_type, confidence=sh.confidence, evidence=ctx.title,
+                explanation=f"Semantic similarity {sh.similarity:.2f} to “{sh.anchor}”."))
+        competitors = hints.get("competitor_hits", [])
+        for ch in competitors:
+            cap = self.catalog.capabilities[ch.capability_id]
+            a.requirements.append(Requirement(
+                text=ch.evidence, kind=cap.offering, capability_ids=[cap.id], sub_capability=cap.name,
+                match_type="SEMANTIC", confidence=80, evidence=ch.evidence,
+                explanation=f"Names competitor product {ch.oem}.", other_oems_named=[ch.oem]))
+        if competitors:
+            a.risks.append("Tender names non-portfolio OEM(s): " + ", ".join(sorted({c.oem for c in competitors}))
+                           + ("; an equivalent product is allowed." if all(c.or_equivalent for c in competitors)
+                              else "; check whether the brand is mandatory."))
         # Components from the heuristic classification; values only when unambiguous.
         if opp_type == "SERVICE":
             a.components.append(Component("Services (from matched service capabilities)", "SERVICE", a.total_value_inr))
@@ -183,7 +200,7 @@ class RulesAnalyzer:
             a.components += [Component("Product / OEM supply", "PRODUCT", None), Component("Associated services", "SERVICE", None)]
         org = (ctx.organization or "").lower()
         a.strategic_relevance = "UNKNOWN" if not any(k in org for k in self.settings.strategic_keywords) else "HIGH"
-        a.generic_security_only = not hits and not oems
+        a.generic_security_only = not hits and not oems and not hints.get("semantic_hits") and not competitors
         names = sorted({self.catalog.capabilities[h.capability_id].name for h in hits})
         a.summary = (f"Rules-only analysis of “{ctx.title}”. Matched: {', '.join(names) or 'no specific capability'}."
                      + ("" if ctx.has_documents else " No tender documents available yet."))

@@ -68,6 +68,15 @@ class Settings(BaseSettings):
     # Comma-separated organisation keywords considered strategic (BFSI regulators, defence, CERTs...).
     STRATEGIC_ORG_KEYWORDS: str = "bank,reserve bank,insurance,irdai,sebi,nabard,nhb,uidai,cert-in,police,defence,ministry,nic,ncrb,stock exchange"
 
+    # --- semantic matching (Phase 4); thresholds tuned with `python -m app.evaluation.run` ---
+    SEMANTIC_MATCHING_ENABLED: bool = True
+    EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
+    EMBEDDING_CACHE_DIR: str = ""  # where the model is cached; baked into the Docker image
+    SEMANTIC_STRONG_THRESHOLD: float = 0.80
+    SEMANTIC_ADJACENT_THRESHOLD: float = 0.78
+    SEMANTIC_NEGATIVE_MARGIN: float = 0.04
+    SEMANTIC_MIN_WORDS: int = 4
+
     # --- LLM (section 22) ---
     LLM_ENABLED: bool = True
     ANTHROPIC_API_KEY: str = ""

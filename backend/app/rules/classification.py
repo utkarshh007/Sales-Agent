@@ -22,19 +22,24 @@ _PRODUCT_RX = re.compile(
 )
 
 
-def heuristic_type(text: str, hits: list[LexiconHit], oems: list[OemHit], catalog: Catalog) -> str:
-    """Classification without the LLM, from which catalog offerings matched and from wording."""
+def heuristic_type(text: str, hits: list[LexiconHit], oems: list[OemHit], catalog: Catalog,
+                   extra_capabilities: list[str] | None = None, weak_capabilities: list[str] | None = None) -> str:
+    """Classification without the LLM, from which catalog offerings matched and from wording.
+    `extra_capabilities` are strong non-lexicon signals (semantic matches, competitor OEM mentions)."""
     strong = [h for h in hits if h.match_type in ("DIRECT", "SEMANTIC")]
-    if not strong and not oems:
+    extra = list(extra_capabilities or [])
+    if not strong and not oems and not extra:
         # only adjacent evidence: let procurement wording decide
-        if not hits:
+        weak = [h.capability_id for h in hits] + list(weak_capabilities or [])
+        if not weak:
             return "UNKNOWN"
         # SITC = "Supply, Installation, Testing and Commissioning", standard Indian procurement shorthand
         if re.search(r"\b(supply|procure(ment)?|purchase|SITC)\b", text, re.IGNORECASE):
             return "OEM"
-        offering = catalog.capabilities[hits[0].capability_id].offering
+        offering = catalog.capabilities[weak[0]].offering
         return "OEM" if offering == "PRODUCT" else "SERVICE"
-    offerings = {catalog.capabilities[h.capability_id].offering for h in strong}
+    offerings = {catalog.capabilities[h.capability_id].offering for h in strong} | \
+        {catalog.capabilities[c].offering for c in extra}
     has_product = "PRODUCT" in offerings or bool(oems)
     has_service = "SERVICE" in offerings
     if has_product and (has_service or _HYBRID_SERVICE_RX.search(text)):

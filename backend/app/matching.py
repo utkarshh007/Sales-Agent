@@ -9,7 +9,7 @@ Functional requirements are expanded to the supported portfolio for that capabil
 from __future__ import annotations
 
 from app.analysis import Analysis, CapabilityMatch
-from app.catalog import MATCH_TYPE_RANK, Catalog, LexiconHit, OemHit
+from app.catalog import MATCH_TYPE_RANK, Catalog, CompetitorHit, LexiconHit, OemHit
 
 
 def _portfolio(catalog: Catalog, capability_id: str) -> list[str]:
@@ -21,6 +21,8 @@ def build_matches(
     lexicon_hits: list[LexiconHit],
     oem_hits: list[OemHit],
     analysis: Analysis | None,
+    semantic_hits: list | None = None,
+    competitor_hits: list[CompetitorHit] | None = None,
 ) -> list[CapabilityMatch]:
     merged: dict[str, CapabilityMatch] = {}
     llm_ran = analysis is not None and analysis.mode == "LLM" and not analysis.refused
@@ -36,11 +38,12 @@ def build_matches(
         products = list(dict.fromkeys(explicit + cur.product_ids + m.product_ids))
         keep, other = (m, cur) if better else (cur, m)
         keep.product_ids, keep.explicit_product_ids = products, explicit
-        if keep.source != other.source and "+" not in keep.source:
-            # keep the LLM's reasoning even when deterministic evidence ranks higher
-            llm, lex = (keep, other) if keep.source == "LLM" else (other, keep)
-            keep.explanation = f"{llm.explanation} Corroborated deterministically: {lex.explanation}".strip()
-            keep.source = "LLM+LEXICON"
+        sources = set(keep.source.split("+")) | set(other.source.split("+"))
+        if sources != set(keep.source.split("+")):
+            # keep every source's reasoning; the LLM's (when present) reads first
+            first, second = (other, keep) if other.source.startswith("LLM") and not keep.source.startswith("LLM") else (keep, other)
+            keep.explanation = f"{first.explanation} Corroborated by {second.source.lower()}: {second.explanation}".strip()
+            keep.source = "+".join(s for s in ("LLM", "LEXICON", "EMBEDDING") if s in sources)
         merged[m.capability_id] = keep
 
     # 1. explicit OEM mentions
@@ -52,6 +55,19 @@ def build_matches(
                 cap_id, cap.name, cap.offering, product.name, "DIRECT", 97 if oh.in_title else 92, oh.evidence,
                 f"Tender explicitly names {product.name} ({product.oem}), a supported product for {cap.name}.",
                 list(dict.fromkeys([product.id] + _portfolio(catalog, cap_id))), [product.id], "LEXICON"))
+
+    # 1b. competitor OEMs: the tender names a product we don't sell, which still states a functional
+    #     requirement for that capability (our portfolio may bid "or equivalent")
+    for ch in competitor_hits or []:
+        cap = catalog.capabilities[ch.capability_id]
+        equivalent = " The tender allows an equivalent product." if ch.or_equivalent else \
+            " No “or equivalent” clause was found, so check whether the brand is mandatory."
+        put(CapabilityMatch(
+            cap.id, cap.name, cap.offering, f"{cap.name} (names {ch.oem})", "SEMANTIC",
+            82 if ch.or_equivalent else 72, ch.evidence,
+            f"Tender names {ch.oem}, which the company does not sell; that is a functional requirement for "
+            f"{cap.name}, covered by the supported portfolio.{equivalent}",
+            _portfolio(catalog, cap.id), [], "LEXICON"))
 
     # 2. LLM requirement mapping (rules-only analyses derive requirements from the lexicon, handled in 3)
     if llm_ran:
@@ -80,6 +96,17 @@ def build_matches(
             cap.id, cap.name, cap.offering, h.sub_capability, h.match_type, h.confidence, h.evidence,
             f"{h.match_type.title()} match: tender {where} describes “{h.sub_capability}”, which maps to the "
             f"company capability {cap.name}.", _portfolio(catalog, cap.id), [], "LEXICON"))
+
+    # 4. semantic similarity, when no LLM has read the text (the LLM supersedes it)
+    if not llm_ran:
+        for sh in semantic_hits or []:
+            cap = catalog.capabilities[sh.capability_id]
+            put(CapabilityMatch(
+                cap.id, cap.name, cap.offering, sh.anchor, sh.match_type, sh.confidence,
+                f"semantic similarity {sh.similarity:.2f} to “{sh.anchor}”",
+                f"{sh.match_type.title()} match by meaning: the tender wording is closest to the catalog description "
+                f"“{sh.anchor}” (similarity {sh.similarity:.2f}, {sh.margin:.2f} above the nearest non-cyber "
+                f"procurement type).", _portfolio(catalog, cap.id), [], "EMBEDDING"))
 
     return sorted(merged.values(), key=lambda m: (-MATCH_TYPE_RANK[m.match_type], -m.confidence))
 

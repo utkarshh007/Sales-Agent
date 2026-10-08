@@ -49,6 +49,12 @@ class Capability:
     category_name: str
     offering: str  # SERVICE | PRODUCT
     rules: list[LexRule] = field(default_factory=list)
+    description: str = ""
+
+    def anchor_texts(self) -> list[str]:
+        """Texts that describe this capability for semantic (embedding) matching."""
+        subs = sorted({r.sub for r in self.rules if r.match_type != "ADJACENT"})
+        return list(dict.fromkeys(t for t in [self.name, self.description, *subs] if t))
 
 
 @dataclass
@@ -88,6 +94,15 @@ class OemHit:
 
 
 @dataclass
+class CompetitorHit:
+    capability_id: str
+    oem: str
+    evidence: str
+    in_title: bool
+    or_equivalent: bool
+
+
+@dataclass
 class Catalog:
     version: int
     categories: dict[str, str]
@@ -95,6 +110,8 @@ class Catalog:
     products: dict[str, Product]
     exclusions: list[tuple[re.Pattern[str], str]]
     generic_signals: list[re.Pattern[str]]
+    competitors: dict[str, list[tuple[str, re.Pattern[str]]]] = field(default_factory=dict)
+    negative_anchors: list[str] = field(default_factory=list)
 
     # ---------------------------------------------------------------- lookups
     def products_for(self, capability_id: str) -> list[Product]:
@@ -145,6 +162,20 @@ class Catalog:
                     break
         return hits
 
+    def competitor_mentions(self, title: str, body: str = "") -> list[CompetitorHit]:
+        """OEMs the company does not sell. The mention still names a functional requirement."""
+        hits: list[CompetitorHit] = []
+        for cap_id, oems in self.competitors.items():
+            for oem, rx in oems:
+                for source, text in (("title", title), ("body", body)):
+                    m = rx.search(text) if text else None
+                    if m:
+                        window = text[m.end(): m.end() + 40]
+                        hits.append(CompetitorHit(cap_id, oem, snippet(text, m.start(), m.end()), source == "title",
+                                                  bool(re.search(r"or equivalent|or similar|equivalent", window, re.I))))
+                        break
+        return hits
+
     def exclusion_hits(self, text: str) -> list[tuple[str, str]]:
         out = []
         for rx, reason in self.exclusions:
@@ -184,7 +215,8 @@ def load_catalog(path: Path = CATALOG_PATH) -> Catalog:
             raise ValueError(f"capability {c['id']} has unknown category {c['category']}")
         if c["offering"] not in ("SERVICE", "PRODUCT"):
             raise ValueError(f"capability {c['id']} has invalid offering {c['offering']}")
-        cap = Capability(c["id"], c["name"], c["category"], categories[c["category"]], c["offering"])
+        cap = Capability(c["id"], c["name"], c["category"], categories[c["category"]], c["offering"],
+                         description=(data.get("descriptions") or {}).get(c["id"], ""))
         for s in c.get("synonyms", []):
             cs = bool(s.get("cs", False))
             cap.rules.append(LexRule(cap.id, _compile(s["p"], cs), MATCH_TYPE_NAMES[s["t"]], s.get("sub", cap.name), s["p"], cs))
@@ -202,7 +234,13 @@ def load_catalog(path: Path = CATALOG_PATH) -> Catalog:
 
     exclusions = [(_compile(e["p"]), e["reason"]) for e in data.get("exclusions", [])]
     generic = [_compile(g) for g in data.get("generic_signals", [])]
-    return Catalog(int(data.get("version", 1)), categories, capabilities, products, exclusions, generic)
+    competitors: dict[str, list[tuple[str, re.Pattern[str]]]] = {}
+    for cap_id, oems in (data.get("competitors") or {}).items():
+        if cap_id not in capabilities:
+            raise ValueError(f"competitors references unknown capability {cap_id}")
+        competitors[cap_id] = [(o, _compile(re.escape(o).replace(r"\ ", r"\s*"))) for o in oems]
+    return Catalog(int(data.get("version", 1)), categories, capabilities, products, exclusions, generic,
+                   competitors, list(data.get("negative_anchors") or []))
 
 
 @lru_cache

@@ -580,3 +580,99 @@ generic_signals:
   - 'security (software|tools?)'
   - 'cyber'
   - 'quantum[- ]?secure|post[- ]quantum|secure (IT|network|communications?) infrastructure'
+
+# ---------------------------------------------------------------------------------------------------
+# Semantic matching (Phase 4)
+#
+# descriptions: plain-language description of what the buyer is procuring, used as embedding anchors
+#   alongside each capability's name and sub-capabilities. Written from the buyer's point of view.
+# competitors: OEMs the company does NOT sell, by capability. A tender naming one still states a
+#   functional requirement for that capability (often "or equivalent"), and is a bid risk.
+# negative_anchors: frequent non-cyber procurements that share vocabulary with cyber tenders. A tender
+#   semantically closer to one of these than to any capability is not a semantic match.
+# ---------------------------------------------------------------------------------------------------
+descriptions:
+  svc_appsec: Security testing and audit of web applications, mobile apps and APIs to find exploitable vulnerabilities before or after go-live
+  svc_netsec: Vulnerability assessment, scanning and ethical hacking of networks, servers, firewalls and IT infrastructure
+  svc_redteam: Simulated real-world cyber attacks by an offensive team against people, processes and technology to test detection and response
+  svc_cyber_drill: Organising cyber security drills and exercises for departments to test their response to simulated attacks
+  svc_cloud_assessment: Security review and configuration audit of public cloud accounts such as AWS, Azure and Google Cloud
+  svc_container_security: Security review and hardening of Kubernetes clusters, Docker containers and container images
+  cmp_iso27001: Consulting and audit support to implement an information security management system and obtain ISO 27001 certification
+  cmp_pci_dss: PCI DSS assessment by a qualified security assessor for systems that store, process or transmit payment card data
+  cmp_cyber_risk: Cyber security audit and risk assessment of an organisation by a CERT-In empanelled auditor, including gap and maturity assessment
+  cmp_data_localization: Audit of compliance with regulations requiring payment and personal data to be stored in India
+  cmp_regulatory_audit: Information systems and cyber security audit against RBI, IRDAI, SEBI, NHB, NABARD or UIDAI Aadhaar guidelines
+  con_digital_transformation: Security-focused advisory for digital transformation and modernisation programmes
+  con_devsecops: Embedding security tools and practices into software development pipelines (CI/CD), secure SDLC consulting
+  con_cloud_arch_review: Independent review of cloud and security architecture designs
+  con_security_framework: Drafting cyber security policies, procedures and frameworks; CISO advisory services
+  ir_breach_response: Investigating and containing cyber attacks, ransomware and data breaches; incident response retainer
+  ir_crisis_management: Preparing a cyber crisis management plan to respond to cyber attacks, as required by CERT-In
+  ir_tabletop: Discussion-based cyber attack scenario exercise for management and response teams
+  ir_readiness_compromise: Hunting for hidden attackers and indicators of compromise; assessing incident response readiness
+  ir_capacity_building: Building incident response teams (CSIRT or CERT) and training staff in cyber security and awareness
+  df_acquisition: Forensically sound acquisition and imaging of computers, phones and storage media
+  df_analysis: Forensic examination of seized digital devices and evidence, with expert reports for investigation or court
+  df_data_recovery: Recovery and reconstruction of deleted or damaged digital data for investigations
+  df_lab_setup: Setting up or upgrading a cyber forensic or cyber crime investigation laboratory
+  df_eee_79a: Helping a forensic lab get notified as Examiner of Electronic Evidence under Section 79A of the IT Act
+  df_training: Training investigators and police officers in digital forensics and electronic evidence handling
+  mss_mdr: 24x7 security monitoring, threat detection and response by a security operations centre (SOC) service
+  mss_infra_mgmt: Operating and managing security devices such as firewalls, IPS, proxies and security tools
+  mss_cloud: Managed security services protecting workloads and accounts on public cloud
+  mss_appsec: Managed, continuous application security testing as a service
+  mss_network: Managed firewall and network security operations
+  prd_audit_lifecycle: Software to manage the lifecycle of audits, observations and compliance tracking
+  prd_firewall_orchestration: Software to automate firewall rule review, change management and policy compliance across many firewalls
+  prd_dlp: Software that prevents sensitive data leaking through email, USB, web upload, cloud and endpoints
+  prd_xdr: Endpoint detection and response or extended detection and response software protecting desktops and servers from malware and attacks
+  prd_pam: Software to control, vault and record privileged administrator access to servers, databases and network devices
+  prd_iam: Identity and access management, single sign-on, multi-factor authentication and identity governance software
+  prd_vuln_mgmt: Software that continuously scans assets for vulnerabilities and prioritises remediation
+  prd_pentest_tools: Commercial penetration testing and adversary simulation software tools
+  prd_bas: Platform that continuously simulates attacker techniques to validate that security controls work
+  prd_cspm: Software detecting misconfigurations and risks across cloud accounts and cloud workloads
+  prd_mobile_security: Software protecting smartphones and tablets from malicious apps, phishing and device threats
+  prd_siem: Platform that collects logs from servers, network and security devices, correlates events and raises security alerts
+  prd_appsec_tools: Software that scans application source code or running web applications for security flaws
+  prd_dfir_software: Digital forensics software for extracting and analysing data from computers, phones, video, email and social media
+  prd_dfir_hardware: Forensic hardware such as write blockers, disk duplicators, forensic workstations, Faraday bags and mobile extraction kits
+  prd_threat_intel: Cyber threat intelligence feeds and platforms, including dark web and open-source intelligence
+  prd_brand_monitoring: Monitoring and takedown of fake websites, apps and social media accounts impersonating an organisation
+  prd_ot_security: Security monitoring and protection for SCADA, industrial control systems and operational technology networks
+  prd_sase: Cloud-delivered secure network access for branches and remote users, secure SD-WAN and zero trust access
+
+competitors:
+  prd_pam: [CyberArk, BeyondTrust, One Identity, Wallix, Senhasegura, PAM360, Saviynt PAM]
+  prd_siem: [Securonix, LogRhythm, Exabeam, Microsoft Sentinel, Azure Sentinel, Log360, Sumo Logic, NetWitness, Elastic SIEM, FortiSIEM, Seceon]
+  prd_dlp: [Symantec DLP, Broadcom DLP, Trellix DLP, McAfee DLP, Microsoft Purview, GTB Technologies, Safetica]
+  prd_xdr: [CrowdStrike, Falcon Insight, Trellix, Trend Micro, Sophos, Microsoft Defender for Endpoint, Symantec Endpoint, Kaspersky, Bitdefender, Seqrite EDR, Cybereason]
+  prd_vuln_mgmt: [Qualys, VMDR, Rapid7, InsightVM, Nexpose]
+  prd_appsec_tools: [Veracode, Coverity, Synopsys, Snyk, Black Duck, SonarQube]
+  prd_cspm: [Wiz, Lacework, CloudGuard, Defender for Cloud, Sysdig Secure]
+  prd_bas: [SafeBreach, Cymulate, Picus]
+  prd_threat_intel: [Mandiant, CloudSEK, Cyble, ZeroFox, Group-IB]
+  prd_ot_security: [Nozomi, Claroty, Dragos, Armis]
+  prd_dfir_software: [Cellebrite, UFED, Magnet AXIOM, MSAB, XRY, Oxygen Forensic, EnCase, FTK, Belkasoft]
+  prd_sase: [Zscaler, Netskope, Prisma Access, FortiSASE, Versa SASE]
+  prd_mobile_security: [Lookout]
+  prd_iam: [Okta, SailPoint, Ping Identity, ForgeRock, Microsoft Entra]
+  prd_firewall_orchestration: [AlgoSec, FireMon, Skybox]
+
+negative_anchors:
+  - Supply, installation and maintenance of CCTV cameras, NVR and video surveillance systems
+  - Annual maintenance contract for desktops, laptops, printers, scanners and UPS
+  - Supply of servers, storage, networking switches and data centre hardware
+  - Laying of optical fibre, LAN cabling, Wi-Fi and internet connectivity
+  - Development of website, mobile app, portal or software application
+  - Implementation of ERP, accounting, HR or billing software
+  - Construction, civil, electrical, plumbing and building repair works
+  - Hiring of security guards, watch and ward, and physical security manpower
+  - Fire alarm, access control gates, boom barriers and physical security equipment
+  - Supply of medical equipment, consumables and hospital services
+  - Cloud hosting services, empanelment of cloud service providers and data centre colocation
+  - Statutory, internal, financial, GST, energy, safety or structural audit of an organisation or building
+  - Medical monitoring equipment and patient data management systems
+  - Advertising, publicity, media buying and social media management
+  - Hiring of manpower, data entry operators and outsourced staff
