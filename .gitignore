@@ -1,0 +1,10 @@
+.env
+*.db
+__pycache__/
+.pytest_cache/
+backend/.venv/
+backend/data/
+node_modules/
+frontend/.next/
+frontend/next-env.d.ts
+.playwright-mcp/
