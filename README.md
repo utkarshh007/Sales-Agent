@@ -153,6 +153,15 @@ Holdout2 is the honest estimate for the final version. On the live database, re-
   - Review-queue turnaround.
   - Bid results: win rate by capability, buyer and type; who beat us; median price gap on losses; reasons for not bidding. Win rates stay hidden until 10 bids have a result, to avoid reading noise.
 
+## Plain-language summary and client contacts
+
+- **What they need, in plain words** (pink box on every tender page, pink line in every list): who wants what, whether it's an expression of interest, whether it's a service job, a product purchase or both, what it is for us, and the stated contract period, value and deadline. With the LLM on, the AI writes it from the tender text in plain words; otherwise it's put together from the title and the analysis. A title that is only a reference code says so instead of guessing.
+- **Client & how to respond** (tender page):
+  - **Where to submit**, as the tender states it: online on a named e-procurement portal (with the link), by email, or on paper. CPPP and GePNIC tenders are always submitted online on that portal. When the documents don't say, the panel says so.
+  - **Client**: organisation, department, contact person and designation, email, phone and address, from the "contact details of issuing department" block of the documents or the GePNIC tender-inviting authority.
+  - **Portal helpdesk** of the e-procurement agency, kept separate from the client, and any other emails in the documents, each with the sentence it came from.
+  - Every value shows the document and the text it was read from. An email is only shown as the submission address when the text says responses go to it. In SBI's RFPs, for example, the officer's email is for correspondence while bids go through etender.sbi.
+
 ## Business rules
 
 | Opportunity | Rule |
@@ -241,7 +250,7 @@ Nothing in the engine, scoring, alerts or dashboard changes.
 ## Tests
 
 ```bash
-cd backend && pytest -q        # 183 tests (one launches headless Chromium, the quality gate loads the embedding model)
+cd backend && pytest -q        # 197 tests (one launches headless Chromium, the quality gate loads the embedding model)
 cd frontend && npm run lint && npm run build
 ```
 
@@ -254,6 +263,7 @@ cd frontend && npm run lint && npm run build
 - `tests/test_phase5_scoring.py`: eligibility extraction on the real SBI RFP appendices, checks against the profile (met, not met, unknown, relaxed, CMMI levels, OEM authorisation), EMD bands, the hybrid shortcut, the priced-BOQ split, buyer segments, timeline by type, next actions, and an end-to-end eligibility gap.
 - `tests/test_phase6_analytics.py`: subject extraction, similar tenders (meaning plus distinctive wording, no matches on place names or generic words), annual re-issue detection, the analytics funnel, source yield, rejection reasons and outcomes, bid-status permissions, validation and audit, and review → pipeline.
 - `tests/test_mfa.py`: RFC 6238 test vectors, clock drift and replay, recovery codes, encrypted secrets, the two-step sign-in, sessions revoked on enrolment, mandatory 2FA by role, turning it off, and the operator reset.
+- `tests/test_brief_contacts.py`: plain-language summaries (real tender titles, reference-only titles, nothing invented), and contacts and submission from SBI's real schedule-of-events layout, email-submission wording, GePNIC authorities and paper submission.
 - `tests/test_documents.py`, `tests/test_connectors.py`, `tests/test_api.py`: extraction and safety, parsing/robots/CAPTCHA handling, auth, CSRF, roles, upload, review flow.
 
 ## Known limitations and next phases

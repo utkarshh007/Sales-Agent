@@ -89,6 +89,9 @@ function Card({ r }: { r: Row }) {
         <ScoreMark score={r.score} priority={r.priority} stacked />
       </div>
       <p className="mt-1 truncate text-sm text-muted">{r.organization ?? "Unknown organisation"}</p>
+      {r.plain_summary && (
+        <p className="mt-1.5 line-clamp-3 rounded-sm border-l-[3px] border-pink-edge bg-pink-soft px-2 py-1 text-sm leading-snug">{r.plain_summary}</p>
+      )}
       <p className="mt-1 text-sm">
         <span className={d !== null && d < 7 ? "font-medium text-high" : "text-muted"}>{closesIn(r.closing_at)}</span>
         <span className="text-muted">, {TYPE_LABEL[r.opportunity_type]}{r.tender_value_inr ? `, ${inr(r.tender_value_inr)}` : ""}</span>

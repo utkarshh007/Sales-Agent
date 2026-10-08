@@ -25,6 +25,7 @@ export interface TenderRow {
   portal_tender_id: string | null;
   score_parts?: Record<string, [number | null, number]> | null;
   source_count?: number;
+  plain_summary?: string;
 }
 
 export interface ScoreComponent {
@@ -54,7 +55,28 @@ export interface FieldOut {
   source: string;
 }
 
+export interface Brief {
+  headline: string;
+  stage: string | null;
+  kind: string | null;
+  fit: string | null;
+  points: { label: string; value: string }[];
+  source: "rules" | "llm";
+}
+
+export interface Contacts {
+  client: { organization: string | null; department: string | null; name?: string | null; designation?: string;
+    email?: string; phone?: string; address?: string | null; source?: string; evidence?: string } | null;
+  submission: { mode: "ONLINE_PORTAL" | "EMAIL" | "PHYSICAL" | "UNKNOWN"; url?: string | null; portal_name?: string | null;
+    email?: string; address?: string; source?: string; evidence?: string };
+  helpdesk: { email: string | null; phone: string | null; source: string; evidence: string } | null;
+  other_emails: { email: string; source: string; context: string }[];
+  read_documents: string[];
+}
+
 export interface TenderDetail extends TenderRow {
+  brief: Brief;
+  contacts: Contacts;
   version: number;
   source_url: string | null;
   department: string | null;

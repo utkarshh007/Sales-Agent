@@ -7,6 +7,7 @@ import { canEdit, useMe } from "@/components/Shell";
 import { Button, DecisionTag, Loading, MatchType, Notice, Panel, ScoreBar, ScoreMark } from "@/components/ui";
 import { api } from "@/lib/api";
 import { BidStatusPanel, PastTendersPanel } from "./BidPanels";
+import { RespondPanel, WhatTheyNeed } from "./BriefPanels";
 import { closesIn, date, dateTime, inr, TYPE_LABEL } from "@/lib/format";
 import { SCORE_LABEL, SCORE_ORDER, type EligibilityCheck, type TenderDetail } from "@/lib/types";
 
@@ -93,6 +94,7 @@ export default function TenderView() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="min-w-0 space-y-6">
+          <WhatTheyNeed brief={t.brief} />
           <Panel title="Why this tender">
             <p className="leading-relaxed">{t.relevance_reason ?? "No capability match was recorded."}</p>
             {t.summary && <p className="mt-3 leading-relaxed text-muted">{t.summary}</p>}
@@ -251,6 +253,7 @@ export default function TenderView() {
         </div>
 
         <aside className="min-w-0 space-y-6">
+          <RespondPanel contacts={t.contacts} closingAt={t.closing_at} />
           <BidStatusPanel tenderId={t.id} editable={editable} onSaved={load} />
 
           <Panel title="Dates">

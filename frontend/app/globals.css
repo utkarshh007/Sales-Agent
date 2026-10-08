@@ -19,6 +19,9 @@
   --reject: #8a8f91;
   --focus: #1f6feb;
   --chart-1: #14998f;
+  --pink: #be185d;
+  --pink-edge: #db2777;
+  --pink-soft: #fce7f1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -40,6 +43,9 @@
     --reject: #7d8a8c;
     --focus: #79b0ff;
     --chart-1: #22a69c;
+    --pink: #f9a8d4;
+    --pink-edge: #f472b6;
+    --pink-soft: #3d1d2e;
   }
 }
 :root[data-theme="dark"] {
@@ -60,6 +66,9 @@
   --reject: #7d8a8c;
   --focus: #79b0ff;
   --chart-1: #22a69c;
+  --pink: #f9a8d4;
+  --pink-edge: #f472b6;
+  --pink-soft: #3d1d2e;
 }
 
 @theme inline {
@@ -79,6 +88,9 @@
   --color-review: var(--review);
   --color-reject: var(--reject);
   --color-chart-1: var(--chart-1);
+  --color-pink: var(--pink);
+  --color-pink-edge: var(--pink-edge);
+  --color-pink-soft: var(--pink-soft);
   --font-sans: var(--font-public-sans), system-ui, sans-serif;
   --font-serif: var(--font-source-serif), Georgia, serif;
 }
