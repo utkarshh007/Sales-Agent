@@ -176,3 +176,15 @@ def test_cli_reset_signs_user_out_and_clears_2fa(app_client, monkeypatch):
     assert cli.main(["reset-2fa", "analyst@x.io"]) == 0
     assert c.get("/api/auth/me").status_code == 401
     assert "mfa_required" not in _login(c)
+
+
+def test_cli_set_email(app_client, monkeypatch):
+    c, Session, _ = app_client
+    from app import cli
+    monkeypatch.setattr(cli, "SessionLocal", Session)
+    assert cli.main(["set-email", "analyst@x.io", "viewer@x.io"]) == 1, "already in use"
+    assert cli.main(["set-email", "analyst@x.io", "not-an-email"]) == 2
+    assert cli.main(["set-email", "Analyst@X.io", "New.Name@Company.com"]) == 0
+    r = c.post("/api/auth/login", json={"email": "new.name@company.com", "password": PW})
+    assert r.status_code == 200 and r.json()["email"] == "new.name@company.com"
+    assert c.post("/api/auth/login", json={"email": "analyst@x.io", "password": PW}).status_code == 401

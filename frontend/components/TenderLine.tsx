@@ -13,6 +13,9 @@ export default function TenderLine({ t, note }: { t: TenderRow; note?: string })
         <Link href={`/tenders/${t.id}`} className="font-serif text-[16px] leading-snug hover:text-teal hover:underline">
           {t.title}
         </Link>
+        {t.plain_summary && (
+          <p className="mt-1.5 rounded-sm border-l-[3px] border-pink-edge bg-pink-soft px-2 py-1 text-sm leading-snug">{t.plain_summary}</p>
+        )}
         <p className="mt-0.5 text-sm text-muted">
           {t.organization ?? "Unknown organisation"}
           {" — "}

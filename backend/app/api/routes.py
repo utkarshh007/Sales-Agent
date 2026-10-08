@@ -260,6 +260,39 @@ def _product_name(pid: str) -> str:
     return p.name if p else pid
 
 
+def _ist_text(dt: datetime | None) -> str | None:
+    from datetime import timezone as _tz
+    dt = as_utc(dt)
+    if dt is None:
+        return None
+    d = dt.astimezone(_tz(timedelta(hours=5, minutes=30)))
+    return f"{d.day} {d:%b %Y}, {int(d.strftime('%I'))}:{d:%M} {d.strftime('%p').lower()} IST"
+
+
+def _brief(t: Tender) -> dict:
+    """Plain-language description. The LLM's summary (prompted for plain words) when it ran, else composed by rules."""
+    from app import brief
+    value = (t.value_analysis or {}).get("total_value_inr") or t.tender_value_inr
+    out = brief.compose(
+        title=t.title, organization=t.organization, opportunity_type=t.opportunity_type, capability=t.primary_capability,
+        products=[_product_name(p) for p in (t.matched_products or [])[:3]], extracted=t.extracted,
+        closing=_ist_text(t.closing_at),
+        value=format_inr(value) if value else None)
+    if t.analysis_mode == "LLM" and t.summary:
+        out["headline"], out["source"] = t.summary, "llm"
+    return out
+
+
+def _contacts(t: Tender) -> dict:
+    from app import contacts
+    texts = [("portal tender page", (t.raw or {}).get("portal_text") or "")]
+    texts += [(d.filename, d.extracted_text or "") for d in t.documents if d.status == "EXTRACTED"]
+    p = t.portal
+    return contacts.extract(portal_code=p.code if p else None, portal_name=p.name if p else None,
+                            portal_url=p.base_url if p else None, organization=t.organization, department=t.department,
+                            portal_contact=t.contact_info, texts=texts)
+
+
 def _row(t: Tender) -> dict:
     return {
         "id": t.id, "score": t.score, "priority": t.priority, "title": t.title, "organization": t.organization,
@@ -270,6 +303,7 @@ def _row(t: Tender) -> dict:
         "documents_status": t.documents_status, "flags": t.flags, "portal_code": t.portal.code if t.portal else None,
         "reference_number": t.reference_number, "portal_tender_id": t.portal_tender_id,
         "source_count": len(t.sources) or 1,
+        "plain_summary": _brief(t)["headline"],
     }
 
 
@@ -349,6 +383,7 @@ def tender_detail(tender_id: int, db: Session = Depends(get_db), _: User = Depen
     score = db.scalar(select(ScoreRow).where(ScoreRow.tender_id == t.id).order_by(ScoreRow.id.desc()).limit(1))
     return {
         **_row(t),
+        "brief": _brief(t), "contacts": _contacts(t),
         "version": v, "source_url": t.source_url, "department": t.department, "category": t.category,
         "tender_type": t.tender_type, "opening_at": _iso(t.opening_at), "emd_inr": t.emd_inr,
         "corrigendum": t.corrigendum, "contact_info": t.contact_info, "blocker_note": t.blocker_note,
@@ -745,6 +780,18 @@ def tender_history(tender_id: int, db: Session = Depends(get_db), _: User = Depe
 def analytics(days: int = Query(90, ge=7, le=730), db: Session = Depends(get_db), _: User = Depends(current_user)):
     from app.analytics import overview
     return overview(db, days)
+
+
+@router.get("/dashboard")
+def dashboard(db: Session = Depends(get_db), _: User = Depends(current_user),
+              days: int = Query(90, ge=0, le=3650, description="0 = all time"),
+              portal: str | None = Query(None, max_length=50),
+              type: Literal["SERVICE", "OEM", "HYBRID", "UNRELATED", "UNKNOWN"] | None = None,
+              segment: str | None = Query(None, max_length=200),
+              capability: str | None = Query(None, max_length=200)):
+    """Executive dashboard: every KPI, chart, table and insight for one filtered slice."""
+    from app.dashboard import build
+    return build(db, days=days, portal=portal, type=type, segment=segment, capability=capability)
 
 
 @router.get("/pipeline")

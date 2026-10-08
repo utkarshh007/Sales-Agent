@@ -133,6 +133,9 @@ export default function TendersView() {
                     <td className="min-w-[20rem] max-w-xl px-4 py-3">
                       <Link href={`/tenders/${t.id}`} className="font-serif text-[15px] leading-snug hover:text-teal hover:underline">{t.title}</Link>
                       <p className="mt-0.5 text-muted">{t.organization ?? t.location ?? "—"}</p>
+                      {t.plain_summary && (
+                        <p className="mt-1.5 rounded-sm border-l-[3px] border-pink-edge bg-pink-soft px-2 py-1 leading-snug">{t.plain_summary}</p>
+                      )}
                       {t.documents_status === "BLOCKED_HUMAN_REQUIRED" && t.decision !== "REJECTED" && (
                         <p className="mt-0.5 text-xs text-high">Documents need manual download</p>
                       )}

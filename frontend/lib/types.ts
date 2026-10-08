@@ -25,6 +25,7 @@ export interface TenderRow {
   portal_tender_id: string | null;
   score_parts?: Record<string, [number | null, number]> | null;
   source_count?: number;
+  plain_summary?: string;
 }
 
 export interface ScoreComponent {
@@ -54,7 +55,28 @@ export interface FieldOut {
   source: string;
 }
 
+export interface Brief {
+  headline: string;
+  stage: string | null;
+  kind: string | null;
+  fit: string | null;
+  points: { label: string; value: string }[];
+  source: "rules" | "llm";
+}
+
+export interface Contacts {
+  client: { organization: string | null; department: string | null; name?: string | null; designation?: string;
+    email?: string; phone?: string; address?: string | null; source?: string; evidence?: string } | null;
+  submission: { mode: "ONLINE_PORTAL" | "EMAIL" | "PHYSICAL" | "UNKNOWN"; url?: string | null; portal_name?: string | null;
+    email?: string; address?: string; source?: string; evidence?: string };
+  helpdesk: { email: string | null; phone: string | null; source: string; evidence: string } | null;
+  other_emails: { email: string; source: string; context: string }[];
+  read_documents: string[];
+}
+
 export interface TenderDetail extends TenderRow {
+  brief: Brief;
+  contacts: Contacts;
   version: number;
   source_url: string | null;
   department: string | null;
@@ -197,4 +219,30 @@ export interface Analytics {
     median_price_gap_when_lost: number | null };
   pipeline_value: { open_opportunities: number; with_stated_value: number; stated_value_inr: number;
     stated_value_by_type: Record<string, number>; bidding_now: number };
+}
+
+export interface DashKpi { key: string; label: string; value: number | null; prev: number | null; delta: number | null;
+  format: "int" | "inr" | "pct" | "score"; note: string | null; spark: number[] | null; lower_is_better: boolean }
+export interface DashGroup { label: string; count: number; value: number; avg_score: number | null }
+export interface Dashboard {
+  as_of: string;
+  window: { days: number; since: string | null; history_days: number; bucket: "day" | "week"; has_previous: boolean };
+  filters: { applied: Record<string, string>; options: { portals: { code: string; name: string }[];
+    types: { code: string; label: string }[]; segments: string[]; capabilities: string[] } };
+  kpis: DashKpi[];
+  trend: { date: string; read: number; surfaced: number }[];
+  funnel: { stage: string; count: number }[];
+  type_mix: { code: string; label: string; count: number; value: number }[];
+  by_capability: DashGroup[];
+  by_segment: DashGroup[];
+  value_bands: { label: string; count: number }[];
+  deadlines: { label: string; count: number; value: number }[];
+  sources: { code: string; name: string; read: number; surfaced: number; avg_score: number | null; yield: number | null;
+    status: string | null; last_run_at: string | null }[];
+  rejections: { code: string; label: string; count: number }[];
+  pipeline: { stage: string; count: number }[];
+  top: { id: number; title: string; organization: string | null; score: number | null; priority: string | null; type: string;
+    capability: string | null; value: number | null; closing_at: string | null; decision: string; stage: string | null;
+    plain_summary: string | null }[];
+  insights: { kind: "risk" | "opportunity" | "trend" | "anomaly" | "info"; title: string; detail: string; tender_ids?: number[] }[];
 }
