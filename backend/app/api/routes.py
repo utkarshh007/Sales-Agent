@@ -9,7 +9,7 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app import audit, jobs
-from app.api.deps import CSRF_COOKIE, SESSION_COOKIE, current_user, require_role
+from app.api.deps import CSRF_COOKIE, SESSION_COOKIE, current_user, mfa_setup_required, require_role, session_user
 from app.catalog import get_catalog
 from app.config import get_settings
 from app.db import as_utc, get_db, utcnow
@@ -19,7 +19,10 @@ from app.models import (
     TenderVersion, User,
 )
 from app.pipeline import store_upload
-from app.security import create_access_token, hash_password, limiter, validate_password, verify_password
+from app.security import (
+    create_access_token, create_mfa_challenge, decode_mfa_challenge, hash_password, limiter, validate_password,
+    verify_password,
+)
 
 router = APIRouter(prefix="/api")
 
@@ -35,10 +38,23 @@ class LoginIn(BaseModel):
     password: str = Field(min_length=1, max_length=256)
 
 
+def _start_session(response: Response, user: User, *, mfa: bool) -> None:
+    s = get_settings()
+    token, csrf = create_access_token(user.id, user.role, session_version=user.session_version or 0, mfa=mfa)
+    secure = s.is_production
+    max_age = s.ACCESS_TOKEN_MINUTES * 60
+    response.set_cookie(SESSION_COOKIE, token, max_age=max_age, httponly=True, secure=secure, samesite="lax", path="/")
+    response.set_cookie(CSRF_COOKIE, csrf, max_age=max_age, httponly=False, secure=secure, samesite="lax", path="/")
+
+
+def _client_ip(request: Request) -> str:
+    return request.client.host if request.client else "?"
+
+
 @router.post("/auth/login")
 def login(body: LoginIn, request: Request, response: Response, db: Session = Depends(get_db)):
     s = get_settings()
-    ip = request.client.host if request.client else "?"
+    ip = _client_ip(request)
     if not limiter.allow(f"login:{ip}", s.LOGIN_RATE_LIMIT_PER_MINUTE) or \
             not limiter.allow(f"login:{body.email.lower()}", s.LOGIN_RATE_LIMIT_PER_MINUTE):
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "Too many login attempts; try again in a minute")
@@ -47,15 +63,53 @@ def login(body: LoginIn, request: Request, response: Response, db: Session = Dep
         audit.record(db, "LOGIN_FAILED", actor=body.email.lower(), details={"ip": ip})
         db.commit()
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid email or password")
-    token, csrf = create_access_token(user.id, user.role)
-    secure = s.is_production
-    max_age = s.ACCESS_TOKEN_MINUTES * 60
-    response.set_cookie(SESSION_COOKIE, token, max_age=max_age, httponly=True, secure=secure, samesite="lax", path="/")
-    response.set_cookie(CSRF_COOKIE, csrf, max_age=max_age, httponly=False, secure=secure, samesite="lax", path="/")
+    if user.totp_enabled:
+        # password was right; no session until the second factor is checked
+        return {"mfa_required": True, "mfa_token": create_mfa_challenge(user.id, user.session_version or 0)}
+    _start_session(response, user, mfa=False)
     user.last_login_at = utcnow()
-    audit.record(db, "LOGIN", actor=user.email, details={"ip": ip})
+    audit.record(db, "LOGIN", actor=user.email, details={"ip": ip, "mfa": False})
     db.commit()
-    return {"email": user.email, "role": user.role}
+    return {"email": user.email, "role": user.role, "mfa_setup_required": mfa_setup_required(user, False)}
+
+
+class MfaLoginIn(BaseModel):
+    mfa_token: str = Field(min_length=1, max_length=2000)
+    code: str = Field(min_length=6, max_length=32)
+
+
+@router.post("/auth/login/verify")
+def login_verify(body: MfaLoginIn, request: Request, response: Response, db: Session = Depends(get_db)):
+    """Second step of sign-in: a code from the authenticator app, or one recovery code."""
+    from app import mfa
+    s = get_settings()
+    ip = _client_ip(request)
+    claims = decode_mfa_challenge(body.mfa_token)
+    if not claims:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Sign-in expired. Enter your email and password again.")
+    user = db.get(User, int(claims["sub"]))
+    if user is None or not user.is_active or not user.totp_enabled or claims.get("sv") != (user.session_version or 0):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Sign-in expired. Enter your email and password again.")
+    if not limiter.allow(f"mfa:{user.id}", 5) or not limiter.allow(f"mfa-ip:{ip}", s.LOGIN_RATE_LIMIT_PER_MINUTE):
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "Too many attempts; wait a minute and try again")
+    method = None
+    if any(ch.isalpha() for ch in body.code):
+        remaining = mfa.use_recovery_code(user.recovery_codes, body.code)
+        if remaining is not None:
+            user.recovery_codes, method = remaining, "recovery_code"
+    else:
+        step = mfa.verify_totp(mfa.decrypt(s, user.totp_secret), body.code, user.totp_last_step)
+        if step is not None:
+            user.totp_last_step, method = step, "totp"
+    if method is None:
+        audit.record(db, "LOGIN_MFA_FAILED", actor=user.email, details={"ip": ip})
+        db.commit()
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "That code didn't work. Check your authenticator app and try again.")
+    _start_session(response, user, mfa=True)
+    user.last_login_at = utcnow()
+    audit.record(db, "LOGIN", actor=user.email, details={"ip": ip, "mfa": method})
+    db.commit()
+    return {"email": user.email, "role": user.role, "recovery_codes_left": len(user.recovery_codes or [])}
 
 
 @router.post("/auth/logout")
@@ -66,8 +120,103 @@ def logout(response: Response):
 
 
 @router.get("/auth/me")
-def me(user: User = Depends(current_user)):
-    return {"email": user.email, "role": user.role}
+def me(request: Request, user: User = Depends(session_user)):
+    return {"email": user.email, "role": user.role, "mfa_enabled": bool(user.totp_enabled),
+            "mfa_setup_required": mfa_setup_required(user, request.state.session_mfa)}
+
+
+# ------------------------------------------------------------------ two-factor authentication
+class CodeIn(BaseModel):
+    code: str = Field(min_length=6, max_length=32)
+
+
+class DisableMfaIn(CodeIn):
+    password: str = Field(min_length=1, max_length=256)
+
+
+def _mfa_status(user: User) -> dict:
+    return {"enabled": bool(user.totp_enabled), "enabled_at": _iso(user.totp_enabled_at),
+            "required": user.role in get_settings().mfa_required_roles,
+            "recovery_codes_left": len(user.recovery_codes or []) if user.totp_enabled else 0}
+
+
+def _check_current_code(user: User, code: str) -> None:
+    from app import mfa
+    if not limiter.allow(f"mfa:{user.id}", 5):
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "Too many attempts; wait a minute and try again")
+    step = mfa.verify_totp(mfa.decrypt(get_settings(), user.totp_secret), code, user.totp_last_step) if user.totp_secret else None
+    if step is None:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "That code didn't work. Check your authenticator app and try again.")
+    user.totp_last_step = step
+
+
+@router.get("/auth/2fa")
+def mfa_status(user: User = Depends(session_user)):
+    return _mfa_status(user)
+
+
+@router.post("/auth/2fa/setup")
+def mfa_setup(user: User = Depends(session_user), db: Session = Depends(get_db)):
+    """Creates a new authenticator secret. It only takes effect once confirmed with a code (/enable)."""
+    from app import mfa
+    if user.totp_enabled:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Two-factor authentication is already on. Turn it off first to move it to a new device.")
+    s = get_settings()
+    secret = mfa.new_secret()
+    try:
+        user.totp_secret = mfa.encrypt(s, secret)
+    except mfa.MfaUnavailable as e:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(e))
+    user.totp_last_step = None
+    db.commit()
+    uri = mfa.provisioning_uri(secret, user.email, s.MFA_ISSUER)
+    return {"secret": secret, "otpauth_uri": uri, "qr": mfa.qr_data_uri(uri), "issuer": s.MFA_ISSUER}
+
+
+@router.post("/auth/2fa/enable")
+def mfa_enable(body: CodeIn, response: Response, user: User = Depends(session_user), db: Session = Depends(get_db)):
+    from app import mfa
+    if user.totp_enabled:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Two-factor authentication is already on.")
+    if not user.totp_secret:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Start the setup first.")
+    _check_current_code(user, body.code)
+    codes, hashes = mfa.new_recovery_codes()
+    user.totp_enabled, user.totp_enabled_at, user.recovery_codes = True, utcnow(), hashes
+    user.session_version = (user.session_version or 0) + 1  # sign out every other session
+    _start_session(response, user, mfa=True)
+    audit.record(db, "MFA_ENABLED", actor=user.email)
+    db.commit()
+    return {**_mfa_status(user), "recovery_codes": codes}
+
+
+@router.post("/auth/2fa/recovery-codes")
+def mfa_new_recovery_codes(body: CodeIn, user: User = Depends(session_user), db: Session = Depends(get_db)):
+    from app import mfa
+    if not user.totp_enabled:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Two-factor authentication is off.")
+    _check_current_code(user, body.code)
+    codes, user.recovery_codes = mfa.new_recovery_codes()
+    audit.record(db, "MFA_RECOVERY_CODES_REPLACED", actor=user.email)
+    db.commit()
+    return {**_mfa_status(user), "recovery_codes": codes}
+
+
+@router.post("/auth/2fa/disable")
+def mfa_disable(body: DisableMfaIn, response: Response, user: User = Depends(session_user), db: Session = Depends(get_db)):
+    if not user.totp_enabled:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Two-factor authentication is already off.")
+    if user.role in get_settings().mfa_required_roles:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Your role requires two-factor authentication, so it can't be turned off.")
+    if not verify_password(body.password, user.password_hash):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Wrong password.")
+    _check_current_code(user, body.code)
+    user.totp_enabled, user.totp_secret, user.totp_enabled_at, user.recovery_codes = False, None, None, None
+    user.session_version = (user.session_version or 0) + 1
+    _start_session(response, user, mfa=False)
+    audit.record(db, "MFA_DISABLED", actor=user.email)
+    db.commit()
+    return _mfa_status(user)
 
 
 # ------------------------------------------------------------------ overview

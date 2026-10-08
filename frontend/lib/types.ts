@@ -119,6 +119,8 @@ export interface Overview {
 export interface Me {
   email: string;
   role: "admin" | "analyst" | "viewer";
+  mfa_enabled: boolean;
+  mfa_setup_required: boolean;
 }
 
 export const SCORE_ORDER = ["capability", "technical", "oem", "commercial", "eligibility", "timeline", "strategic"] as const;

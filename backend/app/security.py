@@ -43,19 +43,40 @@ def _jwt_key() -> str:
     return key if key else _DEV_SECRET
 
 
-def create_access_token(user_id: int, role: str) -> tuple[str, str]:
-    """Returns (jwt, csrf_token). The CSRF token is bound into the JWT and echoed in a readable cookie."""
+def create_access_token(user_id: int, role: str, *, session_version: int = 0, mfa: bool = False) -> tuple[str, str]:
+    """Returns (jwt, csrf_token). The CSRF token is bound into the JWT and echoed in a readable cookie.
+    `mfa` records whether this session passed a second factor; `sv` ties it to the user's session version."""
     csrf = secrets.token_urlsafe(24)
     exp = utcnow() + timedelta(minutes=get_settings().ACCESS_TOKEN_MINUTES)
-    token = jwt.encode({"sub": str(user_id), "role": role, "csrf": csrf, "exp": exp}, _jwt_key(), algorithm="HS256")
+    token = jwt.encode({"sub": str(user_id), "role": role, "csrf": csrf, "exp": exp, "sv": session_version, "mfa": mfa},
+                       _jwt_key(), algorithm="HS256")
     return token, csrf
 
 
 def decode_access_token(token: str) -> dict | None:
     try:
-        return jwt.decode(token, _jwt_key(), algorithms=["HS256"])
+        claims = jwt.decode(token, _jwt_key(), algorithms=["HS256"])
     except jwt.PyJWTError:
         return None
+    return None if claims.get("typ") == "mfa_challenge" else claims
+
+
+MFA_CHALLENGE_MINUTES = 5
+
+
+def create_mfa_challenge(user_id: int, session_version: int) -> str:
+    """Short-lived proof that the password was right; only good for the second-factor step."""
+    exp = utcnow() + timedelta(minutes=MFA_CHALLENGE_MINUTES)
+    return jwt.encode({"sub": str(user_id), "typ": "mfa_challenge", "sv": session_version, "exp": exp},
+                      _jwt_key(), algorithm="HS256")
+
+
+def decode_mfa_challenge(token: str) -> dict | None:
+    try:
+        claims = jwt.decode(token, _jwt_key(), algorithms=["HS256"])
+    except jwt.PyJWTError:
+        return None
+    return claims if claims.get("typ") == "mfa_challenge" else None
 
 
 def fernet() -> Fernet:

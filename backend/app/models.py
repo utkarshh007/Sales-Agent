@@ -6,6 +6,7 @@ from typing import Any
 
 from sqlalchemy import (
     JSON, BigInteger, Boolean, DateTime, Float, ForeignKey, Index, Integer, LargeBinary, String, Text, UniqueConstraint,
+    false as sa_false,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -26,6 +27,13 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = _ts()
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # bumped when 2FA is turned on/off or reset: every session issued before then stops working
+    session_version: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    totp_secret: Mapped[str | None] = mapped_column(Text)  # encrypted; set during setup, active once enabled
+    totp_enabled: Mapped[bool] = mapped_column(Boolean, default=False, server_default=sa_false())
+    totp_last_step: Mapped[int | None] = mapped_column(BigInteger)  # replay protection
+    totp_enabled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    recovery_codes: Mapped[list | None] = mapped_column(JSON)  # Argon2 hashes of unused codes
 
 
 # ---------------------------------------------------------------- portals

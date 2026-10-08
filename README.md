@@ -214,6 +214,14 @@ All rules, thresholds, weights, schedules and integrations are environment varia
 ## Security
 
 - Passwords hashed with Argon2id; sessions are signed JWTs in `HttpOnly`, `SameSite=Lax` cookies (`Secure` in production) with a double-submit CSRF token on every mutation.
+- **Two-factor authentication** (Security page, linked under your name in the sidebar):
+  - Works with any authenticator app (TOTP, RFC 6238): scan a QR code, confirm one code, save 10 single-use recovery codes.
+  - Sign-in becomes password, then a 6-digit code. The password step only yields a 5-minute challenge, never a session.
+  - A code is accepted once: replays are refused. Attempts are rate-limited per user and per address.
+  - Authenticator secrets are encrypted at rest with `FERNET_KEY`, or a key derived from `SECRET_KEY`, so rotating either one disables everyone's 2FA. Recovery codes are stored as Argon2 hashes.
+  - `MFA_REQUIRED_ROLES` (for example `admin,analyst`) makes 2FA mandatory: those users can only reach the setup page until they enrol, and can't turn it off.
+  - Turning 2FA on or off signs out every other session.
+  - Lost phone and recovery codes: an operator runs `python -m app.cli reset-2fa EMAIL`, which also signs the user out everywhere. Every 2FA event is in the audit log.
 - Role-based access, login and API rate limiting, strict security headers, HSTS via Caddy, API docs disabled in production.
 - No credentials in code. Portal credentials are referenced by env-var name in `portal_credentials_metadata`; any stored secret is Fernet-encrypted with `FERNET_KEY`. Emails never contain secrets.
 - **SSRF protection.** Every fetch, including each redirect hop, document links found on pages, and requests made by scripts inside the headless browser, is refused if it targets a private, loopback, link-local or metadata address. Admin-supplied buyer-page URLs go through the same check.
@@ -233,7 +241,7 @@ Nothing in the engine, scoring, alerts or dashboard changes.
 ## Tests
 
 ```bash
-cd backend && pytest -q        # 170 tests (one launches headless Chromium, the quality gate loads the embedding model)
+cd backend && pytest -q        # 183 tests (one launches headless Chromium, the quality gate loads the embedding model)
 cd frontend && npm run lint && npm run build
 ```
 
@@ -245,6 +253,7 @@ cd frontend && npm run lint && npm run build
 - `tests/test_phase4_semantic.py`: semantic thresholds, the non-cyber margin, title segments, exclusion vetoes, fallback-only behaviour, competitor OEMs, and the matching-quality gate on the real model.
 - `tests/test_phase5_scoring.py`: eligibility extraction on the real SBI RFP appendices, checks against the profile (met, not met, unknown, relaxed, CMMI levels, OEM authorisation), EMD bands, the hybrid shortcut, the priced-BOQ split, buyer segments, timeline by type, next actions, and an end-to-end eligibility gap.
 - `tests/test_phase6_analytics.py`: subject extraction, similar tenders (meaning plus distinctive wording, no matches on place names or generic words), annual re-issue detection, the analytics funnel, source yield, rejection reasons and outcomes, bid-status permissions, validation and audit, and review → pipeline.
+- `tests/test_mfa.py`: RFC 6238 test vectors, clock drift and replay, recovery codes, encrypted secrets, the two-step sign-in, sessions revoked on enrolment, mandatory 2FA by role, turning it off, and the operator reset.
 - `tests/test_documents.py`, `tests/test_connectors.py`, `tests/test_api.py`: extraction and safety, parsing/robots/CAPTCHA handling, auth, CSRF, roles, upload, review flow.
 
 ## Known limitations and next phases
