@@ -18,6 +18,8 @@ from app.llm.analyzer import Analyzer, RulesAnalyzer
 from app.matching import build_matches, relevance_gate
 from app.rules.classification import classify_components, component_values
 from app.rules.commercial import CommercialDecision, apply_commercial_rules
+from app.rules.eligibility import EligibilityResult, assess, extract_criteria
+from app.rules.hybrid import ValueBand, boq_components, emd_value_band
 from app.rules.prefilter import PrefilterResult, prefilter
 from app.scoring import ScoreResult, compute_score
 
@@ -38,6 +40,8 @@ class Decision:
     relevance_reason: str = ""
     flags: list[str] = field(default_factory=list)
     value_analysis: dict = field(default_factory=dict)
+    eligibility: EligibilityResult | None = None
+    segment: tuple[str, float] | None = None
 
     @property
     def priority(self) -> str | None:
@@ -105,7 +109,12 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
         analysis.notes = refused_notes + analysis.notes
 
     matches = build_matches(catalog, pf.lexicon_hits, pf.oem_hits, analysis, pf.semantic_hits, pf.competitor_hits)
-    if analysis.mode == "LLM" and analysis.components:
+    # A priced bill of quantities gives a deterministic service/product split; it is preferred over
+    # heuristics, and fills in values the LLM could not find.
+    boq = boq_components(ctx.document_text, catalog) if ctx.has_documents else []
+    if boq and (analysis.mode != "LLM" or not any(c.value_inr for c in analysis.components)):
+        analysis.components = boq
+    if (analysis.mode == "LLM" or boq) and analysis.components:
         opp_type = classify_components(analysis.components)
     else:
         opp_type = pf.heuristic_type
@@ -114,6 +123,12 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
         opp_type = "UNRELATED"
 
     total, sv, pv, va, flags = _resolve_values(pf, analysis, opp_type)
+    band: ValueBand | None = emd_value_band(pf.emd.amount_inr) if pf.emd and total is None else None
+    if band is not None:
+        va["estimated_band"] = {"low": band.low, "high": band.high, "basis": band.basis}
+    if boq:
+        va["boq_lines"] = len(boq)
+        flags.append("BOQ_SPLIT")
     rejections: list[tuple[str, str, str]] = []
 
     gate_status, gate_code, gate_reason = relevance_gate(matches, settings.STRONG_MATCH_MIN_CONFIDENCE,
@@ -123,8 +138,25 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
         if gate_status != "REJECT":
             gate_status, gate_code, gate_reason = "REJECT", "NO_CAPABILITY_MATCH", "Requirements do not map to the capability catalog."
 
-    commercial = apply_commercial_rules(opp_type, settings, total_value_inr=total,
-                                        service_value_inr=sv, product_value_inr=pv) if opp_type != "UNRELATED" else None
+    commercial = apply_commercial_rules(opp_type, settings, total_value_inr=total, service_value_inr=sv,
+                                        product_value_inr=pv, value_band=band) if opp_type != "UNRELATED" else None
+
+    # Eligibility: criteria from the tender, checked against the company profile
+    eligibility = None
+    if ctx.eligibility_text:
+        criteria, startup, msme = extract_criteria(ctx.eligibility_text)
+        products = next((m.product_ids for m in matches if m.offering == "PRODUCT" and m.product_ids), [])
+        eligibility = assess(criteria, ctx.company_profile or {}, startup_relaxation=startup, msme_relaxation=msme,
+                             matched_products=products, source=ctx.eligibility_source)
+        det = eligibility.assessment
+        if det == "INFEASIBLE" or analysis.eligibility_assessment in ("UNKNOWN", "", None) or analysis.mode != "LLM":
+            if det != "UNKNOWN":
+                analysis.eligibility_assessment = det
+        analysis.eligibility_issues = [f"{c.label}: requires {c.requirement}; company has {c.company}" for c in eligibility.gaps] \
+            + analysis.eligibility_issues
+        if eligibility.gaps:
+            flags.append("ELIGIBILITY_GAP")
+    segment = catalog.buyer_segment(ctx.organization, ctx.metadata.get("department"))
 
     other_oems = sorted({o for r in analysis.requirements for o in r.other_oems_named} | {c.oem for c in pf.competitor_hits})
     if other_oems:
@@ -133,7 +165,9 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
                           commercial=commercial or apply_commercial_rules("UNKNOWN", settings, total_value_inr=total),
                           analysis=analysis, has_documents=ctx.has_documents,
                           has_portal_detail=ctx.has_portal_detail, closing_at=ctx.closing_at,
-                          organization=ctx.organization, other_oems_named=other_oems, now=now)
+                          organization=ctx.organization, other_oems_named=other_oems, now=now,
+                          eligibility=eligibility, segment=segment, pre_bid_at=ctx.pre_bid_at,
+                          documents_blocked=ctx.documents_blocked)
 
     if gate_status == "REJECT":
         rejections.append(("RELEVANCE", gate_code, gate_reason))
@@ -167,4 +201,4 @@ def evaluate(ctx: TenderContext, catalog: Catalog, settings: Settings, analyzer:
             relevance += f" Commercial: {commercial.reason}"
     va["total_value_display"] = format_inr(total)
     return Decision(status, opp_type, pf, analysis, matches, commercial, score, rejections, reviews,
-                    relevance.strip(), sorted(set(flags)), va)
+                    relevance.strip(), sorted(set(flags)), va, eligibility, segment)

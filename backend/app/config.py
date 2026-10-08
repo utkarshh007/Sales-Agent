@@ -49,6 +49,13 @@ class Settings(BaseSettings):
     OEM_MAX_VALUE_INR: int = 0  # only used when OEM_VALUE_LIMIT_ENABLED
     HYBRID_REVIEW_ENABLED: bool = True
     HYBRID_SERVICE_OVER_CAP_ACTION: HybridOverCapAction = HybridOverCapAction.MANUAL_REVIEW
+    # When a service tender states no value, its EMD implies a range (GFR: EMD = 2–5% of value).
+    SERVICE_EMD_OVER_CAP_ACTION: str = "MANUAL_REVIEW"  # MANUAL_REVIEW | REJECT (whole range above the cap)
+    SERVICE_EMD_WITHIN_CAP_ACTION: str = "ACCEPT"  # ACCEPT | MANUAL_REVIEW (whole range within the cap)
+    # Days of bid preparation each opportunity type comfortably needs (timeline score)
+    LEAD_DAYS_SERVICE: int = 7
+    LEAD_DAYS_OEM: int = 14
+    LEAD_DAYS_HYBRID: int = 21
 
     # --- relevance / scoring (section 14 / 15 / 20) ---
     MIN_RELEVANCE_SCORE: int = 40

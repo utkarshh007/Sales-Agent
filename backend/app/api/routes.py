@@ -475,6 +475,59 @@ def create_buyer_page(body: BuyerPageCreate, db: Session = Depends(get_db), user
     return {"id": p.id, "code": code}
 
 
+class CompanyProfileIn(BaseModel):
+    """Every field optional: an empty field means "unknown" and is never assumed to be met."""
+    average_turnover_inr: int | None = Field(None, ge=0, le=10**13)
+    profitable_years_last_3: int | None = Field(None, ge=0, le=3)
+    net_worth_inr: int | None = Field(None, ge=-(10**13), le=10**13)
+    years_in_business: int | None = Field(None, ge=0, le=200)
+    similar_projects_count: int | None = Field(None, ge=0, le=10_000)
+    largest_similar_order_inr: int | None = Field(None, ge=0, le=10**13)
+    certifications: list[str] | None = Field(None, max_length=30)
+    empanelments: list[str] | None = Field(None, max_length=30)
+    local_supplier_class: Literal["Class-I", "Class-II", "Non-local"] | None = None
+    indian_registered_entity: bool | None = None
+    currently_debarred: bool | None = None
+    dpiit_startup: bool | None = None
+    msme: bool | None = None
+    oem_authorisations: list[str] | None = Field(None, max_length=100)
+
+
+@router.get("/company-profile")
+def get_company_profile(db: Session = Depends(get_db), _: User = Depends(current_user)):
+    from app.models import CompanyProfile
+    from app.rules.eligibility import PROFILE_FIELDS
+    row = db.get(CompanyProfile, 1)
+    return {"data": (row.data if row else {}) or {}, "updated_by": row.updated_by if row else None,
+            "updated_at": _iso(row.updated_at) if row else None,
+            "fields": [{"key": k, "label": label, "type": kind} for k, label, kind in PROFILE_FIELDS],
+            "products": [{"id": p.id, "name": p.name} for p in get_catalog().products.values()]}
+
+
+@router.put("/company-profile")
+def put_company_profile(body: CompanyProfileIn, db: Session = Depends(get_db), user: User = Depends(require_role("admin"))):
+    from app.models import CompanyProfile
+    data = body.model_dump()
+    unknown = [p for p in (data.get("oem_authorisations") or []) if p not in get_catalog().products]
+    if unknown:
+        raise HTTPException(400, f"Unknown product ids: {', '.join(unknown)}")
+    row = db.get(CompanyProfile, 1) or CompanyProfile(id=1)
+    before = dict(row.data or {})
+    row.data, row.updated_by = data, user.email
+    db.add(row)
+    changed = sorted(k for k in data if before.get(k) != data.get(k))
+    audit.record(db, "COMPANY_PROFILE_UPDATED", actor=user.email, details={"changed": changed})
+    # eligibility depends on the profile: re-score open tenders that have criteria
+    now = utcnow()
+    requeued = 0
+    for t in db.scalars(select(Tender).where(or_(Tender.closing_at.is_(None), Tender.closing_at >= now),
+                                             Tender.decision != "REJECTED")):
+        jobs.enqueue(db, jobs.ANALYZE_TENDER, {"tender_id": t.id, "reason": "company profile"}, dedupe_key=f"analyze:{t.id}")
+        requeued += 1
+    db.commit()
+    return {"ok": True, "changed": changed, "requeued": requeued}
+
+
 @router.get("/settings")
 def get_public_settings(_: User = Depends(current_user)):
     return get_settings().public_view()

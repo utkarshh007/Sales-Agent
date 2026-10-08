@@ -7,7 +7,7 @@ import { canEdit, useMe } from "@/components/Shell";
 import { Button, DecisionTag, Loading, MatchType, Notice, Panel, ScoreBar, ScoreMark } from "@/components/ui";
 import { api } from "@/lib/api";
 import { closesIn, date, dateTime, inr, TYPE_LABEL } from "@/lib/format";
-import { SCORE_LABEL, SCORE_ORDER, type TenderDetail } from "@/lib/types";
+import { SCORE_LABEL, SCORE_ORDER, type EligibilityCheck, type TenderDetail } from "@/lib/types";
 
 const FIELD_LABEL: Record<string, string> = {
   tender_title: "Title", tender_reference: "Reference", procuring_organization: "Procuring organisation", department: "Department",
@@ -64,6 +64,7 @@ export default function TenderView() {
             {t.reference_number && <>, ref. <span className="text-ink">{t.reference_number}</span></>}
             {t.portal_tender_id && <>, tender ID <span className="text-ink">{t.portal_tender_id}</span></>}
           </p>
+          {t.extracted?._segment && <p className="mt-1 text-sm text-muted">Buyer segment: {t.extracted._segment.name}</p>}
           {t.sources.length > 1 && (
             <p className="mt-2 text-sm">Listed on {t.sources.length} portals: {t.sources.map((s) => s.portal_name).join(", ")}.</p>
           )}
@@ -138,6 +139,22 @@ export default function TenderView() {
             </Panel>
           )}
 
+          {(t.extracted?._next_actions?.length ?? 0) > 0 && (
+            <Panel title="What would raise this score">
+              <ol className="space-y-3">
+                {t.extracted._next_actions!.map((a, i) => (
+                  <li key={i} className="grid grid-cols-[1fr_auto] gap-x-4">
+                    <div>
+                      <p className="font-medium">{a.action}</p>
+                      <p className="text-sm text-muted">{a.why}</p>
+                    </div>
+                    <span className="num whitespace-nowrap pt-0.5 text-sm text-teal">{a.points > 0 ? `up to +${a.points}` : ""}</span>
+                  </li>
+                ))}
+              </ol>
+            </Panel>
+          )}
+
           <Panel title="Capability and OEM matches">
             {t.matches.length === 0 ? <p className="text-muted">No requirement maps to the capability catalog.</p> : (
               <ol className="space-y-5">
@@ -170,6 +187,13 @@ export default function TenderView() {
                 <div key={l as string}><dt className="text-sm text-muted">{l}</dt><dd className="num text-xl font-semibold">{inr(v as number | null)}</dd></div>
               ))}
             </dl>
+            {va.estimated_band && (
+              <p className="mt-4 text-sm">
+                <span className="font-medium">Estimated value {inr(va.estimated_band.low)}–{inr(va.estimated_band.high)}</span>
+                <span className="text-muted">: {va.estimated_band.basis}. No value is stated in the tender.</span>
+              </p>
+            )}
+            {(va.boq_lines ?? 0) > 0 && <p className="mt-2 text-sm text-muted">Service and product split taken from {va.boq_lines} priced lines of the bill of quantities.</p>}
             {(va.deterministic_evidence || va.llm_evidence) && (
               <div className="mt-4 space-y-1 text-sm text-muted">
                 {va.deterministic_evidence && <p>{va.deterministic_evidence === "portal listing field" ? "Stated on the portal listing." : <>Parsed from documents: “{va.deterministic_evidence}”</>}</p>}
@@ -187,6 +211,10 @@ export default function TenderView() {
               </table>
             )}
           </Panel>
+
+          {t.extracted?._eligibility_check && t.extracted._eligibility_check.criteria.length > 0 && (
+            <EligibilityPanel check={t.extracted._eligibility_check} />
+          )}
 
           <Panel title="Extracted requirements" aside={unknown.length > 0 && (
             <button className="text-sm text-teal hover:underline" onClick={() => setShowUnknown(!showUnknown)}>
@@ -401,4 +429,42 @@ function SourcesPanel({ t }: { t: TenderDetail }) {
 function matchedBy(source: string): string {
   const parts = source.split("+").map((s) => ({ LEXICON: "keywords", EMBEDDING: "meaning", LLM: "LLM reading" })[s] ?? s.toLowerCase());
   return `matched by ${parts.join(" + ")}`;
+}
+
+const ELIG_STATUS: Record<string, { label: string; cls: string }> = {
+  MET: { label: "Met", cls: "text-accept" }, NOT_MET: { label: "Not met", cls: "font-semibold text-hot" },
+  UNKNOWN: { label: "Not checked", cls: "text-muted" }, RELAXED: { label: "Relaxed", cls: "text-accept" },
+  INFO: { label: "Note", cls: "text-muted" },
+};
+const ELIG_SUMMARY: Record<string, string> = {
+  FEASIBLE: "The company meets every criterion found.",
+  PARTIAL: "No gaps found, but some criteria could not be checked.",
+  INFEASIBLE: "The company does not meet at least one criterion.",
+  UNKNOWN: "Criteria were found, but the company profile is empty.",
+};
+
+function EligibilityPanel({ check }: { check: EligibilityCheck }) {
+  const unknown = check.criteria.some((c) => c.status === "UNKNOWN");
+  return (
+    <Panel title="Eligibility" aside={<span className={`text-sm ${check.assessment === "INFEASIBLE" ? "font-semibold text-hot" : check.assessment === "FEASIBLE" ? "text-accept" : "text-muted"}`}>{check.assessment.toLowerCase()}</span>}>
+      <p className="text-sm">{ELIG_SUMMARY[check.assessment]}{check.startup_relaxation ? " Startups get relaxed financial criteria." : ""}</p>
+      <p className="mt-1 text-xs text-muted">Read from {check.source}, compared with the company profile.</p>
+      <table className="mt-4 w-full text-sm">
+        <tbody className="divide-y divide-line">
+          {check.criteria.map((c, i) => (
+            <tr key={i} className="align-top">
+              <th className="w-44 py-2 pr-3 text-left font-medium">{c.label}</th>
+              <td className="py-2 pr-3">
+                <p>{c.requirement}{c.company !== null && c.company !== undefined && c.status !== "INFO" ? <span className="text-muted">; company: {c.company === true ? "yes" : c.company === false ? "no" : String(c.company)}</span> : null}</p>
+                {c.note && <p className="text-xs text-muted">{c.note}</p>}
+                <p className="mt-1 font-serif text-xs italic text-muted">{c.evidence}</p>
+              </td>
+              <td className={`w-24 whitespace-nowrap py-2 text-right ${ELIG_STATUS[c.status]?.cls ?? ""}`}>{ELIG_STATUS[c.status]?.label ?? c.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {unknown && <p className="mt-3 text-sm"><Link href="/profile" className="text-teal hover:underline">Complete the company profile</Link> to check the remaining criteria.</p>}
+    </Panel>
+  );
 }

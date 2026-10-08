@@ -75,6 +75,9 @@ export interface TenderDetail extends TenderRow {
     _eligibility?: { assessment: string; issues: string[] };
     _risks?: string[];
     _notes?: string[];
+    _eligibility_check?: EligibilityCheck | null;
+    _segment?: { name: string; weight: number } | null;
+    _next_actions?: NextAction[];
   };
   value_analysis: {
     total_value_inr?: number | null;
@@ -85,6 +88,8 @@ export interface TenderDetail extends TenderRow {
     llm_value_inr?: number | null;
     llm_evidence?: string | null;
     emd_inr?: number | null;
+    estimated_band?: { low: number; high: number; basis: string } | null;
+    boq_lines?: number;
     components?: { description: string; kind: string; value_inr: number | null; evidence: string }[];
   };
   portal_text: string | null;
@@ -121,3 +126,27 @@ export const SCORE_LABEL: Record<string, string> = {
   capability: "Capability match", technical: "Technical coverage", oem: "OEM / product match", commercial: "Commercial fit",
   eligibility: "Eligibility", timeline: "Timeline", strategic: "Strategic value",
 };
+
+export interface EligibilityCriterion {
+  code: string;
+  label: string;
+  requirement: string;
+  evidence: string;
+  company: unknown;
+  status: "MET" | "NOT_MET" | "UNKNOWN" | "RELAXED" | "INFO";
+  note: string;
+}
+
+export interface EligibilityCheck {
+  assessment: "FEASIBLE" | "PARTIAL" | "INFEASIBLE" | "UNKNOWN";
+  startup_relaxation: boolean;
+  msme_relaxation: boolean;
+  source: string;
+  criteria: EligibilityCriterion[];
+}
+
+export interface NextAction {
+  action: string;
+  why: string;
+  points: number;
+}

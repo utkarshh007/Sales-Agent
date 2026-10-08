@@ -679,3 +679,17 @@ negative_anchors:
   - Medical monitoring equipment and patient data management systems
   - Advertising, publicity, media buying and social media management
   - Hiring of manpower, data entry operators and outsourced staff
+
+# ---------------------------------------------------------------------------------------------------
+# Buyer segments (Phase 5): strategic weight by who is buying. First match wins; matched against the
+# organisation and department names. weight is the strategic-score factor (0–1).
+# ---------------------------------------------------------------------------------------------------
+buyer_segments:
+  - {name: Financial regulator, weight: 1.0, p: 'reserve bank|\bRBI\b|\bSEBI\b|IRDAI?|PFRDA|NABARD|national housing bank|\bNHB\b|UIDAI|\bTRAI\b|IFSCA|CERT-?In'}
+  - {name: Bank or financial institution, weight: 1.0, p: 'bank|insurance|life insurance|\bLIC\b|\bGIC\b|EXIM|SIDBI|NPCI|NSDL|CDSL|stock exchange|\bCCIL\b|financ'}
+  - {name: Defence or law enforcement, weight: 1.0, p: 'army|navy|naval|air force|defen[cs]e|DRDO|police|NCRB|\bCBI\b|\bNIA\b|CRPF|\bBSF\b|CISF|ITBP|coast guard|ordnance|AWEIL|bharat electronics|\bBEL\b|\bHAL\b|home affairs'}
+  - {name: Government IT body, weight: 0.85, p: '\bNIC\b|national informatics|MeitY|electronics and information technology|C-?DAC|\bSTQC\b|e-?governance|digital india|\bNeGD\b|C-?DOT'}
+  - {name: Critical infrastructure, weight: 0.85, p: 'power|grid|transmission|load despatch|\bSLDC\b|\bNLDC\b|airport|railway|metro|oil|natural gas|refiner|petroleum|NTPC|NHPC|telecom|BSNL|MTNL|water supply|nuclear|space|ISRO|port trust|shipping'}
+  - {name: State or local government, weight: 0.5, p: 'municipal|zilla|panchayat|\bnagar\b|district|\bstate\b'}
+  - {name: Central PSU, weight: 0.65, p: 'limited|\bltd\b|corporation'}
+  - {name: Central ministry or department, weight: 0.65, p: 'ministry|government of india|directorate|commission|authority|institute'}

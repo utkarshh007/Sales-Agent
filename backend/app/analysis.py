@@ -85,6 +85,11 @@ class TenderContext:
     llm_context_truncated: bool = False
     has_documents: bool = False
     has_portal_detail: bool = False  # structured detail page read from the portal (value, category, description)
+    documents_blocked: bool = False  # documents exist but need a human (CAPTCHA)
+    eligibility_text: str = ""  # pre-qualification criteria text (document sections / portal note)
+    eligibility_source: str = ""
+    company_profile: dict | None = None  # the bidding company's facts; None = not configured
+    pre_bid_at: datetime | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
 

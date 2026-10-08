@@ -337,3 +337,13 @@ class ManualReview(Base):
     resolved_by: Mapped[str | None] = mapped_column(String(320))
     created_at: Mapped[datetime] = _ts()
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class CompanyProfile(Base):
+    """The bidding company's own facts (turnover, certifications, empanelments…), used to check tender
+    eligibility. A single row; every field is optional and an empty field is treated as unknown."""
+    __tablename__ = "company_profile"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    updated_by: Mapped[str | None] = mapped_column(String(320))
+    updated_at: Mapped[datetime] = _ts(onupdate=utcnow)

@@ -331,7 +331,18 @@ def process_documents(session: Session, tender: Tender, settings: Settings, conn
 
 
 # ------------------------------------------------------------------ analysis
-def build_context(tender: Tender, settings: Settings) -> TenderContext:
+_PRE_BID = re.compile(r"^Pre-bid meeting: (.+)$", re.MULTILINE)
+
+
+def load_company_profile(session: Session) -> dict | None:
+    from app.models import CompanyProfile
+    row = session.get(CompanyProfile, 1)
+    return dict(row.data) if row and row.data else None
+
+
+def build_context(tender: Tender, settings: Settings, company_profile: dict | None = None) -> TenderContext:
+    from app.connectors.gepnic import parse_gepnic_datetime
+    from app.rules.eligibility import eligibility_text
     docs = [DocText(d.filename, d.extracted_text or "", d.sections or {})
             for d in tender.documents if d.status == "EXTRACTED" and d.extracted_text]
     portal_text = (tender.raw or {}).get("portal_text") or ""
@@ -340,12 +351,18 @@ def build_context(tender: Tender, settings: Settings) -> TenderContext:
     llm_ctx, truncated = build_llm_context(docs, settings.LLM_MAX_CONTEXT_CHARS) if docs else ("", False)
     if portal_text:  # small and always relevant: sent ahead of document excerpts
         llm_ctx = f"=== PORTAL TENDER DETAILS (published on the portal page) ===\n{portal_text}" + (f"\n\n{llm_ctx}" if llm_ctx else "")
+    elig_text, elig_source = eligibility_text([d.sections for d in docs], portal_text, "\n\n".join(d.text for d in docs))
+    pre_bid = _PRE_BID.search(portal_text)
     return TenderContext(
         title=tender.title, organization=tender.organization, reference_number=tender.reference_number,
         closing_at=as_utc(tender.closing_at), published_at=as_utc(tender.published_at),
         portal_value_inr=tender.tender_value_inr, portal_emd_inr=tender.emd_inr, location=tender.location,
         category=tender.category, document_text=full, llm_context=llm_ctx, llm_context_truncated=truncated,
         has_documents=bool(docs), has_portal_detail=bool(portal_text),
+        documents_blocked=tender.documents_status == "BLOCKED_HUMAN_REQUIRED",
+        eligibility_text=elig_text, eligibility_source=elig_source, company_profile=company_profile,
+        pre_bid_at=parse_gepnic_datetime(pre_bid.group(1)) if pre_bid else None,
+        metadata={"department": tender.department},
     )
 
 
@@ -387,6 +404,10 @@ def _persist_decision(session: Session, t: Tender, d: Decision, ctx: TenderConte
         t.analysis_mode, t.model_version = a.mode, a.model_version
     else:
         t.analysis_mode, t.model_version = "PREFILTER", "rules-v1"
+    t.extracted = dict(t.extracted or {})
+    t.extracted["_eligibility_check"] = d.eligibility.to_dict() if d.eligibility is not None else None
+    t.extracted["_segment"] = {"name": d.segment[0], "weight": d.segment[1]} if d.segment else None
+    t.extracted["_next_actions"] = d.score.next_actions if d.score is not None else []
 
     if d.score is not None:
         session.add(ScoreRow(tender_id=t.id, tender_version=v, total=d.score.total, priority=d.score.priority,
@@ -457,7 +478,7 @@ def should_alert_immediately(t: Tender, settings: Settings) -> bool:
 def analyze_tender(session: Session, tender: Tender, settings: Settings, catalog: Catalog, analyzer: Analyzer,
                    now: datetime | None = None) -> Decision:
     tender.pipeline_status = "ANALYZING"
-    ctx = build_context(tender, settings)
+    ctx = build_context(tender, settings, load_company_profile(session))
     decision = evaluate(ctx, catalog, settings, analyzer, now=now)
     _persist_decision(session, tender, decision, ctx, catalog)
     session.flush()
