@@ -23,6 +23,12 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     window.location.href = `/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
     throw new ApiError(401, "Signed out");
   }
+  if (res.status === 403 && res.headers.get("X-MFA-Setup-Required") && window.location.pathname !== "/security") {
+    // this role must use two-factor authentication; nothing else is reachable until it is set up
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.href = "/security";
+    throw new ApiError(403, "Two-factor authentication setup required");
+  }
   if (!res.ok) {
     let detail = res.statusText;
     try {

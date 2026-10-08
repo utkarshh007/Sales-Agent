@@ -44,7 +44,13 @@ export default function Shell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    api<Me>("/auth/me").then(setMe).catch(() => {});
+    api<Me>("/auth/me").then((m) => {
+      setMe(m);
+      if (m.mfa_setup_required && window.location.pathname !== "/security") {
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+        window.location.href = "/security";
+      }
+    }).catch(() => {});
   }, []);
 
   async function signOut() {
@@ -77,7 +83,12 @@ export default function Shell({ children }: { children: ReactNode }) {
               <div className="mt-6 border-t border-line px-3 pt-4 text-sm md:absolute md:bottom-5 md:left-3 md:right-3 md:mt-0">
                 <p className="truncate font-medium" title={me.email}>{me.email}</p>
                 <p className="text-muted">{me.role === "admin" ? "Administrator" : me.role === "analyst" ? "Analyst" : "Viewer"}</p>
-                <button onClick={signOut} className="mt-2 text-teal underline-offset-2 hover:underline">Sign out</button>
+                <div className="mt-2 flex gap-4">
+                  <Link href="/security" onClick={() => setOpen(false)} className="text-teal underline-offset-2 hover:underline">
+                    Security{!me.mfa_enabled && <span className="sr-only"> (two-factor authentication off)</span>}
+                  </Link>
+                  <button onClick={signOut} className="text-teal underline-offset-2 hover:underline">Sign out</button>
+                </div>
               </div>
             )}
           </nav>

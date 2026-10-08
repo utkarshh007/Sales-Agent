@@ -128,6 +128,14 @@ class Settings(BaseSettings):
     API_RATE_LIMIT_PER_MINUTE: int = 300
     BOOTSTRAP_ADMIN_EMAIL: str = ""
     BOOTSTRAP_ADMIN_PASSWORD: str = ""
+    # comma-separated roles that must use two-factor authentication, e.g. "admin,analyst"; users in these
+    # roles can only reach their 2FA setup page until they have enrolled
+    MFA_REQUIRED_ROLES: str = ""
+    MFA_ISSUER: str = "Trever RFP Portal"
+
+    @property
+    def mfa_required_roles(self) -> set[str]:
+        return {r.strip().lower() for r in self.MFA_REQUIRED_ROLES.split(",") if r.strip()}
 
     @property
     def is_production(self) -> bool:
